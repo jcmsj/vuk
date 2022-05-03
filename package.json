@@ -1,0 +1,21 @@
+{
+  "name": "ebook-reader",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@zip.js/zip.js": "^2.4.10",
+    "events": "^3.3.0",
+    "stream": "^0.0.2",
+    "vue": "^3.2.25",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.1",
+    "vite": "^2.9.7"
+  }
+}
