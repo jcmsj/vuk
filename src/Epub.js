@@ -286,8 +286,9 @@ class Epub extends EventEmitter {
      */
     extractUUID(txt) {
         txt = txt.toLowerCase()
-        if (txt.startsWith("uuid:")) {
-            return txt.split(":").lastItem;
+        let parts = txt.split(":")
+        if (parts.includes("uuid")) {
+            return parts[parts.length - 1];
         }
     
         return ""
@@ -297,9 +298,11 @@ class Epub extends EventEmitter {
      * @param {Object} metadata 
      */
     parseMetadata(metadata) {
+        console.log("MD-B:", metadata);
+        
         for(const [k,v] of Object.entries(metadata)) {
             const keyparts = k.split(":");
-            const key = (keyparts.lastItem || "").toLowerCase().trim();
+            const key = (keyparts[keyparts.length-1] || "").toLowerCase().trim();
             const text = v._text
             switch (key) {
                 case "publisher":
@@ -330,17 +333,13 @@ class Epub extends EventEmitter {
                     this.metadata.date = text
                     break;
                 case "identifier":
-                    try {
-                        if (v["opf:scheme"] == "ISBN") {
-                            this.metadata.ISBN = text;
-                        } else if(Array.isArray(v)) {
-                            let i = 0;
-                            this.metadata.UUID = v.join(" | ")
-                        } else {
-                            this.metadata.UUID = this.extractUUID(text)
-                        }
-                    } catch (e) {
-                        this.metadata.identifier = v
+                    if(Array.isArray(v)) {
+                        console.log("VV", v);
+                        this.metadata.UUID = this.extractUUID(v[0]._text)
+                    } else if (v["opf:scheme"] == "ISBN") {
+                        this.metadata.ISBN = text;
+                    } else {
+                        this.metadata.UUID = this.extractUUID(text)
                     }
                     
                     break;

@@ -14,31 +14,26 @@ const book = ref(null),
 /**
  * @param {File} file
  */
-// eslint-disable-next-line no-unused-vars
 async function loadBook(file) {
     const epub = new Epub(file)
 
-    epub.on("parsed-root", () => {
+    epub.on("parsed-root", async() => {
         epub.parseRootFile(epub.rootXML)
     })
 
-    epub.on("parsed-metadata", () => {
-        //Todo: Show cool book loading complete
+
+
+    epub.on("parsed-guide", async() => {
     })
 
-    epub.on("parsed-guide", () => {
-
+    epub.on("parsed-manifest", async() => {
     })
 
-    epub.on("parsed-manifest", () => {
-
-    })
-
-    epub.on("parsed-spine", () => {
+    epub.on("parsed-spine", async() => {
 
     })
 
-    epub.on("parsed-toc", () => {
+    epub.on("parsed-toc", async() => {
         //Todo: Draw to sidebar
         TOC.value = epub.toc
     })
@@ -52,6 +47,10 @@ async function loadBook(file) {
     })
 
     epub.parse()
+    epub.on("parsed-metadata", async() => {
+      //Todo: Cache it, Show cool book loading complete
+      console.log("Metadata: ", epub.metadata);
+    })
     book.value = epub;
 }
 </script>
