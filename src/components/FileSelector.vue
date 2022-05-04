@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable */
 <script setup>
-import {ref, defineEmits} from "vue";
+import {ref} from "vue";
 
 const emits = defineEmits(["update"])
 const filer = ref(null);
@@ -11,8 +11,10 @@ function showFileSelector() {
 }
 
 function onChange(e) {
-    const [file] = e.target.files
-    emits("update", file)
+    if(e.target.files) {
+        const [file] = e.target.files
+        emits("update", file)
+    }
 }
 </script> 
 
@@ -26,6 +28,7 @@ function onChange(e) {
 <style scoped>
     i.icon {
         cursor: pointer;
+        font-size: 2rem;
     }
 
     input

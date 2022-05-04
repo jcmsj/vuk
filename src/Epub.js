@@ -251,7 +251,7 @@ class Epub extends EventEmitter {
 
             this.manifest[element.id] = element
         }
-        console.log("#Manifest: ", this.manifest)
+        //console.log("#Manifest: ", this.manifest)
         this.emit("parsed-manifest")
 
     }
@@ -298,7 +298,7 @@ class Epub extends EventEmitter {
      * @param {Object} metadata 
      */
     parseMetadata(metadata) {
-        console.log("MD-B:", metadata);
+        //console.log("MD-B:", metadata);
         
         for(const [k,v] of Object.entries(metadata)) {
             const keyparts = k.split(":");
@@ -334,7 +334,6 @@ class Epub extends EventEmitter {
                     break;
                 case "identifier":
                     if(Array.isArray(v)) {
-                        console.log("VV", v);
                         this.metadata.UUID = this.extractUUID(v[0]._text)
                     } else if (v["opf:scheme"] == "ISBN") {
                         this.metadata.ISBN = text;
@@ -373,7 +372,7 @@ class Epub extends EventEmitter {
                 "path" : path, 
                 "IDs": IDs
             })
-            console.log("TOC:", this.toc);
+            //console.log("TOC:", this.toc);
     
             this.emit("parsed-toc")
         }
@@ -540,7 +539,6 @@ class Epub extends EventEmitter {
         const m = this.manifest[id]["media-type"]
         let match = imageType.test(m.trim().toLowerCase())
         if(match) {
-            //Todo
             const {"data": b} = await this.readEntryWithName(this.manifest[id].href, "blob")
             const r = new FileReader();
             r.onload = () => {

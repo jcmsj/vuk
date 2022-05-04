@@ -1,31 +1,30 @@
 <template>
 <div>
-    <!-- <div v-for="(val, key, i) of props" :key="key"></div> -->
+    <div class="content" v-for="(item) of props.TOC" :key="item" @click="showContent(item.id)">{{item.title}}</div>
 </div>
 </template>
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {ref, defineProps, watch, onMounted} from "vue"
+import {ref} from "vue"
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
     "TOC": {
-    type: Object,
-    default() {
-        return {}
+        type: Array,
+        default() {
+            return []
+        }
     }
-} })
+})
 
-onMounted(() => {
-    console.log(props.TOC);
-})
-watch(props.TOC, async(newTOC, oldTOC) => {
-    console.log("OLD TOC ", oldTOC);
-    console.log("NEW TOC ", newTOC);
-})
+const emits = defineEmits(["show"])
+function showContent(id) {
+    emits("show", id)
+}
+
 </script>
-
-<style>
-
+<style lang="sass" scoped>
+.content
+    cursor: pointer
 </style>
