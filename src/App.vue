@@ -45,7 +45,7 @@ async function loadBook(file) {
         epub.getImage(n, (reader) => {
             ssrc.value = reader.result
         }) */
-        showContent(TOC.value[0].id)
+        showContent(epub.flow[epub.flowIndex].id)
     })
 
     epub.on("parsed-metadata", async() => {
@@ -68,12 +68,20 @@ function removeAllChildNodes(parent) {
 }
 
 async function showContent(id) {
-  console.log("Loading: ", id);
-  const str = await book.value.getChapter(id)
-  const d = document.createElement("div")
-  d.innerHTML = str;
+  const {str, isCached} = await book.value.getContent(id)
+
   removeAllChildNodes(text.value)
-  text.value.appendChild(d)
+  
+  if (isCached) {
+    console.log(str);
+    text.value.innerHTML = str
+  } else {
+      const d = document.createElement("div")
+      d.innerHTML = str;
+      text.value.appendChild(d.firstElementChild)
+  }
+
+  //Todo: Figure out how to cache the base64 encoded img
   loadImages()
 }
 
@@ -91,6 +99,7 @@ async function loadImages() {
       elem.src = r
     })
   }
+
 }
 
 onMounted(() => {
@@ -155,7 +164,7 @@ aside
   display: flex
   flex-direction: column
   align-items: center
-
+  font-size: larger
   img
     object-fit: contain
     max-width: 50vw

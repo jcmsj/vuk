@@ -38,8 +38,9 @@ class Epub extends EventEmitter {
         this.guide = [];
         this.spine = {toc: false, contents: []};
         this.flow = [];
+        this.flowIndex = 0;
         this.toc = [];
-
+        this.datacache = {};
         this.open();
     }
 
@@ -448,31 +449,27 @@ class Epub extends EventEmitter {
     }
 
     /**
-    *  EPub#getChapter(id, callback) -> undefined
-    *  Finds the chapter text for an id. 
+    *  EPub#getContent(id, callback) -> undefined
+    *  Gets the text from a file based on id. 
     * Replaces image and link URL's
     * and removes <head> etc. elements. 
-    * @param {String} id :Manifest id value for a chapter
+    * @param {String} id :Manifest id of the file
     * @returns {Promise<String>} : Chapter text for mime type application/xhtml+xml
     */
-     async getChapter(id) {
-        let str = await this.getChapterRaw(id);
+     async getContent(id) {
+        const isCached = Boolean(Object.keys(this.datacache).includes(id))
+        if (isCached) {
+            return {str:this.datacache[id], isCached:isCached}
+        }
+
+        let str = await this.getContentRaw(id);
+    
         // remove linebreaks (no multi line matches in JS regex!)
         str = str.replace(/\r?\n/g, "\u0000");
 
-        // keep only <body> contents
+         // keep only <body> contents
         str.replace(/<body[^>]*?>(.*)<\/body[^>]*?>/i, (o, d) => {
             str = d.trim();
-        });
-
-        // remove <script> blocks
-        str = str.replace(/<script[^>]*?>(.*?)<\/script[^>]*?>/ig, (o, s) => {
-            return "";
-        });
-
-        // remove <style> blocks
-        str = str.replace(/<style[^>]*?>(.*?)<\/style[^>]*?>/ig, (o, s) => {
-            return "";
         });
 
         // remove onEvent handlers
@@ -495,15 +492,31 @@ class Epub extends EventEmitter {
             return "";
         });
 
-        return str
+        const frag = new DocumentFragment()
+        frag.innerHTML =  str;
+        const removeChildsWith = (selector) => {
+            for(selector of arguments) {
+                const children = frag.querySelectorAll(selector)
+                for (const child of children) {
+                    children.parentNode.removeChild(child)
+                }
+            }
+        }
+
+        removeChildsWith("script", "style")
+
+        str = frag.innerHTML
+
+        this.datacache[id] = str
+        return {str:str, isCached: isCached}
      }
 
      /**
-     *  EPub#getChapterRaw(id, callback) -> undefined
-     * @param {String} id :Manifest id value for a chapter
+     *  EPub#getContentRaw(id, callback) -> undefined
+     * @param {String} id :Manifest id value for the content
      * @returns {Promise<String>} : Raw Chapter text for mime type application/xhtml+xml
      **/
-    async getChapterRaw(id) {
+    async getContentRaw(id) {
         if (!this.manifest[id]) {
             return ""
         }
@@ -559,6 +572,10 @@ class Epub extends EventEmitter {
     hasDRM () {
         const drmFile = 'META-INF/encryption.xml';
         return Boolean(this.getFileInArchive(drmFile));
+    }
+
+    updateCache(id, text) {
+        this.datacache[id]= text;
     }
 }
 
