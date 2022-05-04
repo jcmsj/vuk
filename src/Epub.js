@@ -457,7 +457,6 @@ class Epub extends EventEmitter {
     */
      async getChapter(id) {
         let str = await this.getChapterRaw(id);
-
         // remove linebreaks (no multi line matches in JS regex!)
         str = str.replace(/\r?\n/g, "\u0000");
 
@@ -483,22 +482,20 @@ class Epub extends EventEmitter {
 
         // replace images
         str = str.replace(/(\ssrc\s*=\s*["']?)([^"'\s>]*?)(["'\s>])/g, (o, a, b, c) => {
-            let element;
             const imgHREF = this.rootPath.alter(b)
 
+            // include only images from manifest
             for(const elem of Object.values(this.manifest)) {
-                if (elem.href == imgHREF)
-                    element = val;
+                //The data-src can be used as the arg of the Epub.getImage()
+                if (elem.href == imgHREF) {
+                    return `class='book-img' data-src='${elem.id}'`;
+                }
             }
 
-            // include only images from manifest
-            if (element)
-                return a + this.imageroot + element.id + "/" + img + c;
-            else
-                return "";
+            return "";
         });
 
-        return str;
+        return str
      }
 
      /**
@@ -531,7 +528,7 @@ class Epub extends EventEmitter {
      *  Returns the image as a Blob.
      *  Return only images with mime type image
      **/
-    async getImage(id, cb) {
+    async getImage(id, cb = undefined) {
         if (!this.manifest[id]) {
             return ""
         }
@@ -542,10 +539,12 @@ class Epub extends EventEmitter {
             const {"data": b} = await this.readEntryWithName(this.manifest[id].href, "blob")
             const r = new FileReader();
             r.onload = () => {
-                cb(r)
+                if (typeof cb == "function") {
+                    cb(r.result)
+                }
             }
             r.readAsDataURL(b)
-            return b
+            return r
         }
         else
             this.error("Invalid mime type for image!")

@@ -1,16 +1,18 @@
 /* eslint-disable no-unused-vars */
 <script setup>
-import {ref} from "vue"
+import {ref, onMounted} from "vue"
 import AppHeader from "./components/AppHeader.vue"
 import AppFooter from "./components/AppFooter.vue"
 import FileSelector from "./components/FileSelector.vue"
 import AppTOC from "./components/TOC.vue"
-
+import Commands from "./Commands.js"
 import Epub from "./Epub.js"
 const book = ref(null),
   text = ref(null),
+  aside = ref(null),
   TOC = ref(false),
-  ssrc = ref("");
+  showAside = ref(false)
+
 /**
  * @param {File} file
  */
@@ -28,7 +30,7 @@ async function loadBook(file) {
     })
 
     epub.on("parsed-spine", async() => {
-
+      console.log(epub.manifest);
     })
 
     epub.on("parsed-toc", async() => {
@@ -55,25 +57,62 @@ async function loadBook(file) {
     book.value = epub;
 }
 
-async function showContent(id) {
-  console.log("Loading: ", id);
-
-  text.value.innerHTML = await book.value.getChapter(id)
+function toggleAside() {
+  showAside.value = !showAside.value
 }
 
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+async function showContent(id) {
+  console.log("Loading: ", id);
+  const str = await book.value.getChapter(id)
+  const d = document.createElement("div")
+  d.innerHTML = str;
+  removeAllChildNodes(text.value)
+  text.value.appendChild(d)
+  loadImages()
+}
+
+async function loadImages() {
+  const elems = text.value.querySelectorAll(".book-img");
+
+  for( const elem of elems) {
+    if(!elem.dataset.src) {
+      continue
+    }
+
+    const id = elem.dataset.src;
+
+    await book.value.getImage(id, r => {
+      elem.src = r
+    })
+  }
+}
+
+onMounted(() => {
+  const cmd = new Commands({
+    "c": () => {
+      toggleAside()
+    }
+  })
+})
 </script>
 <template>
-  <aside>
+  <aside :ref="aside" :active="showAside">
+    <FileSelector @update="loadBook">
+    </FileSelector>
     <AppTOC v-if="TOC" :TOC="TOC" v-on:show="showContent"></AppTOC>
     <div v-else>The book's TOC will be displayed here.</div>
   </aside>
   <main>
     <AppHeader>
-      <FileSelector @update="loadBook">
-      </FileSelector>
+
     </AppHeader>
     <div class="text" ref="text">Click + to load a book</div>
-    <img :src="ssrc" alt="" srcset="">
     <AppFooter></AppFooter>
   </main>
 </template>
@@ -87,11 +126,9 @@ body
 
 #app
   display: grid
-  grid-template-columns: 3fr 7fr
   height: inherit
-</style>
+  grid-template-columns: 1fr
 
-<style lang="sass" scoped>
 %padV1
   padding: 1vh 1vw
 
@@ -99,13 +136,28 @@ main
   display: flex
   flex-direction: column
   align-items: center
-  overflow: scroll
+  overflow-y: scroll
+  overflow-x: hidden
   & > img
     max-width: 80vw
 
 aside
   @extend %padV1
+  position: absolute
+  background-color: wheat
+  height: 100%
+  max-width: 30vw
+  &[active="true"]
+    display: none
 
 .text
   @extend %padV1
+  display: flex
+  flex-direction: column
+  align-items: center
+
+  img
+    object-fit: contain
+    max-width: 50vw
+    margin: 1vh 1vw
 </style>
