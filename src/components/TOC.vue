@@ -18,6 +18,7 @@ const props = defineProps({
     }
 })
 
+console.log("TTOC", props.TOC);
 const emits = defineEmits(["show"])
 function showContent(id) {
     emits("show", id)

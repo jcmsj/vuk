@@ -24,18 +24,20 @@ async function loadBook(file) {
     })
 
     epub.on("parsed-guide", async() => {
+      console.log("Guide: ", epub.guide);
     })
 
     epub.on("parsed-manifest", async() => {
+      console.log("Manifest: ", epub.manifest);
     })
 
     epub.on("parsed-spine", async() => {
-      console.log(epub.manifest);
+        console.log("Flow: ", epub.flow);
     })
 
     epub.on("parsed-toc", async() => {
         //Todo: Draw to sidebar
-        console.log("T", epub.toc);
+        console.log("TOC: ", epub.toc);
         TOC.value = epub.toc
     })
 
@@ -73,7 +75,6 @@ async function showContent(id) {
   removeAllChildNodes(text.value)
   
   if (isCached) {
-    console.log(str);
     text.value.innerHTML = str
   } else {
       const d = document.createElement("div")
@@ -86,7 +87,7 @@ async function showContent(id) {
 }
 
 async function loadImages() {
-  const elems = text.value.querySelectorAll(".book-img");
+  const elems = text.value.querySelectorAll("img");
 
   for( const elem of elems) {
     if(!elem.dataset.src) {
@@ -147,8 +148,6 @@ main
   align-items: center
   overflow-y: scroll
   overflow-x: hidden
-  & > img
-    max-width: 80vw
 
 aside
   @extend %padV1
@@ -167,6 +166,7 @@ aside
   font-size: larger
   img
     object-fit: contain
-    max-width: 50vw
+    max-width: 80vw
+    max-height: 90vh
     margin: 1vh 1vw
 </style>
