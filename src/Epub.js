@@ -2,6 +2,7 @@ import EventEmitter from "events"
 import addTrailingSlash from "./trailingSlash"
 import * as zip from "@zip.js/zip.js"
 import convert from "xml-js";
+
 class Epub extends EventEmitter {
     constructor(file, imageroot = "/images/", linkroot = "/links", logLevel = 0) {
         super();
@@ -144,8 +145,16 @@ class Epub extends EventEmitter {
         this.rootPath = {
             array :fullPath.split("/"),
             str : "",
+
+            /**
+             * 
+             * @param {String} filepath 
+             * @returns 
+             */
             alter(filepath) {
-                filepath = filepath.replace("../", "")
+                filepath = filepath
+                .replace("../", "")
+                .replace(window.location.href, "")
                 if (!filepath.startsWith(this.str)) {
                     return this.str + filepath
                 }
@@ -390,7 +399,6 @@ class Epub extends EventEmitter {
         for (const p of body.p) {
             let _id = p._attributes.id
             _id = _id.replace(/toc(-|:)/i, "").trim()
-            console.log("ID", _id);
             let title = p.a._text;
             if (!this.manifest[_id]) {
                 continue
@@ -525,31 +533,10 @@ class Epub extends EventEmitter {
             str = d.trim();
         });
 
-        // remove onEvent handlers
-        str = str.replace(/(\s)(on\w+)(\s*=\s*["']?[^"'\s>]*?["'\s>])/g, (o, a, b, c) => {
-            return a + "skip-" + b + c;
-        });
-
-        // replace images
-        str = str.replace(/(\ssrc\s*=\s*["']?)([^"'\s>]*?)(["'\s>])/g, (o, a, b, c) => {
-            const imgHREF = this.rootPath.alter(b)
-            console.log(imgHREF);
-
-            // include only images from manifest
-            for(const elem of Object.values(this.manifest)) {
-                //The data-src will be used as the arg of the Epub.getImage()
-                if (elem.href == imgHREF) {
-                    return `class='book-img' data-src='${elem.id}'`;
-                }
-            }
-
-            return "";
-        });
-
-        const frag = new DocumentFragment()
+        const frag = document.createElement("div");
         frag.innerHTML =  str;
-        const removeChildsWith = (selector) => {
-            for(selector of arguments) {
+        const removeChildsWith = () => {
+            for(const selector of arguments) {
                 for (const child of frag.querySelectorAll(selector)) {
                     children.parentNode.removeChild(child)
                 }
@@ -557,6 +544,47 @@ class Epub extends EventEmitter {
         }
 
         removeChildsWith("script", "style")
+        
+        const onEvent = /^on.+/i;
+
+        //Test #01
+        const d = document.createElement("div")
+        d.setAttribute("onclick", "console.log('Test Failed')")
+        d.innerText = ""
+        frag.firstElementChild.appendChild(d)
+
+        for (const elem of frag.querySelectorAll("*")) {
+            for (const {name} of elem.attributes) {
+                if (onEvent.test(name)) {
+                    elem.removeAttribute(name)
+                }
+            }
+        }
+
+        if(d.hasAttribute("onclick")) {
+            console.log("Test 01 failed");
+        } else {
+            d.parentNode.removeChild(d)
+        }
+
+        //Replace SVG <image> with <img>
+        for (const svg of frag.querySelectorAll("svg")) {
+            const image = svg.querySelector("image")
+            const img = new Image();
+            img.dataset.src = image.getAttribute("xlink:href")
+            svg.parentNode.replaceChild(img, svg)
+        }
+
+        for (const img of frag.querySelectorAll("img")) {
+            const src = this.rootPath.alter(img.src || img.dataset.src)
+            img.src = ""
+            for(const elem of Object.values(this.manifest)) {
+                //The data-src will be used as the arg of the Epub.getImage()
+                if (elem.href == src) {
+                    img.dataset.src = elem.id
+                }
+            }
+        }
 
         str = frag.innerHTML
 

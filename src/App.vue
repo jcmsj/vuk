@@ -7,54 +7,74 @@ import FileSelector from "./components/FileSelector.vue"
 import AppTOC from "./components/TOC.vue"
 import Commands from "./Commands.js"
 import Epub from "./Epub.js"
+import Test from "./components/Test.js"
+import DB from "./db.js"
+
+import BookLibrary from "./components/BookLibrary.vue"
 const book = ref(null),
-  text = ref(null),
-  aside = ref(null),
-  TOC = ref(false),
-  showAside = ref(false)
+    text = ref(null),
+    aside = ref(null),
+    TOC = ref(false),
+    showAside = ref(false),
+    titles = ref([])
+
+let shownContent = null;
+DB.init()
+
+/**
+ * @param {String} name
+ */
+async function loadBookFromDB(name) {
+    log("Loading from cache:")
+    DB.get(name).then(file => {
+        loadBook(file, true)
+    })
+}
 
 /**
  * @param {File} file
  */
-async function loadBook(file) {
+async function loadBook(file, cached = false) {
     const epub = new Epub(file)
+    epub.parse()
 
     epub.on("parsed-root", async() => {
         epub.parseRootFile(epub.rootXML)
     })
 
     epub.on("parsed-guide", async() => {
+      Test.isset(epub.guide)
       console.log("Guide: ", epub.guide);
     })
 
     epub.on("parsed-manifest", async() => {
+      Test.isset(epub.manifest)
       console.log("Manifest: ", epub.manifest);
     })
 
     epub.on("parsed-spine", async() => {
-        console.log("Flow: ", epub.flow);
+      Test.isset(epub.flow)
+      console.log("Flow: ", epub.flow);
     })
 
     epub.on("parsed-toc", async() => {
         //Todo: Draw to sidebar
+        Test.isset(epub.toc)
         console.log("TOC: ", epub.toc);
         TOC.value = epub.toc
     })
 
     epub.on("loaded", async() => {
-        /* text.value.innerHTML = await epub.getChapter("chapter1.xhtml")
-        const n = "FrontMatter1.jpg"
-        epub.getImage(n, (reader) => {
-            ssrc.value = reader.result
-        }) */
         showContent(epub.flow[epub.flowIndex].id)
+
+        if(!cached) {
+            DB.set(file)
+        }
     })
 
     epub.on("parsed-metadata", async() => {
 
     })
-
-    epub.parse()
 
     book.value = epub;
 }
@@ -70,6 +90,12 @@ function removeAllChildNodes(parent) {
 }
 
 async function showContent(id) {
+  if (shownContent == id) {
+    return
+  }
+
+  shownContent = id;
+
   const {str, isCached} = await book.value.getContent(id)
 
   removeAllChildNodes(text.value)
@@ -109,10 +135,18 @@ onMounted(() => {
       toggleAside()
     }
   })
+    /* DB.getBooks(5, r => {
+        console.log(r);        
+    }) */
 })
 </script>
 <template>
   <aside :ref="aside" :active="showAside">
+    <BookLibrary 
+    @continue-reading="loadBookFromDB"
+     :titles="titles"
+    >
+    </BookLibrary >
     <FileSelector @update="loadBook">
     </FileSelector>
     <AppTOC v-if="TOC" :TOC="TOC" v-on:show="showContent"></AppTOC>
@@ -122,7 +156,9 @@ onMounted(() => {
     <AppHeader>
 
     </AppHeader>
-    <div class="text" ref="text">Click + to load a book</div>
+    <div class="text" ref="text" @click="addTest">
+      Click + to load a book
+    </div>
     <AppFooter></AppFooter>
   </main>
 </template>

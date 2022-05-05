@@ -6,9 +6,6 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {ref} from "vue"
-
-// eslint-disable-next-line no-unused-vars
 const props = defineProps({
     "TOC": {
         type: Array,
@@ -18,8 +15,8 @@ const props = defineProps({
     }
 })
 
-console.log("TTOC", props.TOC);
 const emits = defineEmits(["show"])
+
 function showContent(id) {
     emits("show", id)
 }
