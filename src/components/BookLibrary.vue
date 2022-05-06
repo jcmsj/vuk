@@ -2,9 +2,6 @@
 <div >
     <div @click="addLibrary">Set Library</div>
     <div @click="getRootDir">Restore Library</div>
-    <!-- <div v-for="title in props.titles" :key="title" @click="continueReading(title)">
-        {{title}}
-    </div> -->
     <div v-for="(handle, dirname) of dirs" 
         :key="dirname"
         @click="traverse(handle)"
@@ -104,30 +101,6 @@ async function verifyPermission(handle, mode = "read") {
     }
     // The user didn't grant permission, so return false.
     return false;
-}
-
-/**
- * 
- * @param {FileSystemDirectoryHandle} dirHandle 
- */
-async function showLibrary(handle) {
-    if (! (await verifyPermission(handle, "read"))) {
-        return
-    }
-
-    items.value = {} //reset
-    try {
-        for await (const [key, h] of handle.entries()) {
-            items.value[key] = h.kind
-        }
-    } catch (e) {
-        console.log(e);
-    }
-
-   /*  for await (const h of handle.keys()) {
-        console.log(h);
-        //items.value[key] = handle.kind
-    } */
 }
 
 </script>

@@ -1,48 +1,48 @@
 import EventEmitter from "events"
-import addTrailingSlash from "./trailingSlash"
 import * as zip from "@zip.js/zip.js"
 import convert from "xml-js";
+import toArray from "./toArray"
 
 class Epub extends EventEmitter {
-    constructor(file, imageroot = "/images/", linkroot = "/links", logLevel = 0) {
+    constructor(file) {
         super();
 
-        this.file = file;
-        this.imageroot = addTrailingSlash(imageroot)
-        this.linkroot = addTrailingSlash(linkroot)
+        this.file = {
+            archive : file,
+            container : false,
+            mime : false,
+            root : false
+        }
 
-        this.logLevel = logLevel
+        this.metadata = {};
+        this.manifest = {};
+        this.spine = {toc: false, contents: []};
+        this.flow = [];
+        this.flowIndex = 0;
+        this.toc = [];
+
+        this.cache = {
+            text : {},
+            setText(id, t) {
+                this.text[id]= t;
+            },
+            image : {},
+            setImage(id, blob) {
+                this.image[id]= blob;
+            }
+        }
     }
 
     error(msg) {
         this.emit("error", new Error(msg));
     }
 
-    parse() {
-        this.containerFile = false;
-        this.mimeFile = false;
-        this.rootFile = false;
-
-        this.metadata = {};
-        this.manifest = {};
-        this.guide = [];
-        this.spine = {toc: false, contents: []};
-        this.flow = [];
-        this.flowIndex = 0;
-        this.toc = [];
-        this.datacache = {};
-        this.imagecache = {};
-        this.open();
-    }
-
     /**
-     *  Epub#open() -> undefined
-     *
      *  Opens the epub file with Zip unpacker, retrieves file listing
      *  and runs mime type check
      **/
     async open() {
-        this.reader = new zip.ZipReader(new zip.BlobReader(this.file))
+        this.reader = new zip.ZipReader(new zip.BlobReader(this.file.archive))
 
         // get all entries from the zip
         this.entries = await this.reader.getEntries();
@@ -78,7 +78,7 @@ class Epub extends EventEmitter {
      * @param {String} w 
      * @returns 
      */
-    determineWriter(w) {
+     determineWriter(w) {
         switch(w) {
             case "text":
                 return new zip.TextWriter()
@@ -101,15 +101,13 @@ class Epub extends EventEmitter {
         return {file:f, data: await f.getData(w)}
     }
     /**
-     *  EPub#checkMimeType() -> undefined
-     *
      *  Checks if there's a file called "mimetype" and that it's contents
      *  are "application/epub+zip". On success, runs root file check.
      **/
     async checkMimeType() {
         const {"file": mimeFile, "data":txt} = await this.readEntryWithName("mimetype")
-        this.mimeFile = mimeFile;
-        if (txt !=  "application/epub+zip") {
+        this.file.mime = mimeFile;
+        if (txt != "application/epub+zip") {
             this.error("Unsupported mime type");
             return;
         }
@@ -118,16 +116,15 @@ class Epub extends EventEmitter {
     }
 
     /**
-     *  EPub#getRootFiles() -> undefined
-     *
      *  Looks for a "meta-inf/container.xml" file and searches for a
      *  rootfile element with mime type "application/oebps-package+xml".
      *  On success, calls the rootfile parser
      **/
     async getRootFiles() {
-        this.containerFile = await this.readEntryWithName("meta-inf/container.xml")
-        const data = this.containerFile.data.toString("utf-8").toLowerCase().trim()
-        const {container} = this.xml2js(data)
+        this.file.container = await this.readEntryWithName("meta-inf/container.xml")
+        
+        const {data} = this.file.container
+        const {container} = this.xml2js(data.toString("utf-8").toLowerCase().trim())
         if (!container.rootfiles || !container.rootfiles.rootfile) {
             this.error("No rootfiles found")
             return;
@@ -141,7 +138,7 @@ class Epub extends EventEmitter {
             this.error("Invalid mime type for " + fullPath)
         }
 
-        this.rootFileName = fullPath
+        this.file.rootName = fullPath
         this.rootPath = {
             array :fullPath.split("/"),
             str : "",
@@ -153,16 +150,19 @@ class Epub extends EventEmitter {
              */
             alter(filepath) {
                 filepath = filepath
-                .replace("../", "")
-                .replace(window.location.href, "")
-                if (!filepath.startsWith(this.str)) {
-                    return this.str + filepath
+                    .replace("../", "")
+                    .replace(window.location.href, "")
+
+                if (filepath.startsWith(this.str)) {
+                    return filepath
                 }
-                return filepath
+
+                return this.str + filepath
             }
         }
         this.rootPath.array.pop()
         this.rootPath.str = this.rootPath.array.join("/") + "/"
+
         this.handleRootFile();
     }
 
@@ -175,7 +175,7 @@ class Epub extends EventEmitter {
         return convert.xml2js(data, {compact: true, spaces: 4})
     }
     async handleRootFile() {
-        const {data} = await this.readEntryWithName(this.rootFileName)
+        const {data} = await this.readEntryWithName(this.file.rootName)
         const xml = this.xml2js(data)
         this.rootXML = xml
         this.emit("parsed-root")
@@ -184,16 +184,13 @@ class Epub extends EventEmitter {
     /**
      * 
      * @param {Object} rootXML 
-     * @param {Object} rootXML.package.guide
      * @param {Object} rootXML.package.manifest
      * @param {Object} rootXML.package.metadata
      * @param {Object} rootXML.package.spine
      * @param {Object} rootXML.package._attributes
      */
     async parseRootFile(rootXML) {
-        console.log("ROOTXML: ", rootXML);
         const { 
-            "guide": guide, 
             "manifest": manifest, 
             "metadata": metadata, 
             "spine": spine, 
@@ -201,43 +198,11 @@ class Epub extends EventEmitter {
         } = rootXML.package
         this.version = attr.version || '2.0';
         this.parseMetadata(metadata)
-        /* this.parseGuide(guide) */
         this.parseManifest(manifest)
         this.parseSpine(spine)
         this.parseTOC().then(() => {
             this.emit("loaded")
         })
-    }
-
-    /**
-     *  EPub#parseGuide() -> undefined
-     *
-     *  Parses "guide" block which has the locations of the fundamental structural components of the publication
-     **/
-    /**
-     * 
-     * @param {Object} guide 
-     * @param {Object} guide.reference
-     */
-    parseGuide(guide) {
-        console.log("R-guide: ", guide);
-        //Todo: Analyze old func
-        /* console.log("Guide: ", guide); */
-
-        if (!guide.reference) {
-            this.error("No guide!")
-        }
-
-        guide.reference = this.toArray(guide.reference)
-
-        for(const reference of guide.reference) {
-            const element = reference._attributes;
-
-            element.href = this.rootPath.alter(element.href)
-            this.guide.push(element);
-        }
-
-        this.emit("parsed-guide")
     }
 
     /**
@@ -265,7 +230,7 @@ class Epub extends EventEmitter {
         )
 
         if (spine.itemref) {
-            spine.itemref = this.toArray(spine.itemref)
+            spine.itemref = toArray(spine.itemref)
             for (const {_attributes} of spine.itemref) {
                 const element = Object.assign({}, this.manifest[_attributes.idref] )
                 this.spine.contents.push(element)
@@ -291,12 +256,10 @@ class Epub extends EventEmitter {
         return ""
     }
     /**
-     * 
+     * Emits a "parsed-metadata" event
      * @param {Object} metadata 
      */
     parseMetadata(metadata) {
-        //console.log("MD-B:", metadata);
-        
         for(const [k,v] of Object.entries(metadata)) {
             const keyparts = k.split(":");
             const key = (keyparts[keyparts.length-1] || "").toLowerCase().trim();
@@ -351,15 +314,16 @@ class Epub extends EventEmitter {
      * 2. With toc.xhtml
      * Since NCX is not required in EPUB3 use option 2.
      * Read : https://docs.fileformat.com/ebook/ncx/
+     * 
+     * Emits a "parsed-toc" event
      */
     async parseTOC() {
         const hasNCX = Boolean(this.spine.toc)
         let tocElem;
-        if (hasNCX) {
-            tocElem = this.manifest[this.spine.toc]
-        } else {
-            tocElem = this.manifest["toc"]
-        }
+
+        tocElem = (hasNCX) ? 
+            this.manifest[this.spine.toc]
+            :this.manifest["toc"];
 
         const IDs = {};
         for (const [k, v] of Object.entries(this.manifest)) {
@@ -456,7 +420,7 @@ class Epub extends EventEmitter {
         }
 
         const output = [];
-        for (const part of this.toArray(branch)) {
+        for (const part of toArray(branch)) {
             let title = "";
             if(part.navLabel) {
                 title = (part.navLabel.text._text || part.navLabel).trim() || ""
@@ -504,23 +468,17 @@ class Epub extends EventEmitter {
         return output;
     }
 
-    toArray(variable) {
-        //Sep from class
-        return (Array.isArray(variable)) ? variable: [variable]
-    }
-
     /**
-    *  EPub#getContent(id, callback) -> undefined
-    *  Gets the text from a file based on id. 
+    * Gets the text from a file based on id. 
     * Replaces image and link URL's
     * and removes <head> etc. elements. 
     * @param {String} id :Manifest id of the file
     * @returns {Promise<String>} : Chapter text for mime type application/xhtml+xml
     */
      async getContent(id) {
-        const isCached = Boolean(Object.keys(this.datacache).includes(id))
+        const isCached = Boolean(Object.keys(this.cache.text).includes(id))
         if (isCached) {
-            return {str:this.datacache[id], isCached:isCached}
+            return this.cache.text[id]
         }
 
         let str = await this.getContentRaw(id);
@@ -547,24 +505,12 @@ class Epub extends EventEmitter {
         
         const onEvent = /^on.+/i;
 
-        //Test #01
-        const d = document.createElement("div")
-        d.setAttribute("onclick", "console.log('Test Failed')")
-        d.innerText = ""
-        frag.firstElementChild.appendChild(d)
-
         for (const elem of frag.querySelectorAll("*")) {
             for (const {name} of elem.attributes) {
                 if (onEvent.test(name)) {
                     elem.removeAttribute(name)
                 }
             }
-        }
-
-        if(d.hasAttribute("onclick")) {
-            console.log("Test 01 failed");
-        } else {
-            d.parentNode.removeChild(d)
         }
 
         //Replace SVG <image> with <img>
@@ -587,13 +533,11 @@ class Epub extends EventEmitter {
         }
 
         str = frag.innerHTML
-
-        this.datacache[id] = str
-        return {str:str, isCached: isCached}
+        this.cache.setText(id, str)
+        return str
      }
 
      /**
-     *  EPub#getContentRaw(id, callback) -> undefined
      * @param {String} id :Manifest id value for the content
      * @returns {Promise<String>} : Raw Chapter text for mime type application/xhtml+xml
      **/
@@ -616,17 +560,15 @@ class Epub extends EventEmitter {
     /**
      *  Return only images with mime type image
      * @param {String} id of the image file in the manifest
-     * @param {Function} cb callback
-     * @returns {Promise<Blob>} Returns a promise of the image as a blob if it has proper mime type.
+     * @returns {Promise<Blob>} Returns a promise of the image as a blob if it has a proper mime type.
      */
-    async getImage(id, cb = result => {console.log(result)}) {
+    async getImage(id) {
         if (!this.manifest[id]) {
-            return ""
+            return new Blob()
         }
 
-        if(this.imagecache[id]) {
-            console.log("IMG from cache");
-            cb(this.imagecache[id])
+        if(this.cache.image[id]) {
+            return this.cache.image[id]
         }
 
         const imageType = /^image\//i;
@@ -639,28 +581,27 @@ class Epub extends EventEmitter {
         }
 
         const {"data": b} = await this.readEntryWithName(this.manifest[id].href, "blob")
+
         const r = new FileReader();
-        r.onload = () => {
-            this.imagecache[id] = r.result
-            cb(r.result)
-        }
-        r.readAsDataURL(b)
-        return r
+        return new Promise((resolve, reject) => {
+            r.onload = (e) => {
+                this.cache.setImage(id, e.target.result)
+                resolve(e.target.result)
+            }
+
+            r.onerror = () => reject(r.error);
+
+            r.readAsDataURL(b)
+        })
     }
 
     /**
-     *  EPub#hasDRM() -> boolean
-     *
      *  Parses the tree to see if there's an ecnryption file, signifying the presence of DRM
      *  see: https://stackoverflow.com/questions/14442968/how-to-check-if-an-epub-file-is-drm-protected
      **/
     hasDRM () {
         const drmFile = 'META-INF/encryption.xml';
         return Boolean(this.getFileInArchive(drmFile));
-    }
-
-    updateCache(id, text) {
-        this.datacache[id]= text;
     }
 }
 

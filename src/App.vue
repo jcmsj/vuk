@@ -38,7 +38,7 @@ async function loadBookFromHandle(handle) {
  */
 async function loadBook(file, cached = false) {
     const epub = new Epub(file)
-    epub.parse()
+    epub.open()
 
     epub.on("parsed-root", async() => {
         epub.parseRootFile(epub.rootXML)
@@ -99,18 +99,10 @@ async function showContent(id) {
 
   shownContent = id;
 
-  const {str, isCached} = await book.value.getContent(id)
+  const str = await book.value.getContent(id)
 
   removeAllChildNodes(text.value)
-  
-  if (isCached) {
-    text.value.innerHTML = str
-  } else {
-      const d = document.createElement("div")
-      d.innerHTML = str;
-      text.value.appendChild(d.firstElementChild)
-  }
-
+  text.value.innerHTML = str
   //Todo: Figure out how to cache the base64 encoded img
   loadImages()
 }
@@ -125,9 +117,7 @@ async function loadImages() {
 
     const id = elem.dataset.src;
 
-    await book.value.getImage(id, r => {
-      elem.src = r
-    })
+    elem.src = await book.value.getImage(id)
   }
 
 }
