@@ -1,7 +1,6 @@
 <template>
 <div >
-    <div v-if="Object.keys(items).length == 0">Select a directory</div>
-    <div @click="addLibrary">Add Library</div>
+    <div @click="addLibrary">Set Library</div>
     <div @click="getRootDir">Restore Library</div>
     <!-- <div v-for="title in props.titles" :key="title" @click="continueReading(title)">
         {{title}}
@@ -40,6 +39,9 @@ function loadBookFromHandle(handle) {
     emits("load-book", handle)
 }
 
+/**
+ * Todo: Display multiple root directories
+ */
 async function addLibrary() {
     let handle;
     try {
