@@ -44,11 +44,6 @@ async function loadBook(file, cached = false) {
         epub.parseRootFile(epub.rootXML)
     })
 
-    epub.on("parsed-guide", async() => {
-      Test.isset(epub.guide)
-      console.log("Guide: ", epub.guide);
-    })
-
     epub.on("parsed-manifest", async() => {
       Test.isset(epub.manifest)
       console.log("Manifest: ", epub.manifest);

@@ -2,31 +2,44 @@
 <div >
     <div @click="addLibrary">Set Library</div>
     <div @click="getRootDir">Restore Library</div>
-    <div v-for="(handle, dirname) of dirs" 
-        :key="dirname"
-        @click="traverse(handle)"
-    >
-        &#128193; {{dirname}}
-    </div>
-    <div v-for="(handle, name) of books" 
-        :key="name" 
-        @click="loadBookFromHandle(handle)">
-            📖 {{name}}
+    <div class="scrollable">
+        <div v-if="hRoot" @click="traverse(hRoot)">
+            &#128193; /
         </div>
+        <div v-if="hPrev" @click="traverse(hPrev)">
+            &#128193; ../
+        </div>
+        <div v-for="(handle, dirname) of dirs" 
+            :key="dirname"
+            @click="traverse(handle)"
+        >
+            &#128193; {{dirname}}
+        </div>
+        <div v-for="(handle, name) of books" 
+            :key="name" 
+            @click="loadBookFromHandle(handle)">
+                📖 {{name}}
+        </div>
+    </div>
 </div>
 
 </template>
 <script setup>
-import { onMounted, ref } from "vue"
+import { ref } from "vue"
 import {get, set, getMany, entries, clear} from "idb-keyval"
 
 const emits = defineEmits(["continue-reading", "load-book"])
-
-const rootDirHandle = ref(null),
-    curDirHandle = ref(null),
+const 
     items = ref({}),
     books = ref({}),
-    dirs = ref({});
+    dirs = ref({}),
+    hCurrent = ref(null),
+    hPrev = ref(null),
+    hRoot = ref(null)
+
+async function isInRoot() {
+    return await hRoot.value.isSameEntry(hCurrent.value)
+}
 
 function continueReading(title) {
     emits("continue-reading", title)
@@ -46,29 +59,34 @@ async function addLibrary() {
     } catch (e) {
         return
     }
-    set(handle.name, handle).then(() => {
+
+    set("last-working-dir", handle).then(() => {
         getRootDir()
     })
 }
 
 async function getRootDir() {
-    entries().then(async(entries) => {
-        if (entries.length == 0) 
-            return
+    const handle = await get("last-working-dir");
 
-        const [[name, handle]] = entries
+    if (! (await verifyPermission(handle, "read"))) {
+        return
+    }
 
-        if (! (await verifyPermission(handle, "read"))) {
-            return
-        }
-
-        sortDir(handle)
-        rootDirHandle.value = handle
-    })
+    sortDir(handle)
+    hRoot.value = handle
 }
 
-async function traverse(dir) {
-    
+/**
+ * @param {FileSystemDirectoryHandle} dirHandle
+ */
+async function traverse(dirHandle) {
+    if (await hCurrent.value.isSameEntry(dirHandle)) {
+        return
+    }
+
+    console.log("Traverse: " , dirHandle);
+
+    sortDir(dirHandle)
 }
 
 async function sortDir(handle) {
@@ -77,14 +95,19 @@ async function sortDir(handle) {
     try {
         for await (const [key, h] of handle.entries()) {
             if (h.kind == "file") {
-                books.value[key] = h
+                const file = await h.getFile()
+                if (file.type == "application/epub+zip")
+                    books.value[key] = h
             } else {
                 dirs.value[key] = h
             }
         }
     } catch (e) {
         console.log(e);
+        return
     }
+    hPrev.value = hCurrent.value;
+    hCurrent.value = handle
 }
 
 async function verifyPermission(handle, mode = "read") {
@@ -107,4 +130,7 @@ async function verifyPermission(handle, mode = "read") {
 <style lang='sass'>
     div
         cursor: pointer
+
+    .scrollable
+        scroll-behavior: scroll
 </style>
