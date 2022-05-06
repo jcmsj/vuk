@@ -8,7 +8,6 @@ import AppTOC from "./components/TOC.vue"
 import Commands from "./Commands.js"
 import Epub from "./Epub.js"
 import Test from "./components/Test.js"
-import DB from "./db.js"
 
 import BookLibrary from "./components/BookLibrary.vue"
 const book = ref(null),
@@ -16,19 +15,22 @@ const book = ref(null),
     aside = ref(null),
     TOC = ref(false),
     showAside = ref(false),
-    titles = ref([])
+    titles = ref([]),
+    dir = ref(""),
+    dirData = ref([])
 
 let shownContent = null;
-DB.init()
-
+async function loadLibrary() {
+  db.getDirHandle(dir.value, res => {
+    dirData.value = res
+  })
+}
 /**
- * @param {String} name
+ * @param {FileSystemFileHandle} handle
  */
-async function loadBookFromDB(name) {
-    log("Loading from cache:")
-    DB.get(name).then(file => {
-        loadBook(file, true)
-    })
+async function loadBookFromHandle(handle) {
+  const file = await handle.getFile()
+  loadBook(file)
 }
 
 /**
@@ -65,10 +67,11 @@ async function loadBook(file, cached = false) {
     })
 
     epub.on("loaded", async() => {
+      document.title = epub.metadata.title
         showContent(epub.flow[epub.flowIndex].id)
 
         if(!cached) {
-            DB.set(file)
+           //Todo: In memory caching
         }
     })
 
@@ -142,11 +145,9 @@ onMounted(() => {
 </script>
 <template>
   <aside :ref="aside" :active="showAside">
-    <BookLibrary 
-    @continue-reading="loadBookFromDB"
-     :titles="titles"
-    >
-    </BookLibrary >
+    <BookLibrary
+      @load-book="loadBookFromHandle"
+    ></BookLibrary >
     <FileSelector @update="loadBook">
     </FileSelector>
     <AppTOC v-if="TOC" :TOC="TOC" v-on:show="showContent"></AppTOC>
