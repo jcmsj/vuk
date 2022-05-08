@@ -1,9 +1,23 @@
 <script setup>
-</script>
+import {ref} from "vue"
+const emits = defineEmits(["nav-toggled"]);
 
+const t = ref("")
+</script>
 <template>
-    <header>
+    <header >
+    <div 
+        ref="t"
+        class="btn" 
+        >Test
+    </div>
+        Header
         <nav>
+            <div 
+                class="btn" 
+                @click="emits('nav-toggled')">
+                ☰
+            </div>
             <slot />
         </nav>
     </header>
@@ -12,8 +26,11 @@
 
 <style lang="sass" scoped>
 header
-  position: sticky
-  top: 0
-  background-color: white
-  width: 100%
+    position: sticky
+    top: 0
+    background-color: white
+    width: 100%
+
+.btn
+    cursor: pointer
 </style>

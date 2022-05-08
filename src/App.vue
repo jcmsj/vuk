@@ -55,18 +55,18 @@ async function loadBookFromFile(file, cached = false) {
         TOC.value = epub.toc
     })
 
-    epub.on("loaded", async() => {
-        title.value = epub.metadata.title
-        showContent(epub.flow[epub.flowIndex].id)
-
-        if(!cached) {
-           //Todo: In memory caching
-        }
-    })
-
-    epub.on("parsed-metadata", async() => {
+   epub.on("parsed-metadata", async() => {
 
     })
+
+  epub.on("loaded", async() => {
+    title.value = epub.metadata.title
+    showContent(epub.flow[epub.flowIndex].id)
+
+    if(!cached) {
+        //Todo: In memory caching
+    }
+  })
 
     book.value = epub;
 }
@@ -143,16 +143,15 @@ function changeTab(i) {
       :active="tabIndex == 0"
     ></BookLibrary>
     <AppTOC 
-      :TOC="TOC" 
       :active="tabIndex == 1"
       v-on:show="showContent">
     </AppTOC>
   </aside>
   <main>
-    <AppHeader>
+    <AppHeader @nav-toggled="toggleAside">
 
     </AppHeader>
-    <div class="text" ref="text" @click="addTest">
+    <div class="text" ref="text">
         Press: <br>
         
         C - Show TOC <br>
@@ -170,9 +169,8 @@ body
   overflow: hidden
 
 #app
-  display: grid
+  display: flex
   height: inherit
-  grid-template-columns: 1fr
 
 %padV1
   padding: 1vh 1vw
@@ -180,18 +178,19 @@ body
 main
   display: flex
   flex-direction: column
+  flex: 1
   align-items: center
   overflow-y: scroll
   overflow-x: hidden
+  @extend %padV1
 
 aside
     @extend %padV1
-    position: absolute
     background-color: wheat
-    height: 100%
     max-width: 30vw
     overflow-y: auto
     display: none
+    resize: horizontal
 
     &[active="true"]
         display: flex
@@ -206,6 +205,9 @@ aside
   flex-direction: column
   align-items: center
   font-size: larger
+  flex: 1
+  width: 100%
+
   img
     object-fit: contain
     max-width: 80vw
