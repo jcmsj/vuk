@@ -1,7 +1,17 @@
 <template>
-<div>
-    <div @click="addLibrary">Set Library</div>
-    <div @click="restoreLibrary">Restore Library</div>
+<div class="r"> 
+    <div 
+        class="btn"
+        @click="addLibrary"
+    >
+        Set Library
+    </div>
+    <div 
+        class="btn"
+        @click="restoreLibrary"
+        >
+        Restore Library
+    </div>
     <div class="directory" v-if="hRoot" @click="traverse(hRoot)">/</div>
     <div class="directory" v-if="levels.length" @click="moveUp">../</div>
     <div class="directory" v-for="(handle, dirname) of dirs" 
@@ -16,16 +26,12 @@
         {{name}}
     </div>
 </div>
-
 </template>
 <script setup>
-import { ref} from "vue"
+import { ref } from "vue"
 import {onKeyUp} from "@vueuse/core"
-
 import {get, set, clear} from "idb-keyval"
-
 const levels = ref([]);
-
 const emits = defineEmits(["continue-reading", "load-book"])
 
 //Refs
@@ -169,9 +175,10 @@ async function verifyPermission(handle, mode = "read") {
 }
 
 </script>
-<style lang='sass'>
-    div
-        cursor: pointer
+<style lang='sass' scoped>
+    .r
+        & > div
+            cursor: pointer
 
     .scrollable
         scroll-behavior: scroll
