@@ -1,57 +1,56 @@
 <template>
-<div >
+<div>
     <div @click="addLibrary">Set Library</div>
-    <div @click="getRootDir">Restore Library</div>
-    <div class="scrollable">
-        <div v-if="hRoot" @click="traverse(hRoot)">
-            &#128193; /
-        </div>
-        <div v-if="hPrev" @click="traverse(hPrev)">
-            &#128193; ../
-        </div>
-        <div v-for="(handle, dirname) of dirs" 
-            :key="dirname"
-            @click="traverse(handle)"
-        >
-            &#128193; {{dirname}}
-        </div>
-        <div v-for="(handle, name) of books" 
-            :key="name" 
-            @click="loadBookFromHandle(handle)">
-                📖 {{name}}
-        </div>
+    <div @click="restoreLibrary">Restore Library</div>
+    <div class="directory" v-if="hRoot" @click="traverse(hRoot)">/</div>
+    <div class="directory" v-if="levels.length" @click="moveUp">../</div>
+    <div class="directory" v-for="(handle, dirname) of dirs" 
+        :key="dirname"
+        @click="traverse(handle)"
+    >
+        {{dirname}}
+    </div>
+    <div class="book" v-for="(handle, name) of books" 
+        :key="name" 
+        @click="loadBookFromHandle(handle)">
+        {{name}}
     </div>
 </div>
 
 </template>
 <script setup>
-import { ref } from "vue"
-import {get, set, getMany, entries, clear} from "idb-keyval"
+import { ref} from "vue"
+import {onKeyUp} from "@vueuse/core"
+
+import {get, set, clear} from "idb-keyval"
+
+const levels = ref([]);
 
 const emits = defineEmits(["continue-reading", "load-book"])
+
+//Refs
 const 
     items = ref({}),
     books = ref({}),
     dirs = ref({}),
     hCurrent = ref(null),
-    hPrev = ref(null),
-    hRoot = ref(null)
-
-async function isInRoot() {
-    return await hRoot.value.isSameEntry(hCurrent.value)
-}
+    hRoot = ref(null),
+    inRoot = ref(true),
+    hParent = ref(null)
+;
 
 function continueReading(title) {
     emits("continue-reading", title)
 }
 
-function loadBookFromHandle(handle) {
-    emits("load-book", handle)
+/**
+ * @param {FileSystemFileHandle} handle 
+ */
+async function loadBookFromHandle(handle) {
+    const file = await handle.getFile()
+    emits("load-book", file)
 }
 
-/**
- * Todo: Display multiple root directories
- */
 async function addLibrary() {
     let handle;
     try {
@@ -65,35 +64,78 @@ async function addLibrary() {
     })
 }
 
-async function getRootDir() {
-    const handle = await get("last-working-dir");
-
-    if (! (await verifyPermission(handle, "read"))) {
+function setRootDir(dirHandle) {
+    if (dirHandle == null) {
         return
     }
 
-    sortDir(handle)
-    hRoot.value = handle
+    hRoot.value = dirHandle
+    return dirHandle
 }
 
+function getRootDir() {
+    return hRoot.value
+}
+
+async function getLastWorkingDir() {
+    const handle = await get("last-working-dir");
+
+    if (await verifyPermission(handle, "read")) {
+        return handle
+    }
+
+    return null;
+}
+
+async function restoreLibrary() {
+    if (getRootDir() != null) {
+        return
+    }
+
+    setCurrentDir(
+        setRootDir(await getLastWorkingDir())
+    )
+}
+
+onKeyUp("f", e=> {
+    restoreLibrary();
+}, {target:document})
 /**
  * @param {FileSystemDirectoryHandle} dirHandle
  */
 async function traverse(dirHandle) {
-    if (await hCurrent.value.isSameEntry(dirHandle)) {
+    if (dirHandle == undefined || dirHandle == null) {
+        dirHandle = hRoot.value
+    }
+
+    if (await dirHandle.isSameEntry(hCurrent.value)) {
         return
     }
 
-    console.log("Traverse: " , dirHandle);
-
-    sortDir(dirHandle)
+    if (await hRoot.value.isSameEntry(dirHandle)) {
+        levels.value = [];
+    } else {
+        levels.value.push(hCurrent.value);
+    }
+    console.log(levels.value);
+    setCurrentDir(dirHandle)
 }
 
-async function sortDir(handle) {
+async function moveUp() {
+    setCurrentDir(levels.value.pop())
+}
+
+async function setCurrentDir(dirHandle) {
+    hCurrent.value = dirHandle
+    sortDir();
+}
+
+//The template shows a live view of the contents
+async function sortDir() {
     books.value = {} //reset
     dirs.value = {}
     try {
-        for await (const [key, h] of handle.entries()) {
+        for await (const [key, h] of hCurrent.value.entries()) {
             if (h.kind == "file") {
                 const file = await h.getFile()
                 if (file.type == "application/epub+zip")
@@ -106,23 +148,23 @@ async function sortDir(handle) {
         console.log(e);
         return
     }
-    hPrev.value = hCurrent.value;
-    hCurrent.value = handle
 }
 
 async function verifyPermission(handle, mode = "read") {
-    console.log("H", handle);
     const options = {};
     options.mode = mode;
-    // Check if permission was already granted. If so, return true.
-    if ((await handle.queryPermission(options)) === 'granted') {
+    const g = "granted"
+    // Check if permission was already granted.
+    if ((await handle.queryPermission(options)) === g) {
         return true;
     }
-    // Request permission. If the user grants permission, return true.
-    if ((await handle.requestPermission(options)) === 'granted') {
+    // Request permission.
+    if ((await handle.requestPermission(options)) === g) {
         return true;
     }
-    // The user didn't grant permission, so return false.
+    // The user didn't grant permission.
+    alert("Please allow the e-reader to READ the contents of the directory.")
+    console.log("Failed to get directory permission");
     return false;
 }
 
@@ -133,4 +175,10 @@ async function verifyPermission(handle, mode = "read") {
 
     .scrollable
         scroll-behavior: scroll
+
+    .directory::before
+        content: "\01F4C2 "
+
+    .book::before
+        content: "📖 "
 </style>

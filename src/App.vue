@@ -1,42 +1,37 @@
-/* eslint-disable no-unused-vars */
+  /* eslint-disable no-unused-vars */
 <script setup>
-import {ref, onMounted} from "vue"
+import {ref, provide} from "vue"
+import {onKeyUp, useTitle} from "@vueuse/core"
+
+//Modules
+import Epub from "./modules/Epub.js"
+import Test from "./modules/Tester.js"
+
+//Components
 import AppHeader from "./components/AppHeader.vue"
 import AppFooter from "./components/AppFooter.vue"
 import FileSelector from "./components/FileSelector.vue"
 import AppTOC from "./components/TOC.vue"
-import Commands from "./Commands.js"
-import Epub from "./Epub.js"
-import Test from "./components/Test.js"
-
 import BookLibrary from "./components/BookLibrary.vue"
-const book = ref(null),
+
+const 
+    title = useTitle(),
+    book = ref(null),
     text = ref(null),
-    aside = ref(null),
-    TOC = ref(false),
-    showAside = ref(false),
+    TOC = ref([]),
     titles = ref([]),
-    dir = ref(""),
-    dirData = ref([])
+    explorer = ref(null),
+    tabIndex = ref(0),
+    asideIsShown = ref(false)
+
+provide("TOC", TOC)
 
 let shownContent = null;
-async function loadLibrary() {
-  db.getDirHandle(dir.value, res => {
-    dirData.value = res
-  })
-}
-/**
- * @param {FileSystemFileHandle} handle
- */
-async function loadBookFromHandle(handle) {
-  const file = await handle.getFile()
-  loadBook(file)
-}
 
 /**
  * @param {File} file
  */
-async function loadBook(file, cached = false) {
+async function loadBookFromFile(file, cached = false) {
     const epub = new Epub(file)
     epub.open()
 
@@ -62,7 +57,7 @@ async function loadBook(file, cached = false) {
     })
 
     epub.on("loaded", async() => {
-      document.title = epub.metadata.title
+        title.value = epub.metadata.title
         showContent(epub.flow[epub.flowIndex].id)
 
         if(!cached) {
@@ -78,7 +73,15 @@ async function loadBook(file, cached = false) {
 }
 
 function toggleAside() {
-  showAside.value = !showAside.value
+  asideIsShown.value = !asideIsShown.value
+}
+
+function hideAside() {
+    asideIsShown.value = false
+}
+
+function showAside() {
+    asideIsShown.value = true
 }
 
 function removeAllChildNodes(parent) {
@@ -105,7 +108,7 @@ async function showContent(id) {
 async function loadImages() {
   const elems = text.value.querySelectorAll("img");
 
-  for( const elem of elems) {
+  for(const elem of elems) {
     if(!elem.dataset.src) {
       continue
     }
@@ -117,33 +120,44 @@ async function loadImages() {
 
 }
 
-onMounted(() => {
-  const cmd = new Commands({
-    "c": () => {
-      toggleAside()
-    }
-  })
-    /* DB.getBooks(5, r => {
-        console.log(r);        
-    }) */
-})
+onKeyUp("f", e => {
+  changeTab(0)
+}, {target:document})
+
+onKeyUp("c", e => {
+  changeTab(1)
+}, {target:document})
+
+onKeyUp("Escape", e => {
+    hideAside()
+}, {target:document})
+
+function changeTab(i) {
+    tabIndex.value = i;
+    showAside()
+}
 </script>
 <template>
-  <aside :ref="aside" :active="showAside">
+  <aside :active="asideIsShown">
     <BookLibrary
-      @load-book="loadBookFromHandle"
-    ></BookLibrary >
-    <FileSelector @update="loadBook">
-    </FileSelector>
-    <AppTOC v-if="TOC" :TOC="TOC" v-on:show="showContent"></AppTOC>
-    <div v-else>The book's TOC will be displayed here.</div>
+      @load-book="loadBookFromFile"
+      :active="tabIndex == 0"
+    ></BookLibrary>
+    <AppTOC 
+        :TOC="TOC" 
+        :active="tabIndex == 1"
+        v-on:show="showContent">
+    </AppTOC>
   </aside>
   <main>
     <AppHeader>
 
     </AppHeader>
     <div class="text" ref="text" @click="addTest">
-      Click + to load a book
+        Press: <br>
+        
+        C - Show TOC <br>
+        F - Show File explorer
     </div>
     <AppFooter></AppFooter>
   </main>
@@ -172,13 +186,20 @@ main
   overflow-x: hidden
 
 aside
-  @extend %padV1
-  position: absolute
-  background-color: wheat
-  height: 100%
-  max-width: 30vw
-  &[active="true"]
+    @extend %padV1
+    position: absolute
+    background-color: wheat
+    height: 100%
+    max-width: 30vw
+    overflow-y: auto
     display: none
+
+    &[active="true"]
+        display: flex
+    & > *
+        display: none
+    & > *[active="true"]
+        display: block
 
 .text
   @extend %padV1

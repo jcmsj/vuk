@@ -1,20 +1,18 @@
 <template>
 <div>
-    <div class="content" v-for="(item) of props.TOC" :key="item" @click="showContent(item.id)">{{item.title}}</div>
+    <div class="content" v-for="(item) of TOC" :key="item" @click="showContent(item.id)">{{item.title}}</div>
+    <div
+        v-if="TOC.length == 0"
+    >
+    Table of Contents
+    </div>
 </div>
 </template>
 
 <script setup>
-// eslint-disable-next-line no-unused-vars
-const props = defineProps({
-    "TOC": {
-        type: Array,
-        default() {
-            return []
-        }
-    }
-})
+import {inject} from "vue"
 
+const TOC = inject("TOC", [])
 const emits = defineEmits(["show"])
 
 function showContent(id) {
