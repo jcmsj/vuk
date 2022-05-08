@@ -20,7 +20,6 @@ const
     text = ref(null),
     TOC = ref([]),
     titles = ref([]),
-    explorer = ref(null),
     tabIndex = ref(0),
     asideIsShown = ref(false)
 
@@ -144,9 +143,9 @@ function changeTab(i) {
       :active="tabIndex == 0"
     ></BookLibrary>
     <AppTOC 
-        :TOC="TOC" 
-        :active="tabIndex == 1"
-        v-on:show="showContent">
+      :TOC="TOC" 
+      :active="tabIndex == 1"
+      v-on:show="showContent">
     </AppTOC>
   </aside>
   <main>
