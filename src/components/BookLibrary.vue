@@ -40,9 +40,7 @@ const
     books = ref({}),
     dirs = ref({}),
     hCurrent = ref(null),
-    hRoot = ref(null),
-    inRoot = ref(true),
-    hParent = ref(null)
+    hRoot = ref(null)
 ;
 
 function continueReading(title) {
@@ -179,9 +177,6 @@ async function verifyPermission(handle, mode = "read") {
     .r
         & > div
             cursor: pointer
-
-    .scrollable
-        scroll-behavior: scroll
 
     .directory::before
         content: "\01F4C2 "

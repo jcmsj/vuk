@@ -1,6 +1,11 @@
 <template>
 <div>
-    <div class="content" v-for="(item) of TOC" :key="item" @click="showContent(item.id)">{{item.title}}</div>
+    <div class="content" 
+        v-for="(item) of TOC" 
+        :key="item" 
+        @click="showContent(item.id)">
+            {{item.title}}
+        </div>
     <div
         v-if="TOC.length == 0"
     >
@@ -16,6 +21,7 @@ const TOC = inject("TOC", [])
 const emits = defineEmits(["show"])
 
 function showContent(id) {
+    console.log("Show:" + id);
     emits("show", id)
 }
 
