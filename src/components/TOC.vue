@@ -3,13 +3,12 @@
     <div class="content" 
         v-for="(item) of TOC" 
         :key="item" 
-        @click="showContent(item.id)">
-            {{item.title}}
-        </div>
-    <div
-        v-if="TOC.length == 0"
+        @click="showContent(item.id)"
     >
-    Table of Contents
+        {{item.title}}
+    </div>
+    <div v-if="TOC.length == 0">
+        Table of Contents
     </div>
 </div>
 </template>

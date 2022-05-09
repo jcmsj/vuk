@@ -30,7 +30,6 @@ header
     top: 0
     background-color: white
     width: 100%
-
 .btn
     cursor: pointer
 </style>

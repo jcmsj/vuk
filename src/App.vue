@@ -10,7 +10,6 @@ import Test from "./modules/Tester.js"
 //Components
 import AppHeader from "./components/AppHeader.vue"
 import AppFooter from "./components/AppFooter.vue"
-import FileSelector from "./components/FileSelector.vue"
 import AppTOC from "./components/TOC.vue"
 import BookLibrary from "./components/BookLibrary.vue"
 
@@ -100,23 +99,6 @@ async function showContent(id) {
 
   removeAllChildNodes(text.value)
   text.value.innerHTML = str
-  //Todo: Figure out how to cache the base64 encoded img
-  loadImages()
-}
-
-async function loadImages() {
-  const elems = text.value.querySelectorAll("img");
-
-  for(const elem of elems) {
-    if(!elem.dataset.src) {
-      continue
-    }
-
-    const id = elem.dataset.src;
-
-    elem.src = await book.value.getImage(id)
-  }
-
 }
 
 onKeyUp("f", e => {
@@ -180,24 +162,27 @@ main
   flex-direction: column
   flex: 1
   align-items: center
-  overflow-y: scroll
+  overflow-y: auto
   overflow-x: hidden
-  @extend %padV1
+  padding: 1vh 1vw
 
 aside
-    @extend %padV1
-    background-color: wheat
-    max-width: 30vw
-    overflow-y: auto
-    display: none
-    resize: horizontal
+  @extend %padV1
+  background-color: wheat
+  max-width: 30vw
+  overflow-y: auto
+  display: none
+  resize: horizontal
 
-    &[active="true"]
-        display: flex
-    & > *
-        display: none
-    & > *[active="true"]
-        display: block
+  &[active="true"]
+      display: flex
+  & > *
+      display: none
+  & > *[active="true"]
+      display: block
+
+header
+  @extend %padV1
 
 .text
   @extend %padV1
@@ -210,7 +195,7 @@ aside
 
   img
     object-fit: contain
-    max-width: 80vw
-    max-height: 90vh
+    max-width: 85vw
+    max-height: 85vh
     margin: 1vh 1vw
 </style>
