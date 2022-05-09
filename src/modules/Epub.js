@@ -517,10 +517,9 @@ class Epub extends EventEmitter {
         for (const img of frag.querySelectorAll("img")) {
             const src = this.rootPath.alter(img.src || img.dataset.src)
             img.src = ""
-            for(const elem of Object.values(this.manifest)) {
-                //The data-src will be used as the arg of the Epub.getImage()
-                if (elem.href == src) {
-                    img.dataset.src = elem.id
+            for(const {id, href} of Object.values(this.manifest)) {
+                if (href == src) {
+                    img.src = await this.getImage(id)
                 }
             }
         }
