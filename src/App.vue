@@ -4,7 +4,7 @@ import {ref, provide} from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
 
 //Modules
-import Epub from "./modules/Epub.js"
+import Epub from "@jcsj/epub"
 import Test from "./modules/Tester.js"
 
 //Components
@@ -96,7 +96,6 @@ async function showContent(id) {
   shownContent = id;
 
   const str = await book.value.getContent(id)
-
   removeAllChildNodes(text.value)
   text.value.innerHTML = str
 }
@@ -143,6 +142,7 @@ function changeTab(i) {
   </main>
 </template>
 
+<!-- Note the FF styles will be apllied for the entire APP -->
 <style lang="sass">
 body
   margin: 0
