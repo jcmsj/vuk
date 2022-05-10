@@ -3,22 +3,30 @@
     </div>
 </template>
 <script setup>
+import { onMounted } from "vue";
 import {Book} from "../modules/Book"
 
+onMounted(() => {
+    Book.updateContent()
+})
 </script>
-<style lang='sass'>
+<style lang='sass' scoped>
 .book-text
     padding: 1vh 1vw
-    display: flex
-    flex-direction: column
-    align-items: center
     font-size: larger
-    flex: 1
-    width: inherit
+    max-width: 100%
 
-    img
+    :deep(img) /* Uses deep cause of v-html */
+        /* Sizing */
         object-fit: contain
         max-width: 80vw
         max-height: 80vh
-        margin: 1vh 1vw
+
+        /* Aligns center */
+        margin-inline: auto
+        display: block
+
+    :deep(h1, h2, h3, h4, h5, h6)
+        align-self: center
+        
 </style>
