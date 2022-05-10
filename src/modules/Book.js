@@ -1,5 +1,6 @@
 import {reactive} from "vue"
 import Epub from "@jcsj/epub";
+//import Epub from "../modules/test-epub"
 
 export const Book = reactive({
     singleton : null,

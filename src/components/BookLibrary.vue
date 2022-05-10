@@ -34,6 +34,8 @@ import Test from "../modules/Tester.js"
 
 import {Book} from "../modules/Book.js"
 import Epub from "@jcsj/epub"
+//import Epub from "../modules/test-epub.js"
+
 import {get, set, clear} from "idb-keyval"
 const title = useTitle()
 const levels = ref([]);
@@ -82,6 +84,7 @@ async function loadBookFromFile(file, cached = false) {
         //Todo: Draw to sidebar
         Test.isset(epub.toc)
         console.log("TOC: ", epub.toc);
+        console.log("Spine: ", epub.spine);
     })
 
    epub.on("parsed-metadata", async() => {
