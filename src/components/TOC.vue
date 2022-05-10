@@ -6,8 +6,9 @@
     <div v-else>
         <div class="content" 
             v-for="(item) of Book.singleton.toc" 
-            :key="item" 
-            @click="Book.updateContent(item.id)"
+            :key="item"
+            :data-id="item.id"  
+            @click="update"
         >
             {{item.title}}
         </div>
@@ -17,6 +18,12 @@
 
 <script setup>
 import {Book} from "../modules/Book.js"
+
+function update(e) {
+    const id = e.target.dataset.id
+    console.log("TOC ID: ", id);
+    Book.updateContent(id)
+}
 
 </script>
 <style lang="sass" scoped>

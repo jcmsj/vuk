@@ -1,7 +1,26 @@
-# Vue 3 + Vite
+## Features Roadmap
+1. Make epub parser
+    1. Support EPUB 2.0 compliant
+    1. Support EPUB 3.0 compliant
+    1. Support Non-compliant files
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+1. File browser / Library
+    1. Ask Permissions
+    1. Make permission persistent
+    1. Directory traversal
+    1. Filter contents - Display only Directories and EPUBs.
+    1. Load book on click
 
-## Recommended IDE Setup
+1. Page renderer
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+1. Bookmarks
+    1. Last read.
+    1. last spoken by TTS
+    1. User-defined.
+
+1. Text-to-speech
+    1. Uses media controls
+    1. Start speaking on selected text
+
+## Current feature in dev:
+Page renderer
