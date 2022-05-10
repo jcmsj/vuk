@@ -1,143 +1,41 @@
   /* eslint-disable no-unused-vars */
 <script setup>
-import {ref, provide} from "vue"
-import {onKeyUp, useTitle} from "@vueuse/core"
-
-//Modules
-import Epub from "@jcsj/epub"
-import Test from "./modules/Tester.js"
+import {ref} from "vue"
 
 //Components
 import AppHeader from "./components/AppHeader.vue"
 import AppFooter from "./components/AppFooter.vue"
 import AppTOC from "./components/TOC.vue"
 import BookLibrary from "./components/BookLibrary.vue"
+import SidePanel from "./components/SidePanel.vue"
+import PageRenderer from "./components/PageRenderer.vue"
 
-const 
-    title = useTitle(),
-    book = ref(null),
-    text = ref(null),
-    TOC = ref([]),
-    titles = ref([]),
-    tabIndex = ref(0),
-    asideIsShown = ref(false)
-
-provide("TOC", TOC)
-
-let shownContent = null;
-
-/**
- * @param {File} file
- */
-async function loadBookFromFile(file, cached = false) {
-    const epub = new Epub(file)
-    epub.open()
-
-    epub.on("parsed-root", async() => {
-        epub.parseRootFile(epub.rootXML)
-    })
-
-    epub.on("parsed-manifest", async() => {
-      Test.isset(epub.manifest)
-      console.log("Manifest: ", epub.manifest);
-    })
-
-    epub.on("parsed-spine", async() => {
-      Test.isset(epub.flow)
-      console.log("Flow: ", epub.flow);
-    })
-
-    epub.on("parsed-toc", async() => {
-        //Todo: Draw to sidebar
-        Test.isset(epub.toc)
-        console.log("TOC: ", epub.toc);
-        TOC.value = epub.toc
-    })
-
-   epub.on("parsed-metadata", async() => {
-
-    })
-
-  epub.on("loaded", async() => {
-    title.value = epub.metadata.title
-    showContent(epub.flow[epub.flowIndex].id)
-
-    if(!cached) {
-        //Todo: In memory caching
-    }
-  })
-
-    book.value = epub;
-}
+const sPanelIsActive = ref(false)
 
 function toggleAside() {
-  asideIsShown.value = !asideIsShown.value
+  sPanelIsActive.value = !sPanelIsActive.value
 }
 
 function hideAside() {
-    asideIsShown.value = false
+    sPanelIsActive.value = false
 }
 
 function showAside() {
-    asideIsShown.value = true
-}
-
-function removeAllChildNodes(parent) {
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
-}
-
-async function showContent(id) {
-  if (shownContent == id) {
-    return
-  }
-
-  shownContent = id;
-
-  const str = await book.value.getContent(id)
-  removeAllChildNodes(text.value)
-  text.value.innerHTML = str
-}
-
-onKeyUp("f", e => {
-  changeTab(0)
-}, {target:document})
-
-onKeyUp("c", e => {
-  changeTab(1)
-}, {target:document})
-
-onKeyUp("Escape", e => {
-    hideAside()
-}, {target:document})
-
-function changeTab(i) {
-    tabIndex.value = i;
-    showAside()
+    sPanelIsActive.value = true
 }
 </script>
 <template>
-  <aside :active="asideIsShown">
-    <BookLibrary
-      @load-book="loadBookFromFile"
-      :active="tabIndex == 0"
-    ></BookLibrary>
-    <AppTOC 
-      :active="tabIndex == 1"
-      v-on:show="showContent">
-    </AppTOC>
-  </aside>
+  <SidePanel 
+    :active="sPanelIsActive" 
+    @toggle-s-panel="toggleAside"
+    @show-s-panel="showAside"
+    @hide-s-panel="hideAside"
+    ></SidePanel>
   <main>
-    <AppHeader @nav-toggled="toggleAside">
+    <AppHeader @toggle-s-panel="toggleAside">
 
     </AppHeader>
-    <div class="text" ref="text">
-        Press: <br>
-        
-        C - Show TOC <br>
-        F - Show File explorer
-    </div>
+    <PageRenderer></PageRenderer>
     <AppFooter></AppFooter>
   </main>
 </template>
@@ -166,36 +64,4 @@ main
   overflow-x: hidden
   padding: 1vh 1vw
 
-aside
-  @extend %padV1
-  background-color: wheat
-  max-width: 30vw
-  overflow-y: auto
-  display: none
-  resize: horizontal
-
-  &[active="true"]
-      display: flex
-  & > *
-      display: none
-  & > *[active="true"]
-      display: block
-
-header
-  @extend %padV1
-
-.text
-  @extend %padV1
-  display: flex
-  flex-direction: column
-  align-items: center
-  font-size: larger
-  flex: 1
-  width: 100%
-
-  img
-    object-fit: contain
-    max-width: 85vw
-    max-height: 85vh
-    margin: 1vh 1vw
 </style>

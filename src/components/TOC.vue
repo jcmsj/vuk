@@ -1,28 +1,22 @@
 <template>
 <div>
-    <div class="content" 
-        v-for="(item) of TOC" 
-        :key="item" 
-        @click="showContent(item.id)"
-    >
-        {{item.title}}
-    </div>
-    <div v-if="TOC.length == 0">
+    <div v-if="Book.singleton == null">
         Table of Contents
+    </div>
+    <div v-else>
+        <div class="content" 
+            v-for="(item) of Book.singleton.toc" 
+            :key="item" 
+            @click="Book.updateContent(item.id)"
+        >
+            {{item.title}}
+        </div>
     </div>
 </div>
 </template>
 
 <script setup>
-import {inject} from "vue"
-
-const TOC = inject("TOC", [])
-const emits = defineEmits(["show"])
-
-function showContent(id) {
-    console.log("Show:" + id);
-    emits("show", id)
-}
+import {Book} from "../modules/Book.js"
 
 </script>
 <style lang="sass" scoped>

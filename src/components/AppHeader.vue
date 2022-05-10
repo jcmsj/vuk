@@ -1,27 +1,18 @@
 <script setup>
-import {ref} from "vue"
-const emits = defineEmits(["nav-toggled"]);
+const emits = defineEmits(["toggle-s-panel"]);
 
-const t = ref("")
 </script>
 <template>
-    <header >
-    <div 
-        ref="t"
-        class="btn" 
-        >Test
-    </div>
+    <header>
         Header
         <nav>
-            <div 
-                class="btn" 
-                @click="emits('nav-toggled')">
+            <button
+            @click="emits('toggle-s-panel')"
+            >
                 ☰
-            </div>
-            <slot />
+            </button>
         </nav>
     </header>
-
 </template>
 
 <style lang="sass" scoped>
@@ -30,6 +21,4 @@ header
     top: 0
     background-color: white
     width: 100%
-.btn
-    cursor: pointer
 </style>

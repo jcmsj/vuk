@@ -29,10 +29,14 @@
 </template>
 <script setup>
 import { ref } from "vue"
-import {onKeyUp} from "@vueuse/core"
+import {onKeyUp, useTitle} from "@vueuse/core"
+import Test from "../modules/Tester.js"
+
+import {Book} from "../modules/Book.js"
+import Epub from "@jcsj/epub"
 import {get, set, clear} from "idb-keyval"
+const title = useTitle()
 const levels = ref([]);
-const emits = defineEmits(["continue-reading", "load-book"])
 
 //Refs
 const 
@@ -43,17 +47,54 @@ const
     hRoot = ref(null)
 ;
 
-function continueReading(title) {
-    emits("continue-reading", title)
-}
-
 /**
  * @param {FileSystemFileHandle} handle 
  */
 async function loadBookFromHandle(handle) {
     const file = await handle.getFile()
-    emits("load-book", file)
+    await loadBookFromFile(file)
 }
+
+/**
+ * @param {File} file
+ */
+async function loadBookFromFile(file, cached = false) {
+    const epub = new Epub(file)
+    epub.open()
+
+    Book.setSingleton(epub)
+
+    epub.on("parsed-root", async() => {
+        epub.parseRootFile(epub.rootXML)
+    })
+
+    epub.on("parsed-manifest", async() => {
+      Test.isset(epub.manifest)
+      console.log("Manifest: ", epub.manifest);
+    })
+
+    epub.on("parsed-spine", async() => {
+      Test.isset(epub.flow)
+      console.log("Flow: ", epub.flow);
+    })
+
+    epub.on("parsed-toc", async() => {
+        //Todo: Draw to sidebar
+        Test.isset(epub.toc)
+        console.log("TOC: ", epub.toc);
+    })
+
+   epub.on("parsed-metadata", async() => {
+
+    })
+
+  epub.on("loaded", async() => {
+    title.value = epub.metadata.title
+    Book.updateContent(epub.flow[epub.flowIndex].id)
+  })
+
+}
+
 
 async function addLibrary() {
     let handle;
@@ -121,7 +162,6 @@ async function traverse(dirHandle) {
     } else {
         levels.value.push(hCurrent.value);
     }
-    console.log(levels.value);
     setCurrentDir(dirHandle)
 }
 
