@@ -6,6 +6,12 @@ export const Book = reactive({
     contentID : null,
     content : "",
 
+    defaultContent: `
+        Press: <br>
+        C - Show TOC <br>
+        F - Show File explorer
+    `,
+
     /**
      * 
      * @param {Epub} epub 
@@ -22,7 +28,12 @@ export const Book = reactive({
         return this.singleton
     },
 
-    async updateContent(id) {
+    async updateContent(id = null) {
+        if (!(this.singleton || id)) {
+            this.setContent()
+            return
+        }
+        
         this.setContent(
             await this.singleton.getContent(id)
         )
@@ -30,15 +41,12 @@ export const Book = reactive({
         this.setContentID(id)
     },
 
-    setContent(text) {
-        if (!text) {
-            text =  `
-            Press: <br>
-            C - Show TOC <br>
-            F - Show File explorer`
+    setContent(text = "") {
+        if (text) {
+            this.content = text
+        } else {
+            this.content = this.defaultContent
         }
-
-        this.content = text
     },
 
     setContentID(id) {
