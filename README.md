@@ -1,19 +1,22 @@
 ## Features Roadmap
 1. Make epub parser
-    1. Support EPUB 2.0.
-    1. Support EPUB 3.0.
-    1. Support Non-compliant files.
+    1. ✓ Support EPUB 2.0.
+    1. ✓ Support EPUB 3.0.
+    1. [-] Support Non-compliant files.
 
 1. File browser / Library
-    1. Ask Permissions.
-    1. Make permission persistent.
-    1. Directory traversal.
-    1. Filter contents - Display only Directories and EPUBs.
-    1. Load book on click.
+    1. ✓ Ask Permissions.
+    1. ✓ Make permission persistent.
+    1. ✓ Directory traversal.
+    1. ✓ Filter contents - Display only Directories and EPUBs.
+    1. ✓ Load book on click.
 
 1. Page renderer
+    1. ✓ Display cover page when book is first loaded.
+    1. Divided flow into pages that scale on viewport.
     1. Button for moving to a specific page.
     1. Button, hotkey, ang scroll, touch gestures for [next, previous] page.
+    1. Custom text styling.
 
 1. Bookmarks
     1. Last read.
