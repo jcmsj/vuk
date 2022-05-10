@@ -40,7 +40,7 @@ function showAside() {
   </main>
 </template>
 
-<!-- Note the FF styles will be apllied for the entire APP -->
+<!-- Note the FF styles will be applied for the entire APP -->
 <style lang="sass">
 body
   margin: 0
