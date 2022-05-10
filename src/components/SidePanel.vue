@@ -33,6 +33,11 @@ onKeyUp("Escape", e => {
 }, {target:document})
 
 function changeTab(i) {
+    if (i == tabIndex.value) {
+        emits("toggle-s-panel")
+        return
+    } 
+    
     tabIndex.value = i;
     emits("show-s-panel")
 }
@@ -47,7 +52,7 @@ aside
     display: none
     resize: horizontal
 
-    /* The active state is controlled from App.vue am thinking how to fix this */
+    /* Todo: The active state is controlled from App.vue am thinking if this should be changed. */
     &[active="true"]
         display: flex
     & > *
