@@ -4,29 +4,24 @@
         Table of Contents
     </div>
     <div v-else>
-        <div class="content" 
-            v-for="(item) of Book.singleton.toc" 
-            :key="item"
-            :data-id="item.id"  
-            @click="update"
+        <NodeStart
+            :active="true"
+            :items="Book.singleton.toc"
+            :level="0"
         >
-            {{item.title}}
-        </div>
+        </NodeStart>
     </div>
 </div>
 </template>
 
 <script setup>
+import {provide } from "vue";
 import {Book} from "../modules/Book.js"
+import NodeStart from "./NodeStart.vue"
 
-function update(e) {
-    const id = e.target.dataset.id
-    console.log("TOC ID: ", id);
-    Book.updateContent(id)
-}
-
+/* provide("unified-event", (e) => {
+    Book.clickTOC(e)
+}) */
 </script>
 <style lang="sass" scoped>
-.content
-    cursor: pointer
 </style>

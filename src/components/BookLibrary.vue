@@ -33,8 +33,8 @@ import {onKeyUp, useTitle} from "@vueuse/core"
 import Test from "../modules/Tester.js"
 
 import {Book} from "../modules/Book.js"
-import Epub from "@jcsj/epub"
-//import Epub from "../modules/test-epub.js"
+//import Epub from "@jcsj/epub"
+import Epub from "../modules/test-epub.js"
 
 import {get, set, clear} from "idb-keyval"
 const title = useTitle()
