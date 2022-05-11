@@ -1,6 +1,6 @@
 import {reactive} from "vue"
 import Epub from "@jcsj/epub";
-//import Epub from "../modules/test-epub"
+//import Epub from "../modules/test-epub.js"
 
 export const Book = reactive({
     singleton : null,
@@ -52,6 +52,12 @@ export const Book = reactive({
 
     setContentID(id) {
         this.contentID = id;
+    },
+
+    clickTOC(e) {
+        const id = e.target.dataset.id
+        console.log("TOC ID: ", id);
+        this.updateContent(id)
     },
 
     getContentID() {
