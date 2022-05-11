@@ -1,6 +1,6 @@
 <template>
  <div :active="props.active" class="node">
-    <div v-if="level > 7"></div>
+    <div v-if="props.level > maxLevel"></div>
     <div v-else>
         <div v-for="(item) of props.items"
                 :key="item"
@@ -28,6 +28,7 @@
 import {ref} from "vue"
 import {Book} from "../modules/Book.js"
 import NodeEnd from "./NodeEnd.vue";
+const maxLevel = 7;
 const props = defineProps({
     "items": {
         type: Array,

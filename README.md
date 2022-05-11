@@ -13,8 +13,8 @@
     1. ✓ Load book on click.
 
 1. Table of Contents
-    1. ✓ With levels
-    1. ✓ Chapter loading (Except for body.xhtml)
+    1. ✓ Multi-levels.
+    1. ✓ Chapter loading (Except for body.xhtml).
 
 1. Page renderer
     1. ✓ Display first part of book when book is loaded (this is usually the cover page).
@@ -29,7 +29,7 @@
     1. User-defined.
 
 1. Text-to-speech
-    1. Uses media controls.
+    1. Use media controls.
     1. Start speaking on selected text.
 
 ## Current feature in dev:
