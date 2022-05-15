@@ -33,8 +33,7 @@ import {onKeyUp, useTitle} from "@vueuse/core"
 import Test from "../modules/Tester.js"
 
 import {Book} from "../modules/Book.js"
-import Epub from "@jcsj/epub"
-//import Epub from "../modules/test-epub.js"
+import EnhancedEpub from "../modules/EnhancedEpub.js";
 
 import {get, set, clear} from "idb-keyval"
 const title = useTitle()
@@ -61,7 +60,7 @@ async function loadBookFromHandle(handle) {
  * @param {File} file
  */
 async function loadBookFromFile(file, cached = false) {
-    const epub = new Epub(file)
+    const epub = new EnhancedEpub(file)
     epub.open()
 
     Book.setSingleton(epub)
@@ -94,6 +93,7 @@ async function loadBookFromFile(file, cached = false) {
   epub.on("loaded", async() => {
     title.value = epub.metadata.title
     Book.updateContent(epub.flow[epub.flowIndex].id)
+
   })
 
 }

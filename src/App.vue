@@ -1,6 +1,7 @@
   /* eslint-disable no-unused-vars */
 <script setup>
-import {ref} from "vue"
+import {onMounted, ref} from "vue"
+import { onKeyStroke } from "@vueuse/core";
 
 //Components
 import AppHeader from "./components/AppHeader.vue"
@@ -9,6 +10,7 @@ import AppTOC from "./components/TOC.vue"
 import BookLibrary from "./components/BookLibrary.vue"
 import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
+const main = ref(null)
 
 const sPanelIsActive = ref(false)
 
@@ -31,12 +33,13 @@ function showAside() {
     @show-s-panel="showAside"
     @hide-s-panel="hideAside"
     ></SidePanel>
-  <main>
+  <main ref="main">
     <AppHeader @toggle-s-panel="toggleAside">
 
     </AppHeader>
     <PageRenderer></PageRenderer>
-    <AppFooter></AppFooter>
+    <AppFooter>
+    </AppFooter>
   </main>
 </template>
 
@@ -60,8 +63,6 @@ main
   flex-direction: column
   flex: 1
   align-items: center
-  overflow-y: auto
-  overflow-x: hidden
   padding: 1vh 1vw
 
 </style>

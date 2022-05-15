@@ -1,13 +1,13 @@
 import {reactive} from "vue"
-import Epub from "@jcsj/epub";
-//import Epub from "../modules/test-epub.js"
+import EnhancedEpub from "./EnhancedEpub.js";
 
 export const Book = reactive({
     singleton : null,
     contentID : null,
-    content : "",
+    content : null,
 
     defaultContent: `
+
         Press: <br>
         C - Show TOC <br>
         F - Show File explorer
@@ -15,7 +15,7 @@ export const Book = reactive({
 
     /**
      * 
-     * @param {Epub} epub 
+     * @param {EnhancedEpub} epub 
      */
     setSingleton(epub) {
         this.singleton = epub;
@@ -23,7 +23,7 @@ export const Book = reactive({
 
     /**
      * 
-     * @returns {Epub}
+     * @returns {EnhancedEpub}
      */
     getSingleton() {
         return this.singleton
