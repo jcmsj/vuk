@@ -3,7 +3,7 @@
     <div v-if="props.level > maxLevel"></div>
     <div v-else>
         <div v-for="(item) of props.items"
-                :key="item"
+            :key="item"
         >
             <div v-if="item.navPoint">
                 <NodeEnd
@@ -19,7 +19,6 @@
             {{item.title}}
             </div>
         </div>
-
     </div>
 </div>
 </template>

@@ -1,12 +1,12 @@
 <template>
 <div>
-    <div v-if="Book.singleton == null">
+    <div v-if="TOC.items.length <= 0">
         Table of Contents
     </div>
     <div v-else>
         <NodeStart
             :active="true"
-            :items="Book.singleton.toc"
+            :items="TOC.items"
             :level="0"
         >
         </NodeStart>
@@ -18,10 +18,7 @@
 import {provide } from "vue";
 import {Book} from "../modules/Book.js"
 import NodeStart from "./NodeStart.vue"
-
-/* provide("unified-event", (e) => {
-    Book.clickTOC(e)
-}) */
+import {TOC} from "../modules/TOC.js"
 </script>
 <style lang="sass" scoped>
 </style>

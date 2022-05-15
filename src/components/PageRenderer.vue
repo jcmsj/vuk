@@ -1,12 +1,25 @@
 <template>
-    <div class="book-text" v-html="Book.content" ref="text">
+    <div class="book-text" ref="text" >
+        <div v-if="Flow.items.length == 0">
+            Press: <br>
+                C - Show TOC <br>
+                F - Show File explorer
+        </div>
+        <div v-else
+            class="chapter"
+            v-for="part of Flow.items" 
+            :key="part"
+            v-html="part"
+            >
+        </div>
+        <!--  -->
     </div>
 </template>
+
 <script setup>
 import { ref, onMounted, watch} from "vue";
-import {Book} from "../modules/Book"
-import { onKeyStroke } from "@vueuse/core";
-
+import { onKeyStroke, onKeyUp } from "@vueuse/core";
+import {Flow} from "../modules/Flow.js";
 const text = ref(null)
 let amount = 0;
 function movePage(_pages = 1) {
@@ -15,27 +28,25 @@ function movePage(_pages = 1) {
         return
     
     const height = text.value.scrollHeight;
-    console.log(height, text.value.scrollTop, amount);
-    console.log(_pages);
+    const lastPos = text.value.scrollTop;
+    //console.log(height, lastPos, amount);
     text.value.scrollBy(0, amount * _pages)
+
     pages.value += _pages
 }
 
 const pages = ref(0)
 const pagenum = ref(0);
-onKeyStroke("ArrowRight", e=> {
+onKeyUp("ArrowRight", e=> {
     movePage()
 })
 
-onKeyStroke("ArrowLeft", e=> {
+onKeyUp("ArrowLeft", e=> {
     movePage(-1)
 })
 
 onMounted(() => {
     amount = document.documentElement.clientHeight
-    Book.updateContent()
-  
-
 })
 </script>
 <style lang='sass' scoped>
@@ -57,6 +68,10 @@ onMounted(() => {
 
     :deep(h1, h2, h3, h4, h5, h6)
         align-self: center
+
+.chapter
+    min-height: 100vh
+
 .pager
     position: sticky
     bottom: 0

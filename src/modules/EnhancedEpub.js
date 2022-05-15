@@ -1,25 +1,34 @@
 import Epub from "@jcsj/epub";
-/* 
-2 stacks
-1. Read
-2. Unread
-Pointer = currentpage
-*/
-class EnhancedEpub extends Epub {
+import {Flow} from "./Flow.js";
+import {TOC} from "./TOC.js";
 
+class EnhancedEpub extends Epub {
     /**
      * 
      * @param {File} file 
      */
     constructor(file) {
         super(file)
-        this.on("loaded", async(e) => {
-            for (const item of this.flow) {                
-                this.cache.setText(item.id,
-                        await this.getContent(item.id)
-                );
+        this.flowIndex = 1;
+        this.done = false;
+        TOC.items = [];
+        Flow.items = [];
+
+        this.on("parsed-spine", async(e) => {
+            for (const item of this.flow) {    
+                Flow.items
+                .push(
+                    await this.getContent(item.id)
+                )            
+                
             }
 
+            console.log("DONE");
+            this.done = true;
+        })
+
+        this.on("parsed-toc", e => {
+            TOC.items.push(...this.toc);
         })
     }
 }

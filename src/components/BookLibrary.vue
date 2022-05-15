@@ -30,7 +30,6 @@
 <script setup>
 import { ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
-import Test from "../modules/Tester.js"
 
 import {Book} from "../modules/Book.js"
 import EnhancedEpub from "../modules/EnhancedEpub.js";
@@ -70,18 +69,15 @@ async function loadBookFromFile(file, cached = false) {
     })
 
     epub.on("parsed-manifest", async() => {
-      Test.isset(epub.manifest)
       console.log("Manifest: ", epub.manifest);
     })
 
     epub.on("parsed-spine", async() => {
-      Test.isset(epub.flow)
       console.log("Flow: ", epub.flow);
     })
 
     epub.on("parsed-toc", async() => {
         //Todo: Draw to sidebar
-        Test.isset(epub.toc)
         console.log("TOC: ", epub.toc);
         console.log("Spine: ", epub.spine);
     })
@@ -92,8 +88,6 @@ async function loadBookFromFile(file, cached = false) {
 
   epub.on("loaded", async() => {
     title.value = epub.metadata.title
-    Book.updateContent(epub.flow[epub.flowIndex].id)
-
   })
 
 }
