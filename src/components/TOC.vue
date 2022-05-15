@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div v-if="TOC.items.keys().length <= 0">
+    <div v-if="TOC.items.keys().length == 0">
         Table of Contents
     </div>
     <div v-else>

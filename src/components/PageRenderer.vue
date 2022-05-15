@@ -54,9 +54,7 @@ onMounted(() => {
 .book-text
     padding: 1vh 1vw
     font-size: 2rem
-    max-width: 100%
     overflow-y: hidden
-
     :deep(img) /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
@@ -73,6 +71,9 @@ onMounted(() => {
 .chapter
     min-height: 100vh
 
+    //Temp fix Issue #1
+    max-width: 80vw
+    overflow-x: auto
 .pager
     position: sticky
     bottom: 0

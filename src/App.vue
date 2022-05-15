@@ -65,4 +65,6 @@ main
   align-items: center
   padding: 1vh 1vw
 
+  //Temp fix Issue #1
+  width: 100%
 </style>
