@@ -1,14 +1,15 @@
 <template>
     <div class="book-text" ref="text" >
-        <div v-if="Flow.items.length == 0">
+        <div v-if="Flow.items.keys().length <= 1">
             Press: <br>
                 C - Show TOC <br>
                 F - Show File explorer
         </div>
         <div v-else
             class="chapter"
-            v-for="part of Flow.items" 
-            :key="part"
+            v-for="[key, part] of Flow.items" 
+            :key="key"
+            :id="key"
             v-html="part"
             >
         </div>

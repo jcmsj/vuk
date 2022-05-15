@@ -40,7 +40,6 @@ const levels = ref([]);
 
 //Refs
 const 
-    items = ref({}),
     books = ref({}),
     dirs = ref({}),
     hCurrent = ref(null),

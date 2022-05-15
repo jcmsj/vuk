@@ -12,6 +12,8 @@ const emits = defineEmits(["toggle-s-panel"]);
                 ☰
             </button>
         </nav>
+        <a href="#id_cover_xhtml">Test</a>
+
     </header>
 </template>
 

@@ -27,9 +27,9 @@ const props = defineProps({
         }
     },
     "items": {
-        type: Array,
+        type: Map,
         default() {
-            return []
+            return new Map()
         }
     }
 })

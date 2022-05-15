@@ -11,16 +11,13 @@ class EnhancedEpub extends Epub {
         super(file)
         this.flowIndex = 1;
         this.done = false;
-        TOC.items = [];
-        Flow.items = [];
-
+        Flow.items = new Map();
         this.on("parsed-spine", async(e) => {
-            for (const item of this.flow) {    
-                Flow.items
-                .push(
+            for (const [key, item] of this.flow) {    
+                Flow.items.set(
+                    key, 
                     await this.getContent(item.id)
-                )            
-                
+                )
             }
 
             console.log("DONE");
@@ -28,7 +25,7 @@ class EnhancedEpub extends Epub {
         })
 
         this.on("parsed-toc", e => {
-            TOC.items.push(...this.toc);
+            TOC.items = this.toc;
         })
     }
 }

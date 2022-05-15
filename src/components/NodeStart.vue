@@ -2,8 +2,8 @@
  <div :active="props.active" class="node">
     <div v-if="props.level > maxLevel"></div>
     <div v-else>
-        <div v-for="(item) of props.items"
-            :key="item"
+        <div v-for="[key, item] of props.items"
+            :key="key"
         >
             <div v-if="item.navPoint">
                 <NodeEnd
@@ -12,12 +12,12 @@
                 >
                 </NodeEnd>
             </div>
-            <div v-else class="item"
-                :data-id="item.id"  
+            <a v-else class="item"
+                :href="'#' + item.id"
                 @click="Book.clickTOC"
             >
             {{item.title}}
-            </div>
+            </a>
         </div>
     </div>
 </div>
@@ -30,9 +30,9 @@ import NodeEnd from "./NodeEnd.vue";
 const maxLevel = 7;
 const props = defineProps({
     "items": {
-        type: Array,
+        type: Map,
         default() {
-            return []
+            return new Map()
         }
     },
     "active": {
