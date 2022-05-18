@@ -15,13 +15,9 @@
 </template>
 
 <script setup>
-import {onMounted, provide } from "vue";
 import {Book} from "../modules/Book.js"
 import NodeStart from "./NodeStart.vue"
 import {TOC} from "../modules/TOC.js"
-onMounted(() => {
-    console.log(TOC.items.size);
-})
 </script>
 <style lang="sass" scoped>
 </style>

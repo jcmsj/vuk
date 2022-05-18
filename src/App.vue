@@ -1,7 +1,6 @@
   /* eslint-disable no-unused-vars */
 <script setup>
-import {onMounted, ref, provide} from "vue"
-import { onKeyStroke } from "@vueuse/core";
+import {ref} from "vue"
 
 //Components
 import AppHeader from "./components/AppHeader.vue"
@@ -10,9 +9,6 @@ import AppTOC from "./components/TOC.vue"
 import BookLibrary from "./components/BookLibrary.vue"
 import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
-const main = ref(null)
-
-provide("toggle-sidebar", )
 
 const sPanelIsActive = ref(false)
 function toggleAside() {
