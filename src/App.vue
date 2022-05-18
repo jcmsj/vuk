@@ -1,6 +1,6 @@
   /* eslint-disable no-unused-vars */
 <script setup>
-import {onMounted, ref} from "vue"
+import {onMounted, ref, provide} from "vue"
 import { onKeyStroke } from "@vueuse/core";
 
 //Components
@@ -12,8 +12,9 @@ import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 const main = ref(null)
 
-const sPanelIsActive = ref(false)
+provide("toggle-sidebar", )
 
+const sPanelIsActive = ref(false)
 function toggleAside() {
   sPanelIsActive.value = !sPanelIsActive.value
 }
@@ -32,15 +33,20 @@ function showAside() {
     @toggle-s-panel="toggleAside"
     @show-s-panel="showAside"
     @hide-s-panel="hideAside"
-    ></SidePanel>
-  <main ref="main">
-    <AppHeader @toggle-s-panel="toggleAside">
-
+  ></SidePanel>
+  <PageRenderer>
+    <template v-slot:header>
+    <AppHeader 
+      @toggle-s-panel="toggleAside"
+      name="header"
+    >
     </AppHeader>
-    <PageRenderer></PageRenderer>
-    <AppFooter>
-    </AppFooter>
-  </main>
+    </template>
+
+    <template v-slot:footer>
+      <AppFooter></AppFooter>
+    </template>
+  </PageRenderer>
 </template>
 
 <!-- Note the FF styles will be applied for the entire APP -->
@@ -58,13 +64,4 @@ body
 %padV1
   padding: 1vh 1vw
 
-main
-  display: flex
-  flex-direction: column
-  flex: 1
-  align-items: center
-  padding: 1vh 1vw
-
-  //Temp fix Issue #1
-  width: 100%
 </style>

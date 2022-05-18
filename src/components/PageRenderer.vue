@@ -1,5 +1,6 @@
 <template>
-    <div class="book-text" ref="text" >
+    <main ref="text">
+        <slot name="header"></slot>
         <div v-if="Flow.items.size == 0">
             Press: <br>
                 C - Show TOC <br>
@@ -13,15 +14,17 @@
             v-html="part"
             >
         </div>
-        <!--  -->
-    </div>
+        <slot name="footer"></slot>
+    </main>
 </template>
 
 <script setup>
 import { ref, onMounted, watch} from "vue";
 import { onKeyStroke, onKeyUp } from "@vueuse/core";
 import {Flow} from "../modules/Flow.js";
+
 const text = ref(null)
+const pages = ref(0)
 let amount = 0;
 function movePage(_pages = 1) {
     //Seriously??
@@ -36,8 +39,6 @@ function movePage(_pages = 1) {
     pages.value += _pages
 }
 
-const pages = ref(0)
-const pagenum = ref(0);
 onKeyUp("ArrowRight", e=> {
     movePage()
 })
@@ -51,10 +52,19 @@ onMounted(() => {
 })
 </script>
 <style lang='sass' scoped>
-.book-text
-    padding: 1vh 1vw
+
+main
+    display: flex
+    flex-direction: column
+    flex: 1
+    align-items: center
+
+    //Temp fix Issue #1
+    width: 100%
+
     font-size: 2rem
-    overflow-y: hidden
+    overflow-y: auto
+    overflow-x: hidden
     :deep(img) /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
@@ -69,11 +79,9 @@ onMounted(() => {
         align-self: center
 
 .chapter
-    min-height: 100vh
+    flex: 1
+    margin: 1vh 1vw
 
-    //Temp fix Issue #1
-    max-width: 80vw
-    overflow-x: auto
 .pager
     position: sticky
     bottom: 0

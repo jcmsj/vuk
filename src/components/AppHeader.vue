@@ -4,7 +4,6 @@ const emits = defineEmits(["toggle-s-panel"]);
 </script>
 <template>
     <header>
-        Header
         <nav>
             <button
             @click="emits('toggle-s-panel')"
@@ -15,10 +14,11 @@ const emits = defineEmits(["toggle-s-panel"]);
     </header>
 </template>
 
-<style lang="sass" scoped>
+<style lang="sass">
 header
     position: sticky
     top: 0
     background-color: white
-    width: 100%
+    padding: 1vh 1vw
+    align-self: flex-start
 </style>
