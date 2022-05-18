@@ -1,6 +1,6 @@
 <template>
     <div class="book-text" ref="text" >
-        <div v-if="Flow.items.keys().length <= 1">
+        <div v-if="Flow.items.size == 0">
             Press: <br>
                 C - Show TOC <br>
                 F - Show File explorer

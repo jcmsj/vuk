@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div v-if="TOC.items.keys().length == 0">
+    <div v-if="TOC.items.size == 0">
         Table of Contents
     </div>
     <div v-else>
@@ -15,10 +15,13 @@
 </template>
 
 <script setup>
-import {provide } from "vue";
+import {onMounted, provide } from "vue";
 import {Book} from "../modules/Book.js"
 import NodeStart from "./NodeStart.vue"
 import {TOC} from "../modules/TOC.js"
+onMounted(() => {
+    console.log(TOC.items.size);
+})
 </script>
 <style lang="sass" scoped>
 </style>
