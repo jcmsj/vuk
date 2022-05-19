@@ -31,7 +31,6 @@
 import { ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
 
-import {Book} from "../modules/Book.js"
 import EnhancedEpub from "../modules/EnhancedEpub.js";
 
 import {get, set, clear} from "idb-keyval"
@@ -50,8 +49,9 @@ const
  * @param {FileSystemFileHandle} handle 
  */
 async function loadBookFromHandle(handle) {
-    const file = await handle.getFile()
-    await loadBookFromFile(file)
+    await loadBookFromFile(
+        await handle.getFile()
+    )
 }
 
 /**
@@ -60,8 +60,6 @@ async function loadBookFromHandle(handle) {
 async function loadBookFromFile(file, cached = false) {
     const epub = new EnhancedEpub(file)
     epub.open()
-
-    Book.setSingleton(epub)
 
     epub.on("parsed-root", async() => {
         epub.parseRootFile(epub.rootXML)

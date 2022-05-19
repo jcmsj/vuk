@@ -13,8 +13,7 @@
 import {ref} from "vue"
 import {onKeyUp} from "@vueuse/core"
 import vTOC from "./TOC.vue"
-import vLibrary from "./BookLibrary.vue";
-import {Book} from "../modules/Book"
+import vLibrary from "./Library.vue";
 
 const isDisplayed = ref(false);
 const tabIndex = ref(0);

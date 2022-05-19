@@ -4,7 +4,6 @@
     [{{(isChildActive) ? "-":"+"}}] </span>
     <span
         :data-id="props.item.id"  
-        @click="Book.clickTOC"
     >{{item.title}}
     </span>
     <NodeStart
@@ -15,7 +14,6 @@
 </template>
 <script setup>
 import {ref, inject} from "vue"
-import {Book} from "../modules/Book.js"
 import NodeStart from "./NodeStart.vue";
 const isChildActive = ref(false)
 

@@ -14,7 +14,6 @@
             </div>
             <a v-else class="item"
                 :href="'#' + item.id"
-                @click="Book.clickTOC"
             >
             {{item.title}}
             </a>
@@ -25,7 +24,6 @@
 
 <script setup>
 import {ref} from "vue"
-import {Book} from "../modules/Book.js"
 import NodeEnd from "./NodeEnd.vue";
 const maxLevel = 7;
 const props = defineProps({

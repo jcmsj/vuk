@@ -5,8 +5,6 @@ import {ref} from "vue"
 //Components
 import AppHeader from "./components/AppHeader.vue"
 import AppFooter from "./components/AppFooter.vue"
-import AppTOC from "./components/TOC.vue"
-import BookLibrary from "./components/BookLibrary.vue"
 import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 

@@ -15,7 +15,6 @@
 </template>
 
 <script setup>
-import {Book} from "../modules/Book.js"
 import NodeStart from "./NodeStart.vue"
 import {TOC} from "../modules/TOC.js"
 </script>
