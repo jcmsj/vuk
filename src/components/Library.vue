@@ -12,7 +12,7 @@
         >
         Restore Library
     </div>
-    <div class="directory" v-if="hRoot" @click="traverse(hRoot)">/</div>
+    <div class="directory" v-if="hRoot && hRoot != hCurrent" @click="traverse(hRoot)">/</div>
     <div class="directory" v-if="levels.length" @click="moveUp">../</div>
     <div class="directory" v-for="(handle, dirname) of dirs" 
         :key="dirname"
