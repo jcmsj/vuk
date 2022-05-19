@@ -1,12 +1,12 @@
 <template>
 <div class="r"> 
-    <div 
+    <div
         class="btn"
-        @click="addLibrary"
+        @click="setLibrary"
     >
         Set Library
     </div>
-    <div 
+    <div
         class="btn"
         @click="restoreLibrary"
         >
@@ -90,7 +90,7 @@ async function loadBookFromFile(file, cached = false) {
 }
 
 
-async function addLibrary() {
+async function setLibrary() {
     let handle;
     try {
         handle = await window.showDirectoryPicker()
@@ -99,7 +99,7 @@ async function addLibrary() {
     }
 
     set("last-working-dir", handle).then(() => {
-        getRootDir()
+        restoreLibrary()
     })
 }
 
@@ -208,10 +208,9 @@ async function verifyPermission(handle, mode = "read") {
 
 </script>
 <style lang='sass' scoped>
-    .r
-        & > div
-            cursor: pointer
-
+    .book, .directory, .btn
+        cursor: pointer
+        
     .directory::before
         content: "\01F4C2 "
 
