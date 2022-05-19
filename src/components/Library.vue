@@ -2,6 +2,11 @@
 <div class="r"> 
     <div
         class="btn"
+        @click="selectFile"
+    >Open epub
+    </div>
+    <div
+        class="btn"
         @click="setLibrary"
     >
         Set Library
@@ -30,19 +35,20 @@
 <script setup>
 import { ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
-
+import {directoryOpen, fileOpen} from "browser-fs-access"
+  
 import EnhancedEpub from "../modules/EnhancedEpub.js";
 
 import {get, set, clear} from "idb-keyval"
 const title = useTitle()
-const levels = ref([]);
 
 //Refs
 const 
     books = ref({}),
     dirs = ref({}),
     hCurrent = ref(null),
-    hRoot = ref(null)
+    hRoot = ref(null),
+    levels = ref([])
 ;
 
 /**
@@ -54,6 +60,12 @@ async function loadBookFromHandle(handle) {
     )
 }
 
+async function selectFile() {
+    const file = await fileOpen({
+        mimeTypes: ['application/epub+zip'],
+    });
+    loadBookFromFile(file);
+}
 /**
  * @param {File} file
  */
@@ -91,14 +103,18 @@ async function loadBookFromFile(file, cached = false) {
 
 
 async function setLibrary() {
-    let handle;
+    let directoryHandle = null;
     try {
-        handle = await window.showDirectoryPicker()
+        [{directoryHandle}] = await directoryOpen();
     } catch (e) {
+        console.log(e);
         return
     }
 
-    set("last-working-dir", handle).then(() => {
+    if (!directoryHandle)
+        return
+
+    set("last-working-dir", directoryHandle).then(() => {
         restoreLibrary()
     })
 }

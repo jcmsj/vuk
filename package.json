@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@jcsj/epub": "link:D:/code/epub",
-    "@vueuse/core": "^8.4.2",
+    "@vueuse/core": "^8.5.0",
+    "browser-fs-access": "^0.29.5",
     "idb-keyval": "^6.1.0",
     "vue": "^3.2.33"
   },

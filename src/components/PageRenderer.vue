@@ -81,6 +81,7 @@ main
 .chapter
     flex: 1
     margin: 1vh 1vw
+    max-width: 90%
 
 .pager
     position: sticky

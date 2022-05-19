@@ -1,13 +1,14 @@
   /* eslint-disable no-unused-vars */
 <script setup>
 import {ref} from "vue"
-
+import { useTitle } from "@vueuse/core"
 //Components
 import AppHeader from "./components/AppHeader.vue"
 import AppFooter from "./components/AppFooter.vue"
 import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 
+useTitle("Ebook reader by JCSJ")
 const sPanelIsActive = ref(false)
 function toggleAside() {
   sPanelIsActive.value = !sPanelIsActive.value
