@@ -10,6 +10,7 @@ specifiers:
   vite: ^2.9.9
   vite-plugin-mkcert: ^1.6.4
   vue: ^3.2.35
+  vue-simple-context-menu: ^4.0.4
 
 dependencies:
   '@jcsj/epub': link:../epub
@@ -17,6 +18,7 @@ dependencies:
   browser-fs-access: 0.29.5
   idb-keyval: 6.1.0
   vue: 3.2.35
+  vue-simple-context-menu: 4.0.4_vue@3.2.35
 
 devDependencies:
   '@vitejs/plugin-vue': 2.3.3_vite@2.9.9+vue@3.2.35
@@ -334,6 +336,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /click-outside-vue3/4.0.1:
+    resolution: {integrity: sha512-sbplNecrup5oGqA3o4bo8XmvHRT6q9fvw21Z67aDbTqB9M6LF7CuYLTlLvNtOgKU6W3zst5H5zJuEh4auqA34g==}
+    engines: {node: '>=6'}
+    dev: false
 
   /csstype/2.6.20:
     resolution: {integrity: sha512-/WwNkdXfckNgw6S5R125rrW8ez139lBHWouiBvX8dfMFtcn6V81REDqnH7+CRpRipfYlyU1CmOnOxrmGcFOjeA==}
@@ -845,6 +852,15 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
+      vue: 3.2.35
+    dev: false
+
+  /vue-simple-context-menu/4.0.4_vue@3.2.35:
+    resolution: {integrity: sha512-Kn6rTXzKHpdTsPoKpBUQC4K+iZxpYiDU04BbGOgLuX/jLFIA7arzIstOp3+tFoV5JaWrjxGPLAuj2BAf8/G4pQ==}
+    peerDependencies:
+      vue: ^3.2.31
+    dependencies:
+      click-outside-vue3: 4.0.1
       vue: 3.2.35
     dev: false
 

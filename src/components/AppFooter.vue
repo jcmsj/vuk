@@ -1,10 +1,11 @@
 <template>
     <footer>
-        Footer
+        <SpeechSynthesis></SpeechSynthesis>
     </footer>
 </template>
 
 <script setup>
+import SpeechSynthesis from './SpeechSynthesis.vue';
 </script>
 <style lang="sass">
 footer

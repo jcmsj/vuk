@@ -7,6 +7,11 @@
       :active="tabIndex == 1"
       >
     </vTOC>
+    <vBookmarks
+      :active="tabIndex == 2"
+    ></vBookmarks>
+
+
   </aside>
 </template>
 <script setup>
@@ -14,17 +19,23 @@ import {ref} from "vue"
 import {onKeyUp} from "@vueuse/core"
 import vTOC from "./TOC.vue"
 import vLibrary from "./Library.vue";
+import vBookmarks from "./Bookmarks.vue"
 
 const isDisplayed = ref(false);
 const tabIndex = ref(0);
 
 const emits = defineEmits(["toggle-s-panel", "hide-s-panel", "show-s-panel"])
+
 onKeyUp("f", e => {
   changeTab(0)
 }, {target:document})
 
 onKeyUp("c", e => {
   changeTab(1)
+}, {target:document})
+
+onKeyUp("b", e => {
+  changeTab(2)
 }, {target:document})
 
 onKeyUp("Escape", e => {

@@ -1,31 +1,73 @@
 <template>
-    <main ref="text">
-        <slot name="header"></slot>
-        <div v-if="Flow.items.size == 0">
-            Press: <br>
-                C - Show TOC <br>
-                F - Show File explorer
-        </div>
-        <div v-else
-            class="chapter"
-            v-for="[key, part] of Flow.items" 
-            :key="key"
-            :id="key"
-            v-html="part"
-            >
-        </div>
-        <slot name="footer"></slot>
-    </main>
+<main ref="text"
+    @mouseup="identfiySpeechTarget"
+>
+    <slot name="header"></slot>
+    <div v-if="Flow.items.size == 0">
+        Press: <br>
+            C - Show TOC <br>
+            F - Show File explorer
+    </div>
+    <div v-else
+        class="chapter"
+        v-for="[key, part] of Flow.items" 
+        :key="key"
+        :id="key"
+        v-html="part"
+        @contextmenu.prevent.stop="showContextMenu($event, key)"
+        >
+    </div>
+    <slot name="footer"></slot>
+    <vue-simple-context-menu
+        element-id="page-context"
+        :options="menuItems"
+        ref="pageContextMenu"
+        @option-clicked="optionClicked"
+    />
+</main>
 </template>
 
 <script setup>
 import { ref, onMounted, watch} from "vue";
-import { onKeyStroke, onKeyUp } from "@vueuse/core";
+import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/Flow.js";
+import {startReading, identfiySpeechTarget, stopReading} from "../modules/TTS.js";
 
+let amount = 0;
 const text = ref(null)
 const pages = ref(0)
-let amount = 0;
+const pageContextMenu = ref(null)
+const menuItems = [
+    {
+        name: "&#x1F50A;",
+        type:"read",
+    },
+    {
+        name: "&#x1F516;",
+        type:"bookmark",
+    },
+    {
+        name: "&#x1F4CB;",
+        type:"copy"
+    }
+]
+
+function optionClicked({item, option}) {
+    switch(option.type) {
+        case "read":
+            stopReading();
+            startReading();
+        break;
+        case "bookmark":
+
+        break;
+        case "copy":
+
+        break;
+    }
+    console.log(item, option);
+}
+
 function movePage(_pages = 1) {
     //Seriously??
     if (_pages == 0)
@@ -37,6 +79,10 @@ function movePage(_pages = 1) {
     text.value.scrollBy(0, amount * _pages)
 
     pages.value += _pages
+}
+
+function showContextMenu(e, item) {
+    pageContextMenu.value.showMenu(e, item);
 }
 
 onKeyUp("ArrowRight", e=> {
@@ -51,6 +97,7 @@ onMounted(() => {
     amount = document.documentElement.clientHeight
 })
 </script>
+
 <style lang='sass' scoped>
 
 main
@@ -86,4 +133,5 @@ main
 .pager
     position: sticky
     bottom: 0
+
 </style>

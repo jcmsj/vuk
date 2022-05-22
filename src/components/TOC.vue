@@ -1,17 +1,14 @@
 <template>
-<div>
     <div v-if="TOC.items.size == 0">
         Table of Contents
     </div>
-    <div v-else>
-        <NodeStart
-            :active="true"
-            :items="TOC.items"
-            :level="0"
-        >
-        </NodeStart>
-    </div>
-</div>
+    <NodeStart
+        v-else
+        :active="true"
+        :items="TOC.items"
+        :level="0"
+    >
+    </NodeStart>
 </template>
 
 <script setup>
