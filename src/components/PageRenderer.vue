@@ -1,6 +1,6 @@
 <template>
 <main ref="text"
-    @mouseup="identfiySpeechTarget"
+    @mouseup="identifySpeechTarget"
 >
     <slot name="header"></slot>
     <div v-if="Flow.items.size == 0">
@@ -31,7 +31,7 @@
 import { ref, onMounted, watch} from "vue";
 import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/Flow.js";
-import {startReading, identfiySpeechTarget, stopReading} from "../modules/TTS.js";
+import {startReading, identifySpeechTarget, stopReading} from "../modules/TTS.js";
 
 let amount = 0;
 const text = ref(null)
@@ -41,30 +41,25 @@ const menuItems = [
     {
         name: "&#x1F50A;",
         type:"read",
+        cb() {
+            stopReading();
+            startReading();  
+        }
     },
     {
         name: "&#x1F516;",
         type:"bookmark",
+        cb() {}
     },
     {
         name: "&#x1F4CB;",
-        type:"copy"
+        type:"copy",
+        cb() {}
     }
 ]
 
 function optionClicked({item, option}) {
-    switch(option.type) {
-        case "read":
-            stopReading();
-            startReading();
-        break;
-        case "bookmark":
-
-        break;
-        case "copy":
-
-        break;
-    }
+    option.cb()
     console.log(item, option);
 }
 
