@@ -30,7 +30,7 @@
 
 1. Text-to-speech
     1. Use media controls.
-    1. Start speaking on selected text.
+    1. ✓ Start speaking on selected text. 
 
 ## Current feature in dev:
-Page renderer
+Bookmarks
