@@ -8,7 +8,7 @@ import AppFooter from "./components/AppFooter.vue"
 import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 
-useTitle("Ebook reader by JCSJ")
+useTitle("Vuk | An EPUB reader for the web.")
 const sPanelIsActive = ref(false)
 function toggleAside() {
   sPanelIsActive.value = !sPanelIsActive.value

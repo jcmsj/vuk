@@ -12,12 +12,12 @@
     "@vueuse/core": "^8.5.0",
     "browser-fs-access": "^0.29.5",
     "idb-keyval": "^6.1.0",
-    "vue": "^3.2.33"
+    "vue": "^3.2.35"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
-    "sass": "^1.51.0",
+    "sass": "^1.52.1",
     "vite": "^2.9.9",
-    "vite-plugin-mkcert": "^1.6.0"
+    "vite-plugin-mkcert": "^1.6.4"
   }
 }
