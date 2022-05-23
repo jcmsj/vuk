@@ -18,8 +18,8 @@
 
 1. Page renderer
     1. ✓ Display first part of book when book is loaded (this is usually the cover page).
-    1. Divide flow into pages that scale on viewport.
-    1. Button for moving to a specific page.
+    1. Dropped: Divide flow into pages that scale on viewport.
+    1. Dropped: Button for moving to a specific page.
     1. Button, hotkey, ang scroll, touch gestures for [next, previous] page.
     1. Custom text styling.
 
@@ -33,4 +33,4 @@
     1. ✓ Start speaking on selected text. 
 
 ## Current feature in dev:
-Bookmarks
+TTS
