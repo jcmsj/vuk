@@ -1,40 +1,27 @@
-var elem = null
-const className = "s-read"
-var utterance = null;
-const allowedTags = ["P", "H1", "H2", "H3", "H4", "H5", "H6", "A"]
 import {ref} from "vue";
+
+const className = {
+    para: "s-read",
+    word: "current-word"
+}
+const allowedTags = /^(P|A|H[1-6])$/;
+var elem = null
+var wordIndex = 0;
+var wordElem = null;
 export const isReading = ref(false);
 export function identifySpeechTarget(e) {
-    const [_elem] = e.path.filter(_elem => allowedTags.includes(_elem.tagName))
+    const [_elem] = e.path.filter(_elem => allowedTags.test(_elem.tagName))
 
     if (!_elem) return;
-
-    stopReading();
+    stopReading()
     setSpeechTarget(_elem)
 }
 
-export function setSpeechTarget(_elem) {
-    elem = _elem;
-    console.log(elem);
-}
-
-export function startReading() {
-    elem.classList.add(className);
-    readAloud(elem.innerText, () => {
-        elem.classList.remove(className)
-        
-        if (isReading.value) {
-            setSpeechTarget(elem.nextElementSibling);
-            startReading()    
-        }
-    })
-    isReading.value = true;
-}
-
-export function toggleReading() {
-    isReading.value ? stopReading():startReading();
-}
-export function getSelectionText() {
+/**
+ * https://stackoverflow.com/questions/5379120/get-the-highlighted-selected-text * 
+ * @returns String
+ */
+ export function getSelectionText() {
     let text = "";
     if (window.getSelection)
         text = window.getSelection().toString();
@@ -45,18 +32,124 @@ export function getSelectionText() {
 }
 
 /**
+ * https://stackoverflow.com/questions/123999/how-can-i-tell-if-a-dom-element-is-visible-in-the-current-viewport
+ * @param {HTMLElement} el 
+ * @returns boolean
+ */
+function isElementInViewport (el) {
+
+    const rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && 
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+/**
+ * @param {HTMLElement} _elem 
+ */
+export function setSpeechTarget(_elem) {
+    Transformer.last = elem;
+    elem = _elem;
+    console.log(elem);
+}
+
+export function startReading() {
+    if (elem == null) return
+    
+    //Start reading at the selected text
+    let txt = elem.innerText;
+    txt = txt.slice(txt.indexOf(getSelectionText()))
+
+    beforeSpeak(txt);
+}
+
+function beforeSpeak(txt) {
+    Transformer.transform()
+    const utterance = readAloud(txt)
+
+    utterance.onstart = highlightWord
+    utterance.onboundary = highlightWord
+    utterance.onend = () => {
+        Transformer.revert();
+
+        if (!isReading.value) return;
+
+        let target = elem.nextElementSibling || elem.parentElement.nextElementSibling
+        setSpeechTarget(target);
+        try {
+            beforeSpeak(target.innerText);
+        }
+        catch(e) {
+            console.log(target);
+        }
+    };
+
+    isReading.value = true;
+}
+
+export function toggleReading() {
+    isReading.value ? stopReading():startReading();
+}
+
+
+
+/**
  * @param {string} txt 
  * @param {Function} cb 
+ * @returns SpeechSynthesisUtterance
  */
-async function readAloud(txt, cb) {
-    txt = txt.slice(txt.indexOf(getSelectionText()))
-    utterance = new SpeechSynthesisUtterance(txt)
+function readAloud(txt) {
+    let utterance = new SpeechSynthesisUtterance(txt)
     speechSynthesis.speak(utterance);
-    utterance.onend = cb;
+    return utterance;
+}
+
+function highlightWord(event) {
+    if (event.name != "word") return;
+    
+    wordElem != null && wordElem.classList.remove(className.word)
+
+    if (wordIndex < elem.children.length) {
+        wordElem = elem.children.item(wordIndex++)
+        wordElem.classList.add(className.word);
+    }
+}
+
+class Transformer {
+    clone = null;
+    last = null;
+    static transform() {
+        this.last = elem;
+        this.clone = elem.innerHTML;
+        elem.classList.add(className.para)
+    
+        elem.innerHTML = 
+            elem.innerText.split(" ")
+            .map(word =>
+                `<span>${word}</span>`
+            )
+            .join(' ');
+            
+        if(!isElementInViewport(elem)) {
+            elem.scrollIntoView({block:"start"})
+        }
+    }
+
+    static revert() {
+        if (this.last == null) return;
+        this.last.innerHTML = this.clone
+        this.last.classList.remove(className.para)
+        wordIndex = 0;
+    }
 }
 
 export function stopReading() {
-    elem && elem.classList.remove(className)
+    if (isReading.value == false) return;
+
     speechSynthesis.cancel();
     isReading.value = false;
+    Transformer.revert()
 }

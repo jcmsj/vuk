@@ -17,4 +17,7 @@ onKeyUp("r", () => {
 <style lang="sass">
     .s-read
         background-color: wheat
+    
+    span.current-word
+        background-color: skyblue
 </style>
