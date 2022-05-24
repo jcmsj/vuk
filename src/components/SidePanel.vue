@@ -1,17 +1,40 @@
 <template>
-  <aside>
-    <vLibrary
-      :active="tabIndex == 0"
-    ></vLibrary>
-    <vTOC
-      :active="tabIndex == 1"
-      >
-    </vTOC>
-    <vBookmarks
-      :active="tabIndex == 2"
-    ></vBookmarks>
-
-
+  <aside
+  >
+    <section
+    :active="isDisplayed"
+    >
+      <vLibrary
+        :active="tabIndex == 0"
+        class="panel"
+      ></vLibrary>
+      <vTOC
+        :active="tabIndex == 1"
+        class="panel"
+        >
+      </vTOC>
+      <vBookmarks
+        :active="tabIndex == 2"
+        class="panel"
+      ></vBookmarks>
+    </section>
+    <nav>
+        <button
+          @click="changeTab(0)"
+        >
+        📂
+        </button>
+        <button
+          @click="changeTab(1)"
+        >
+        📋
+        </button>
+        <button
+          @click="changeTab(2)"
+        >
+        &#x1F516;
+        </button>
+    </nav>
   </aside>
 </template>
 <script setup>
@@ -22,9 +45,19 @@ import vLibrary from "./Library.vue";
 import vBookmarks from "./Bookmarks.vue"
 
 const isDisplayed = ref(false);
-const tabIndex = ref(0);
+function toggleAside() {
+  isDisplayed.value = !isDisplayed.value
+}
 
-const emits = defineEmits(["toggle-s-panel", "hide-s-panel", "show-s-panel"])
+function hideAside() {
+    isDisplayed.value = false
+}
+
+function showAside() {
+    isDisplayed.value = true
+}
+
+const tabIndex = ref(0);
 
 onKeyUp("f", e => {
   changeTab(0)
@@ -39,35 +72,41 @@ onKeyUp("b", e => {
 }, {target:document})
 
 onKeyUp("Escape", e => {
-    emits("hide-s-panel")
+      hideAside()
 }, {target:document})
 
 function changeTab(i) {
     if (i == tabIndex.value) {
-        emits("toggle-s-panel")
+        toggleAside()
         return
     } 
     
     tabIndex.value = i;
-    emits("show-s-panel")
+    showAside()
 }
 
 </script>
 <style lang='sass' scoped>
 aside
-    padding: 1vh 1vw
-    background-color: wheat
-    max-width: 30vw
-    overflow-y: auto
-    display: none
-    resize: horizontal
+  display: flex
 
-    /* Todo: The active state is controlled from App.vue am thinking if this should be changed. */
-    &[active="true"]
-        display: flex
-    & > *
-        display: none
-    & > *[active="true"]
-        display: block
+section
+  background-color: wheat
+  max-width: 30vw
+  overflow-y: auto
+  display: none
+  resize: horizontal
+  flex-direction: column
+  &[active="true"]
+      display: flex
 
+.panel
+  display: none
+
+  &[active="true"]
+      display: block
+nav
+  display: flex
+  flex-direction: column
+  row-gap: 1vh
 </style>

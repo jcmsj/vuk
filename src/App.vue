@@ -9,30 +9,14 @@ import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 
 useTitle("Vuk | An EPUB reader for the web.")
-const sPanelIsActive = ref(false)
-function toggleAside() {
-  sPanelIsActive.value = !sPanelIsActive.value
-}
 
-function hideAside() {
-    sPanelIsActive.value = false
-}
-
-function showAside() {
-    sPanelIsActive.value = true
-}
 </script>
 <template>
   <SidePanel 
-    :active="sPanelIsActive" 
-    @toggle-s-panel="toggleAside"
-    @show-s-panel="showAside"
-    @hide-s-panel="hideAside"
   ></SidePanel>
   <PageRenderer>
     <template v-slot:header>
     <AppHeader 
-      @toggle-s-panel="toggleAside"
       name="header"
     >
     </AppHeader>

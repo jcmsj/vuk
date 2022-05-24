@@ -2,7 +2,7 @@
 <div
     @click="toggleReading"
 >
-{{isReading ? "||":"&#9658;"}}
+{{isReading ? "&#x23f8;":"&#9654;&#65039;"}}
 </div>
 </template>
 <script setup>
@@ -16,8 +16,8 @@ onKeyUp("r", () => {
 </script>
 <style lang="sass">
     .s-read
-        background-color: wheat
+        background-color: #53e7f5
     
     span.current-word
-        background-color: skyblue
+        background-color: #FFFF00
 </style>

@@ -5,14 +5,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "upsurge": "surge --domain https://ebook-reader.surge.sh/"
   },
   "dependencies": {
     "@jcsj/epub": "link:D:/code/epub",
     "@vueuse/core": "^8.5.0",
     "browser-fs-access": "^0.29.5",
     "idb-keyval": "^6.1.0",
-    "vue": "^3.2.35",
+    "vue": "^3.2.36",
     "vue-simple-context-menu": "^4.0.4"
   },
   "devDependencies": {

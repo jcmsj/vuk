@@ -1,14 +1,21 @@
 <template>
 <main ref="text"
-    @mouseup="identifySpeechTarget"
 >
-    <slot name="header"></slot>
+    <AppHeader 
+      name="header"
+    >
+    </AppHeader>
+
     <div v-if="Flow.items.size == 0">
         Press: <br>
             C - Show TOC <br>
             F - Show File explorer
     </div>
-    <div v-else
+    <section
+    @mouseup="identifySpeechTarget"
+    v-else
+    >
+        <div
         class="chapter"
         v-for="[key, part] of Flow.items" 
         :key="key"
@@ -17,7 +24,9 @@
         @contextmenu.prevent.stop="showContextMenu($event, key)"
         >
     </div>
-    <slot name="footer"></slot>
+    </section>
+
+    <AppFooter></AppFooter>
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
@@ -32,7 +41,8 @@ import { ref, onMounted, watch} from "vue";
 import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/Flow.js";
 import {startReading, identifySpeechTarget, stopReading} from "../modules/TTS.js";
-
+import AppHeader from "./AppHeader.vue"
+import AppFooter from "./AppFooter.vue"
 let amount = 0;
 const text = ref(null)
 const pages = ref(0)

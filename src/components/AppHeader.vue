@@ -1,15 +1,8 @@
 <script setup>
-const emits = defineEmits(["toggle-s-panel"]);
-
 </script>
 <template>
     <header>
         <nav>
-            <button
-            @click="emits('toggle-s-panel')"
-            >
-                ☰
-            </button>
         </nav>
     </header>
 </template>
