@@ -3,8 +3,6 @@
 import {ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
-import AppHeader from "./components/AppHeader.vue"
-import AppFooter from "./components/AppFooter.vue"
 import SidePanel from "./components/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 
@@ -15,16 +13,6 @@ useTitle("Vuk | An EPUB reader for the web.")
   <SidePanel 
   ></SidePanel>
   <PageRenderer>
-    <template v-slot:header>
-    <AppHeader 
-      name="header"
-    >
-    </AppHeader>
-    </template>
-
-    <template v-slot:footer>
-      <AppFooter></AppFooter>
-    </template>
   </PageRenderer>
 </template>
 
