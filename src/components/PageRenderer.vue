@@ -1,21 +1,15 @@
 <template>
 <main ref="text"
 >
-    <AppHeader 
-      name="header"
-    >
-    </AppHeader>
-
+    <AppHeader />
     <div v-if="Flow.items.size == 0">
         Press: <br>
             C - Show TOC <br>
             F - Show File explorer
     </div>
-    <section
-    @mouseup="identifySpeechTarget"
-    v-else
-    >
-        <div
+    <div
+        v-else
+        @mouseup="identifySpeechTarget"
         class="chapter"
         v-for="[key, part] of Flow.items" 
         :key="key"
@@ -24,9 +18,7 @@
         @contextmenu.prevent.stop="showContextMenu($event, key)"
         >
     </div>
-    </section>
-
-    <AppFooter></AppFooter>
+    <AppFooter />
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
@@ -80,7 +72,6 @@ function movePage(_pages = 1) {
     
     const height = text.value.scrollHeight;
     const lastPos = text.value.scrollTop;
-    //console.log(height, lastPos, amount);
     text.value.scrollBy(0, amount * _pages)
 
     pages.value += _pages
@@ -111,16 +102,17 @@ main
     flex: 1
     align-items: center
 
-    //Temp fix Issue #1
-    width: 100%
-
     font-size: 2rem
     overflow-y: auto
     overflow-x: hidden
+
+div.chapter
+    flex: 1
+    margin: 1vh 1vw
     :deep(img) /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
-        max-width: 80vw
+        max-width: 80%
         max-height: 80vh
 
         /* Aligns center */
@@ -129,11 +121,6 @@ main
 
     :deep(h1, h2, h3, h4, h5, h6)
         align-self: center
-
-.chapter
-    flex: 1
-    margin: 1vh 1vw
-    max-width: 90%
 
 .pager
     position: sticky
