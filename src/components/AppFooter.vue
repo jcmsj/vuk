@@ -9,6 +9,6 @@ import SpeechSynthesis from './SpeechSynthesis.vue';
 </script>
 <style lang="sass">
 footer
-    position: sticky
+    position: absolute
     bottom: 0
 </style>
