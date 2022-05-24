@@ -59,17 +59,11 @@ function showAside() {
 
 const tabIndex = ref(0);
 
-onKeyUp("f", e => {
-  changeTab(0)
-}, {target:document})
-
-onKeyUp("c", e => {
-  changeTab(1)
-}, {target:document})
-
-onKeyUp("b", e => {
-  changeTab(2)
-}, {target:document})
+["f", "c", "b"].map((key, i) => {
+  onKeyUp(key, e => {
+    changeTab(i)
+  }, {target:document})
+})
 
 onKeyUp("Escape", e => {
       hideAside()
