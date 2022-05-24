@@ -91,6 +91,7 @@ aside
   display: flex
 
 section
+  padding: 1vh 1vw
   background-color: wheat
   max-width: 30vw
   overflow-y: auto
