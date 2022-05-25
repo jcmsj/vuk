@@ -9,6 +9,20 @@ var elem = null
 var wordIndex = 0;
 var wordElem = null;
 import {reactive} from "vue";
+export const voice = reactive({
+    value : null,
+    set(name) {
+        for (const v of speechSynthesis.getVoices()) {
+            if (v.name == name) {
+                this.value = v;
+                return;
+            }
+        }
+        
+        this.value = null;
+    }
+});
+
 export const speech_rate = reactive({
     value : 1,
     min : 0.25,
@@ -119,6 +133,10 @@ export function toggleReading() {
 function readAloud(txt) {
     let utterance = new SpeechSynthesisUtterance(txt)
     utterance.rate = speech_rate.value
+
+    if (voice.value != null)
+        utterance.voice = voice.value;
+
     speechSynthesis.speak(utterance);
     return utterance;
 }

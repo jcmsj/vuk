@@ -47,6 +47,7 @@
         </datalist>
         <select
             ref="select"
+            @change="e => voice.set(e.target.value)"
         >
             <option
                 v-for="({name}, i) in voices"
@@ -61,7 +62,7 @@
 </section>
 </template>
 <script setup>
-import {isReading, toggleReading, speech_rate} from "../modules/TTS.js";
+import {isReading, toggleReading, speech_rate, voice} from "../modules/TTS.js";
 import { onMounted, ref } from "vue";
 import { onKeyUp } from "@vueuse/core";
 const voices = ref([])
