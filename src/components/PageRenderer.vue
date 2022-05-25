@@ -1,6 +1,5 @@
 <template>
-<main ref="text"
->
+<main ref="pageMode.text">
     <AppHeader />
     <div v-if="Flow.items.size == 0">
         Press: <br>
@@ -29,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch} from "vue";
+import { ref, onMounted, watch, reactive} from "vue";
 import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/Flow.js";
 import {startReading, identifySpeechTarget, stopReading} from "../modules/TTS.js";
@@ -38,6 +37,20 @@ import AppFooter from "./AppFooter.vue"
 let amount = 0;
 const text = ref(null)
 const pages = ref(0)
+
+const pageMode = reactive({
+    amount : 0,
+    text : null,
+    pages : 0,
+    move(n) {
+    if (n == 0)
+            return
+        
+        this.text.scrollBy(0, amount * n)
+
+        this.pages += n
+    }
+})
 const pageContextMenu = ref(null)
 const menuItems = [
     {
@@ -65,32 +78,20 @@ function optionClicked({item, option}) {
     console.log(item, option);
 }
 
-function movePage(_pages = 1) {
-    //Seriously??
-    if (_pages == 0)
-        return
-    
-    const height = text.value.scrollHeight;
-    const lastPos = text.value.scrollTop;
-    text.value.scrollBy(0, amount * _pages)
-
-    pages.value += _pages
-}
-
 function showContextMenu(e, item) {
     pageContextMenu.value.showMenu(e, item);
 }
 
 onKeyUp("ArrowRight", e=> {
-    movePage()
+    pageMode.move()
 })
 
 onKeyUp("ArrowLeft", e=> {
-    movePage(-1)
+    pageMode.move(-1)
 })
 
 onMounted(() => {
-    amount = document.documentElement.clientHeight
+    pageMode.amount = document.documentElement.clientHeight
 })
 </script>
 

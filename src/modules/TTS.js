@@ -8,6 +8,24 @@ const allowedTags = /^(P|A|H[1-6])$/;
 var elem = null
 var wordIndex = 0;
 var wordElem = null;
+import {reactive} from "vue";
+export const speech_rate = reactive({
+    value : 1,
+    min : 0.25,
+    max : 3,
+
+    /**
+     * @param {Number} n 
+     * @returns 
+     */
+    set(n) {
+        if (n > this.max || n < this.min)
+            return;
+
+        this.value = n;
+    }
+})
+
 export const isReading = ref(false);
 export function identifySpeechTarget(e) {
     const [_elem] = e.path.filter(_elem => allowedTags.test(_elem.tagName))
@@ -69,7 +87,6 @@ export function startReading() {
 function beforeSpeak(txt) {
     Transformer.transform()
     const utterance = readAloud(txt)
-
     utterance.onstart = highlightWord
     utterance.onboundary = highlightWord
     utterance.onend = () => {
@@ -94,8 +111,6 @@ export function toggleReading() {
     isReading.value ? stopReading():startReading();
 }
 
-
-
 /**
  * @param {string} txt 
  * @param {Function} cb 
@@ -103,6 +118,7 @@ export function toggleReading() {
  */
 function readAloud(txt) {
     let utterance = new SpeechSynthesisUtterance(txt)
+    utterance.rate = speech_rate.value
     speechSynthesis.speak(utterance);
     return utterance;
 }
