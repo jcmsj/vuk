@@ -125,6 +125,15 @@ export function toggleReading() {
     isReading.value ? stopReading():startReading();
 }
 
+/* export function pauseResume() {
+    if (isReading.value) {
+        speechSynthesis.pause()
+    } else {
+        speechSynthesis.resume()
+    }
+    isReading.value = !isReading.value
+} */
+
 /**
  * @param {string} txt 
  * @param {Function} cb 

@@ -36,7 +36,6 @@
 import { ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
-  
 import EnhancedEpub from "../modules/EnhancedEpub.js";
 
 import {get, set, clear} from "idb-keyval"
