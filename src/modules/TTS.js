@@ -1,5 +1,5 @@
 import {ref} from "vue";
-
+import {get, set} from "idb-keyval";
 const className = {
     para: "s-read",
     word: "current-word"
@@ -24,7 +24,7 @@ export const voice = reactive({
 });
 
 export const speech_rate = reactive({
-    value : 1,
+    value : await get("speech-rate") || 1,
     min : 0.25,
     max : 3,
 
@@ -37,6 +37,7 @@ export const speech_rate = reactive({
             return;
 
         this.value = n;
+        set("speech-rate", this.value);
     }
 })
 
