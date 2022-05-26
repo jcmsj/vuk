@@ -11,6 +11,7 @@
     1. ✓ Directory traversal.
     1. ✓ Filter contents - Display only Directories and EPUBs.
     1. ✓ Load book on click.
+    1. -- Properly sort by name.
 
 1. Table of Contents
     1. ✓ Multi-levels.
@@ -33,5 +34,11 @@
     1. ✓ Start speaking on selected text. 
     1. ✓ Resume speaking on unfinished paragraph.
     1. -- while reading, immediately start reading if target is changed.
+
+1. Make browser remember certain configurations
+    1. TTS 
+        1. ✓ speech rate
+        1. voice used.
+    1. Custom keybinds
 ## Current feature in dev:
 TTS
