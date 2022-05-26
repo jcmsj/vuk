@@ -223,12 +223,12 @@ async function verifyPermission(handle, mode = "read") {
 
 </script>
 <style lang='sass' scoped>
-    .book, .directory, .btn
-        cursor: pointer
-        
-    .directory::before
-        content: "\01F4C2 "
+.book, .directory, .btn
+    cursor: pointer
+    
+.directory::before
+    content: "\01F4C2 "
 
-    .book::before
-        content: "📖 "
+.book::before
+    content: "📖 "
 </style>

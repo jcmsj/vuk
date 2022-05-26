@@ -88,39 +88,42 @@ onMounted(() => {
 })
 </script>
 <style lang="sass">
-    .s-read
-        background-color: #53e7f5
-    
-    span.current-word
-        background-color: #FFFF00
+.s-read
+    background-color: #53e7f5
+
+span.current-word
+    background-color: #FFFF00
 </style>
 
 <style lang="sass" scoped>
-    section
-        display: flex
-        justify-content: space-between
-        background-color: gray
-        padding: 3px
+section
+    display: flex
+    justify-content: space-between
+    background-color: gray
+    padding: 3px
 
-    .voice-ops
-        justify-self: flex-end
-        cursor: pointer
-    .pop-up
-        font-size: smaller
-        padding: 1vh 1vw
-        background-color: inherit
-        display: none
-        position: absolute
-        right: 0
-        bottom: 7vh
-        color: white
-        flex-direction: column
-        &[active="true"]
-            display: flex
+.voice-ops
+    justify-self: flex-end
+    cursor: pointer
 
-    input[type="range"]
-        padding: 3vh 1vw
-    .controls
+.pop-up
+    font-size: smaller
+    padding: 1vh 1vw
+    background-color: inherit
+    display: none
+    position: absolute
+    right: 0
+    bottom: 7vh
+    color: white
+    flex-direction: column
+
+    &[active="true"]
         display: flex
+
+input[type="range"]
+    padding: 3vh 1vw
+    
+.controls
+    display: flex
 
 </style>

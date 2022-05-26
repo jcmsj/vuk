@@ -9,9 +9,9 @@
 <script setup>
 
 </script>
-<style lang='sass'>
-    .welcome-page
-        height: -webkit-fill-available
-        display: flex
-        align-items: center
+<style lang='sass' scoped>
+.welcome-page
+    height: -webkit-fill-available
+    display: flex
+    align-items: center
 </style>
