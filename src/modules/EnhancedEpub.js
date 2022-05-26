@@ -9,7 +9,6 @@ class EnhancedEpub extends Epub {
      */
     constructor(file) {
         super(file, simplifyHTMLTree)
-        this.flowIndex = 1;
         this.done = false;
         Flow.items = new Map();
         this.on("parsed-flow", async(e) => {
