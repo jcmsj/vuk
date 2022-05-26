@@ -1,14 +1,19 @@
-import {ref} from "vue";
+import {ref, reactive} from "vue";
 import {get, set} from "idb-keyval";
 const className = {
     para: "s-read",
-    word: "current-word"
+    word: "current-word",
+    overlay : "overlay"
 }
 const allowedTags = /^(P|A|H[1-6])$/;
 var elem = null
 var wordIndex = 0;
 var wordElem = null;
-import {reactive} from "vue";
+var lastSelectedText = "";
+export const speech_overlay = reactive({
+    clone: "",
+    stats : {}
+});
 export const voice = reactive({
     value : null,
     set(name) {
@@ -50,8 +55,12 @@ export function identifySpeechTarget(e) {
     const [_elem] = e.path.filter(_elem => allowedTags.test(_elem.tagName))
 
     if (!_elem) return;
+
+    const wasReading = isReading.value;
     stopReading()
     setSpeechTarget(_elem)
+    if (wasReading)
+        startReading();
 }
 
 /**
@@ -100,29 +109,45 @@ export function startReading() {
     let txt = elem.innerText;
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
-    beforeSpeak(txt);
+    beforeSpeak((txt == lastSelectedText) 
+        ? null: txt
+    );
 }
 
+function moveSpeechCursor(target) {
+    Transformer.revert();
+    if (!isReading.value) return;
+
+    setSpeechTarget(target);
+    try {
+        beforeSpeak(target.innerText);
+    }
+    catch(e) {
+        console.log(target);
+    }
+}
+
+/**
+ * 
+ * @param {String} txt 
+ */
 function beforeSpeak(txt) {
-    Transformer.transform()
+    if (txt == null) {
+        txt = lastSelectedText
+    } else
+        lastSelectedText = txt;
+
+    
+    const alreadyRead = Transformer.transform()
+    txt = txt.slice(alreadyRead);
+
     const utterance = readAloud(txt)
+    //speech_overlay.clone = elem.outerHTML;
     utterance.onstart = highlightWord
     utterance.onboundary = highlightWord
-    utterance.onend = () => {
-        Transformer.revert();
-
-        if (!isReading.value) return;
-
-        let target = elem.nextElementSibling || elem.parentElement.nextElementSibling
-        setSpeechTarget(target);
-        try {
-            beforeSpeak(target.innerText);
-        }
-        catch(e) {
-            console.log(target);
-        }
+    utterance.onend = (e) => {
+        moveSpeechCursor(elem.nextElementSibling || elem.parentElement.nextElementSibling)
     };
-
     isReading.value = true;
 }
 
@@ -145,7 +170,7 @@ export function toggleReading() {
  * @returns SpeechSynthesisUtterance
  */
 function readAloud(txt) {
-    let utterance = new SpeechSynthesisUtterance(txt)
+    const utterance = new SpeechSynthesisUtterance(txt)
     utterance.rate = speech_rate.value
 
     if (voice.value != null)
@@ -155,9 +180,12 @@ function readAloud(txt) {
     return utterance;
 }
 
-function highlightWord(event) {
-    if (event.name != "word") return;
-    
+/**
+ * @param {SpeechSynthesisEvent} e
+ * @returns 
+ */
+function highlightWord(e) {
+    if (e.name != "word") return;
     wordElem != null && wordElem.classList.remove(className.word)
 
     if (wordIndex < elem.children.length) {
@@ -174,8 +202,16 @@ class Transformer {
         this.clone = elem.innerHTML;
         elem.classList.add(className.para)
     
-        elem.innerHTML = 
-            elem.innerText.split(" ")
+        let read = ""
+        const words = elem.innerText.split(" ");
+
+        while(wordIndex > 0) {
+            read += words.shift() + " ";
+            wordIndex--;
+        }
+
+        elem.innerHTML = read +
+            words
             .map(word =>
                 `<span>${word}</span>`
             )
@@ -184,20 +220,20 @@ class Transformer {
         if(!isElementInViewport(elem)) {
             elem.scrollIntoView({block:"start"})
         }
+
+        return read.length;
     }
 
     static revert() {
         if (this.last == null) return;
         this.last.innerHTML = this.clone
         this.last.classList.remove(className.para)
-        wordIndex = 0;
     }
 }
 
 export function stopReading() {
     if (isReading.value == false) return;
-
     speechSynthesis.cancel();
     isReading.value = false;
-    Transformer.revert()
+    Transformer.revert();
 }
