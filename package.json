@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "upsurge": "surge --domain https://ebook-reader.surge.sh/"
+    "upsurge": "vite build && cd dist && surge --domain https://ebook-reader.surge.sh/"
   },
   "dependencies": {
     "@jcsj/epub": "link:D:/code/epub",

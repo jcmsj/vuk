@@ -24,7 +24,7 @@ export const voice = reactive({
 });
 
 export const speech_rate = reactive({
-    value : await get("speech-rate") || 1,
+    value : 1,
     min : 0.25,
     max : 3,
 
@@ -39,6 +39,10 @@ export const speech_rate = reactive({
         this.value = n;
         set("speech-rate", this.value);
     }
+})
+
+get("speech-rate").then(n => {
+    speech_rate.set(n || 1);
 })
 
 export const isReading = ref(false);
