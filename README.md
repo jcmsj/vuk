@@ -31,6 +31,7 @@
 1. Text-to-speech
     1. Use media controls.
     1. ✓ Start speaking on selected text. 
-
+    1. ✓ Resume speaking on unfinished paragraph.
+    1. -- while reading, immediately start reading if target is changed.
 ## Current feature in dev:
 TTS
