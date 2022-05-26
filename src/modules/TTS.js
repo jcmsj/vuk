@@ -54,7 +54,7 @@ export const isReading = ref(false);
 export function identifySpeechTarget(e) {
     const [_elem] = e.path.filter(_elem => allowedTags.test(_elem.tagName))
 
-    if (!_elem) return;
+    if (!_elem || _elem.isSameNode(elem)) return;
 
     const wasReading = isReading.value;
     stopReading()
@@ -115,6 +115,10 @@ export function startReading() {
 }
 
 function moveSpeechCursor(target) {
+    if (!isReading.value)
+        return;
+
+    wordIndex = 0;
     Transformer.revert();
     if (!isReading.value) return;
 
@@ -139,7 +143,8 @@ function beforeSpeak(txt) {
 
     
     const alreadyRead = Transformer.transform()
-    txt = txt.slice(alreadyRead);
+    if (alreadyRead > 0)
+        txt = txt.slice(alreadyRead);
 
     const utterance = readAloud(txt)
     //speech_overlay.clone = elem.outerHTML;
@@ -198,19 +203,23 @@ class Transformer {
     clone = null;
     last = null;
     static transform() {
+        let resumed = elem.isSameNode(this.last)
+
         this.last = elem;
         this.clone = elem.innerHTML;
         elem.classList.add(className.para)
-    
+        
         let read = ""
         const words = elem.innerText.split(" ");
 
-        while(wordIndex > 0) {
-            read += words.shift() + " ";
-            wordIndex--;
-        }
+        if (resumed) {
+            for (let i = 0; i < wordIndex; i ++) {
+                read += words[i] + " ";
+            }
+        } else 
+            wordIndex = 0;
 
-        elem.innerHTML = read +
+        elem.innerHTML =
             words
             .map(word =>
                 `<span>${word}</span>`
