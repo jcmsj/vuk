@@ -3,8 +3,11 @@ import {get, set} from "idb-keyval";
 const className = {
     para: "s-read",
     word: "current-word",
-    overlay : "overlay"
+    overlay : "overlay",
+    chapter : "chapter"
 }
+
+const allowedTagsSelector = "h1, h2, h3, h4, h5, h6, a, p, div";
 const allowedTags = /^(P|A|H[1-6])$/;
 var elem = null
 var wordIndex = 0;
@@ -151,9 +154,31 @@ function beforeSpeak(txt) {
     utterance.onstart = highlightWord
     utterance.onboundary = highlightWord
     utterance.onend = (e) => {
-        moveSpeechCursor(elem.nextElementSibling || elem.parentElement.nextElementSibling)
+        moveSpeechCursor(determineElement());
     };
     isReading.value = true;
+}
+
+function determineElement(property = "nextElementSibling") {
+    let target = null;
+    let _try = elem
+    while(target == null) {
+        target = _try[property]
+
+        if (target == null)
+            _try = elem.parentElement;
+
+        else if (target.classList.contains(className.chapter)) {
+            target = target.querySelector(allowedTagsSelector)
+            ;
+        } else {
+            while(!allowedTags.test(target.tagName)) {
+                target = target[property];
+            }
+        }
+    }
+    
+    return target;
 }
 
 export function toggleReading() {
