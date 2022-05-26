@@ -1,13 +1,10 @@
 <template>
-<main ref="pageMode.text">
+<main ref="text">
     <AppHeader />
-    <div v-if="Flow.items.size == 0">
-        Press: <br>
-            C - Show TOC <br>
-            F - Show File explorer
-    </div>
+    <WelcomePage
+        v-if="Flow.items.size == 0"
+    />
     <div
-        v-else
         @mouseup="identifySpeechTarget"
         class="chapter"
         v-for="[key, part] of Flow.items" 
@@ -34,23 +31,22 @@ import {Flow} from "../modules/Flow.js";
 import {startReading, identifySpeechTarget, stopReading} from "../modules/TTS.js";
 import AppHeader from "./AppHeader.vue"
 import AppFooter from "./AppFooter.vue"
+import WelcomePage from "./WelcomePage.vue"
 let amount = 0;
 const text = ref(null)
-const pages = ref(0)
 
-const pageMode = reactive({
+const pageMode = {
     amount : 0,
-    text : null,
     pages : 0,
     move(n) {
     if (n == 0)
             return
         
-        this.text.scrollBy(0, amount * n)
+        text.value.scrollBy(0, amount * n)
 
         this.pages += n
     }
-})
+}
 const pageContextMenu = ref(null)
 const menuItems = [
     {
