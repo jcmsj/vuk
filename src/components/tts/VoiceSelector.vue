@@ -13,11 +13,23 @@
     </select>
 </template>
 <script setup>
+import {ref, onMounted} from "vue"
 import {voice} from "./TTS.js";
+const voices = ref([])
+
+// Can't instanstly set voices, must use this.
+async function loadvoices() {
+    if(speechSynthesis.getVoices().length == 0) {
+        setTimeout(loadvoices, 1000)
+    }
+
+    voices.value = speechSynthesis.getVoices()
+}
+
+onMounted(() => {
+    loadvoices()
+})
 
 </script>
 <style lang='sass' scoped>
-.voice-ops
-    justify-self: flex-end
-    cursor: pointer
 </style>

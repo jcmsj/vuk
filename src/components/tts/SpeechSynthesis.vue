@@ -3,7 +3,7 @@
     <div>&#x1F50A;</div>
     <MediaControls />
     <div
-        class="voice-ops"
+        class="settings"
         @click="toggleops"
     >
         &#9881;
@@ -11,33 +11,21 @@
     <div class="pop-up"
         :active="showOps"
     >
-        <SpeechRateController />        
-        <select
-            ref="select"
-            @change="e => voice.set(e.target.value)"
-        >
-            <option
-                v-for="({name}, i) in voices"
-                :key="i"
-                :value="name"
-            >
-            {{name}}
-            </option>
-        </select>
+        <SpeechRateController />   
+        <VoiceSelector />     
     </div>
 
 </section>
 </template>
 <script setup>
 import {toggleReading } from "./TTS.js";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { onKeyUp } from "@vueuse/core";
 
 import SpeechRateController from "./SpeechRateController.vue"
 import MediaControls from "./MediaControls.vue"
 import VoiceSelector from "./VoiceSelector.vue"
 const 
-    voices = ref([]),
     select = ref(null),
     showOps = ref(false)
 ;
@@ -50,18 +38,6 @@ function toggleops() {
     showOps.value = !showOps.value
 }
 
-// Can't instanstly set voices, must use this.
-async function loadvoices() {
-    if(speechSynthesis.getVoices().length == 0) {
-        setTimeout(loadvoices, 1000)
-    }
-
-    voices.value = speechSynthesis.getVoices()
-}
-
-onMounted(() => {
-    loadvoices()
-})
 </script>
 <style lang="sass">
 .s-read
@@ -92,4 +68,7 @@ section
     &[active="true"]
         display: flex
 
+.settings
+    justify-self: flex-end
+    cursor: pointer
 </style>
