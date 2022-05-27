@@ -6,13 +6,12 @@
         v-for="[key, item] of props.items"
         :key="key"
     >
-        <div v-if="item.navPoint">
-            <NodeEnd
-                :item="item"
-                :items="item.navPoint"
-            >
-            </NodeEnd>
-        </div>
+        <NodeEnd
+            v-if="item.navPoint"
+            :item="item"
+            :items="item.navPoint"
+        >
+        </NodeEnd>
         <a v-else class="item"
             :href="'#' + item.id"
         >
