@@ -3,17 +3,17 @@
     <button 
         @click="selectFile"
     >
-    Open epub
+    Open 📖
     </button>
     <button
         @click="setLibrary"
     >
-    Set Library
+    Set 📂
     </button>
     <button
         @click="restoreLibrary"
     >
-        Restore Library
+    ↻ 📂
     </button>
     <div class="directory" v-if="hRoot && hRoot != hCurrent" @click="traverse(hRoot)">/</div>
     <div class="directory" v-if="levels.length" @click="moveUp">../</div>
