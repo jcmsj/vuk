@@ -1,6 +1,23 @@
 <template>
   <aside
   >
+    <nav>
+      <button
+        @click="changeTab(0)"
+      >
+      📂
+      </button>
+      <button
+        @click="changeTab(1)"
+      >
+      📋
+      </button>
+      <button
+        @click="changeTab(2)"
+      >
+      &#x1F516;
+      </button>
+    </nav>
     <section
     :active="isDisplayed"
     >
@@ -18,23 +35,7 @@
         class="panel"
       ></vBookmarks>
     </section>
-    <nav>
-        <button
-          @click="changeTab(0)"
-        >
-        📂
-        </button>
-        <button
-          @click="changeTab(1)"
-        >
-        📋
-        </button>
-        <button
-          @click="changeTab(2)"
-        >
-        &#x1F516;
-        </button>
-    </nav>
+
   </aside>
 </template>
 <script setup>
@@ -83,17 +84,22 @@ function changeTab(i) {
 <style lang='sass' scoped>
 aside
   display: flex
+  background-color: wheat
 
 section
-  padding: 1vh 1vw
-  background-color: wheat
-  max-width: 30vw
+  padding: 5px
   overflow-y: auto
-  display: none
   resize: horizontal
   flex-direction: column
+  max-width: 0
+  transform: translateX(-30vw)
+  display: flex
+  transition: transform 100ms
+  transition: max-width 70ms
+
   &[active="true"]
-      display: flex
+    max-width: 30vw
+    transform: translateX(0)
 
 .panel
   display: none
@@ -104,4 +110,5 @@ nav
   display: flex
   flex-direction: column
   row-gap: 1vh
+  padding: 3px
 </style>
