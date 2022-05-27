@@ -3,7 +3,7 @@
 import {ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
-import SidePanel from "./components/SidePanel.vue"
+import SidePanel from "./components/panels/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 
 useTitle("Vuk | An EPUB reader for the web.")

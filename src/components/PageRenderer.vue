@@ -1,6 +1,6 @@
 <template>
 <main ref="text">
-    <AppHeader />
+    <vHeader />
     <WelcomePage
         v-if="Flow.items.size == 0"
     />
@@ -14,7 +14,7 @@
         @contextmenu.prevent.stop="showContextMenu($event, key)"
         >
     </div>
-    <AppFooter />
+    <vFooter />
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
@@ -29,8 +29,8 @@ import { ref, onMounted, watch, reactive} from "vue";
 import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/Flow.js";
 import {startReading, identifySpeechTarget, stopReading} from "../modules/TTS.js";
-import AppHeader from "./AppHeader.vue"
-import AppFooter from "./AppFooter.vue"
+import vHeader from "./Header.vue"
+import vFooter from "./Footer.vue"
 import WelcomePage from "./WelcomePage.vue"
 let amount = 0;
 const text = ref(null)
