@@ -26,6 +26,10 @@ import {speech_rate} from "./TTS.js";
 
 </script>
 <style lang='sass' scoped>
+div
+    display: flex
+    flex-direction: column
+    
 input[type="range"]
     padding: 3vh 1vw
 </style>
