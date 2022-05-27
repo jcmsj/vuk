@@ -28,7 +28,7 @@
 import { ref, onMounted, watch, reactive} from "vue";
 import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/Flow.js";
-import {startReading, identifySpeechTarget, stopReading} from "../modules/TTS.js";
+import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
 import vHeader from "./Header.vue"
 import vFooter from "./Footer.vue"
 import WelcomePage from "./WelcomePage.vue"
