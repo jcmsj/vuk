@@ -1,23 +1,23 @@
 <template>
  <div :active="props.active" class="node">
     <div v-if="props.level > maxLevel"></div>
-    <div v-else>
-        <div v-for="[key, item] of props.items"
-            :key="key"
-        >
-            <div v-if="item.navPoint">
-                <NodeEnd
-                    :item="item"
-                    :items="item.navPoint"
-                >
-                </NodeEnd>
-            </div>
-            <a v-else class="item"
-                :href="'#' + item.id"
+    <div
+        v-else 
+        v-for="[key, item] of props.items"
+        :key="key"
+    >
+        <div v-if="item.navPoint">
+            <NodeEnd
+                :item="item"
+                :items="item.navPoint"
             >
-            {{item.title}}
-            </a>
+            </NodeEnd>
         </div>
+        <a v-else class="item"
+            :href="'#' + item.id"
+        >
+        {{item.title}}
+        </a>
     </div>
 </div>
 </template>
