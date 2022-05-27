@@ -13,8 +13,9 @@
 </div>
 </template>
 <script setup>
-import {ref, inject} from "vue"
+import { ref } from "vue"
 import NodeStart from "./NodeStart.vue";
+
 const isChildActive = ref(false)
 
 const props = defineProps({

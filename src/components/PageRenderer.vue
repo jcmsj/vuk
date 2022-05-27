@@ -33,7 +33,10 @@ import vHeader from "./Header.vue"
 import vFooter from "./Footer.vue"
 import WelcomePage from "./WelcomePage.vue"
 let amount = 0;
-const text = ref(null)
+const 
+    text = ref(null),
+    pageContextMenu = ref(null)
+;
 
 const pageMode = {
     amount : 0,
@@ -47,7 +50,6 @@ const pageMode = {
         this.pages += n
     }
 }
-const pageContextMenu = ref(null)
 const menuItems = [
     {
         name: "&#x1F50A;",

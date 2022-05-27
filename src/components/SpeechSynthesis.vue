@@ -65,17 +65,21 @@
 import {isReading, toggleReading, speech_rate, voice} from "../modules/TTS.js";
 import { onMounted, ref } from "vue";
 import { onKeyUp } from "@vueuse/core";
-const voices = ref([])
-const select = ref(null)
+const 
+    voices = ref([]),
+    select = ref(null),
+    showOps = ref(false)
+;
+
 onKeyUp("r", () => {
     toggleReading()
 })
-const showOps = ref(false)
-// Can't instanstly set voices by calling the speechSynthesis method below
 
 function toggleops() {
     showOps.value = !showOps.value
 }
+
+// Can't instanstly set voices, must use this.
 async function loadvoices() {
     if(speechSynthesis.getVoices().length == 0) {
         setTimeout(loadvoices, 1000)
@@ -83,6 +87,7 @@ async function loadvoices() {
 
     voices.value = speechSynthesis.getVoices()
 }
+
 onMounted(() => {
     loadvoices()
 })

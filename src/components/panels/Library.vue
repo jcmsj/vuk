@@ -1,22 +1,20 @@
 <template>
 <div class="r"> 
-    <div
-        class="btn"
+    <button 
         @click="selectFile"
-    >Open epub
-    </div>
-    <div
-        class="btn"
+    >
+    Open epub
+    </button>
+    <button
         @click="setLibrary"
     >
-        Set Library
-    </div>
-    <div
-        class="btn"
+    Set Library
+    </button>
+    <button
         @click="restoreLibrary"
-        >
+    >
         Restore Library
-    </div>
+    </button>
     <div class="directory" v-if="hRoot && hRoot != hCurrent" @click="traverse(hRoot)">/</div>
     <div class="directory" v-if="levels.length" @click="moveUp">../</div>
     <div class="directory" v-for="(handle, dirname) of dirs" 
@@ -37,8 +35,8 @@ import { ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import EnhancedEpub from "../../modules/EnhancedEpub.js";
-
 import {get, set, clear} from "idb-keyval"
+
 const title = useTitle()
 
 //Refs
@@ -223,7 +221,11 @@ async function verifyPermission(handle, mode = "read") {
 
 </script>
 <style lang='sass' scoped>
-.book, .directory, .btn
+button
+    display: block
+    margin: 1vh 1vw
+    
+.book, .directory
     cursor: pointer
     
 .directory::before
