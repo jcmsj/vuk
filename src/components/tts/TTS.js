@@ -102,9 +102,22 @@ function isElementInViewport (el) {
 export function setSpeechTarget(_elem) {
     Transformer.last = elem;
     elem = _elem;
-    console.log(elem);
+    console.log("R", elem);
 }
 
+export function onBookLoaded() {
+    const ch = document.querySelector("." + className.chapter);
+
+    if (ch == null) {
+        setTimeout(onBookLoaded, 500)
+        return
+    }
+    console.log(ch);
+            
+    setSpeechTarget(
+        findFirstReadable(ch)
+    )
+}
 export function startReading() {
     if (elem == null) return
     
@@ -154,29 +167,42 @@ function beforeSpeak(txt) {
     utterance.onstart = highlightWord
     utterance.onboundary = highlightWord
     utterance.onend = (e) => {
-        moveSpeechCursor(determineElement());
+        moveSpeechCursor(determineElement(elem));
     };
     isReading.value = true;
 }
 
-function determineElement(property = "nextElementSibling") {
-    let target = null;
-    let _try = elem
+function determineElement(_target, property = "nextElementSibling") {
+    let target = null
     while(target == null) {
-        target = _try[property]
+        target = _target[property] || null;
 
         if (target == null)
-            _try = elem.parentElement;
-
-        else if (target.classList.contains(className.chapter)) {
-            target = target.querySelector(allowedTagsSelector)
-            ;
-        } else {
-            while(!allowedTags.test(target.tagName)) {
-                target = target[property];
-            }
-        }
+            _target = _target.parentElement
     }
+
+    if (target.classList != null 
+        && target.classList.contains(className.chapter)
+    )
+        target = findFirstReadable(target);
+
+    return target;
+}
+
+/**
+ * 
+ * @param {HTMLElement} chapterElem 
+ */
+function findFirstReadable(chapterElem) {
+    if (!chapterElem.classList.contains(className.chapter)) 
+        throw Error("Not a chapter element");
+
+    if (chapterElem.innerText.length == 0) {
+        return findFirstReadable(chapterElem.nextElementSibling)
+    }
+
+    let target = chapterElem.querySelector(allowedTagsSelector);
+    //todo: Traverse tree since the target may contain childs.
     
     return target;
 }

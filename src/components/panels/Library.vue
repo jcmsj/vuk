@@ -36,7 +36,7 @@ import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import EnhancedEpub from "../../modules/EnhancedEpub.js";
 import {get, set, clear} from "idb-keyval"
-
+import { onBookLoaded } from "../tts/TTS.js";
 const title = useTitle()
 
 //Refs
@@ -96,6 +96,7 @@ async function loadBookFromFile(file, cached = false) {
     title.value = epub.metadata.title
   })
 
+  epub.on("loaded-chapters", onBookLoaded) 
 }
 
 
