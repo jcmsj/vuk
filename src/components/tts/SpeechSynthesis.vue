@@ -5,6 +5,7 @@
     <div
         class="settings"
         @click="toggleops"
+        title="voice settings"
     >
         &#9881;
     </div>

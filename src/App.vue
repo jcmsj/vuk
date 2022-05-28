@@ -27,6 +27,9 @@ body
 #app
   display: flex
   height: inherit
+  flex-direction: column
+  @media screen and (hover: hover) and (min-width: 1024px)
+    flex-direction: row
 
 %padV1
   padding: 1vh 1vw

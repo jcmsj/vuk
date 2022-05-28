@@ -2,18 +2,24 @@
   <aside
   >
     <nav>
+      <!-- <button class="mobile-nav">
+      &#9776;
+      </button> -->
       <button
         @click="changeTab(0)"
+        title="File explorer"
       >
       📂
       </button>
       <button
         @click="changeTab(1)"
+        title="Table of contents"
       >
       📋
       </button>
       <button
         @click="changeTab(2)"
+        title="Bookmarks"
       >
       &#x1F516;
       </button>
@@ -35,7 +41,6 @@
         class="panel"
       ></vBookmarks>
     </section>
-
   </aside>
 </template>
 <script setup>
@@ -86,20 +91,38 @@ aside
   display: flex
   background-color: wheat
 
+  @media screen and (hover: none) and (max-width: 1024px)
+    flex-direction: column
+
+
 section
   padding: 5px
   overflow-y: auto
   resize: horizontal
   flex-direction: column
-  max-width: 0
-  transform: translateX(-30vw)
-  display: flex
+  display: none
   transition: transform 100ms
-  transition: max-width 70ms
 
-  &[active="true"]
-    max-width: 30vw
-    transform: translateX(0)
+  @media screen and (hover: none) and (max-width: 1024px)
+    transform: translateY(-30vh)
+    transition: max-height 70ms
+    max-height: 0
+
+    &[active="true"]
+      max-height: 30vh
+      transform: translateY(0)
+      display: flex
+
+  @media screen and (hover: hover) and (min-width: 1024px)
+    transform: translateX(-30vw)
+    transition: max-width 70ms
+    display: flex
+    max-width: 0
+
+    &[active="true"]
+      max-width: 30vw
+      transform: translateX(0)
+      display: flex
 
 .panel
   display: none
@@ -108,7 +131,15 @@ section
       display: block
 nav
   display: flex
-  flex-direction: column
   row-gap: 1vh
   padding: 3px
+
+  @media screen and (hover: hover) and (min-width: 1024px)
+    flex-direction: column
+
+.mobile-nav
+  display: block
+
+  @media screen and (hover: hover) and (min-width: 1024px)
+    display: none
 </style>
