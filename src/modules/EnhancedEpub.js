@@ -19,6 +19,7 @@ class EnhancedEpub extends Epub {
                 )
             }
 
+            this.emit("loaded-chapters")
             console.log("DONE");
             this.done = true;
         })
