@@ -1,3 +1,7 @@
+const type = {
+    cover: "cover",
+    chapter: "chapter"
+}
 /**
  * 
  * @param {HTMLDivElement} fragment
@@ -7,13 +11,12 @@
 function simplifyHTMLTree(fragment) {
     let rootElem = fragment
     let end = false;
-    
     while(!end) {
         switch(rootElem.childElementCount) {
             case 0:
                 //If the deepest descendant is an IMG then it must be a cover page.
                 if (rootElem.tagName == "IMG") {
-                    end = "COVER";
+                    end = type.cover;
                 } else {
                     rootElem = rootElem.parentElement
                 }
@@ -24,11 +27,11 @@ function simplifyHTMLTree(fragment) {
 
             //If there are multiple childs then this must be a chapter.
             default:
-                end = "CHAPTER";
+                end = type.chapter;
             break;
         }
     }
-    if (end == "COVER") {
+    if (end == type.cover) {
         const div = document.createElement("div")
         div.appendChild(rootElem)
         return div;
