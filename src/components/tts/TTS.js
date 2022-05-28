@@ -20,14 +20,10 @@ export const speech_overlay = reactive({
 export const voice = reactive({
     value : null,
     set(name) {
-        for (const v of speechSynthesis.getVoices()) {
-            if (v.name == name) {
-                this.value = v;
-                return;
-            }
-        }
-        
-        this.value = null;
+        this.value = speechSynthesis
+            .getVoices()
+            .find(v => v.name == name)
+            || null
     }
 });
 
@@ -126,7 +122,7 @@ export function startReading() {
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
     beforeSpeak((txt == lastSelectedText) 
-        ? null: txt
+        ? "": txt
     );
 }
 
@@ -151,12 +147,11 @@ function moveSpeechCursor(target) {
  * 
  * @param {String} txt 
  */
-function beforeSpeak(txt) {
-    if (txt == null) {
+function beforeSpeak(txt = "") {
+    if (txt.length == 0) {
         txt = lastSelectedText
     } else
         lastSelectedText = txt;
-
     
     const alreadyRead = Transformer.transform()
     if (alreadyRead > 0)
@@ -167,18 +162,17 @@ function beforeSpeak(txt) {
     utterance.onstart = highlightWord
     utterance.onboundary = highlightWord
     utterance.onend = (e) => {
-        moveSpeechCursor(determineElement(elem));
+        moveSpeechCursor(nextReadable(elem));
     };
     isReading.value = true;
 }
 
-function determineElement(_target, property = "nextElementSibling") {
+function nextReadable(element, property = "nextElementSibling") {
     let target = null
     while(target == null) {
-        target = _target[property] || null;
-
-        if (target == null)
-            _target = _target.parentElement
+        target = element[property] 
+            || null;
+        element = element.parentElement
     }
 
     if (target.classList != null 
@@ -189,17 +183,22 @@ function determineElement(_target, property = "nextElementSibling") {
     return target;
 }
 
+function endOfBookReached() {
+    console.warn("End of Book has been reached!")
+}
 /**
  * 
  * @param {HTMLElement} chapterElem 
  */
 function findFirstReadable(chapterElem) {
-    if (!chapterElem.classList.contains(className.chapter)) 
-        throw Error("Not a chapter element");
-
-    if (chapterElem.innerText.length == 0) {
-        return findFirstReadable(chapterElem.nextElementSibling)
+    if (chapterElem == null 
+    || !chapterElem.classList.contains(className.chapter)) {
+        console.warn("Not a chapter element");
+        return
     }
+
+    if (chapterElem.innerText.length == 0)
+        return findFirstReadable(chapterElem.nextElementSibling)
 
     let target = chapterElem.querySelector(allowedTagsSelector);
     //todo: Traverse tree since the target may contain childs.
@@ -229,7 +228,7 @@ function readAloud(txt) {
     const utterance = new SpeechSynthesisUtterance(txt)
     utterance.rate = speech_rate.value
 
-    if (voice.value != null)
+    if (voice.value!= null )
         utterance.voice = voice.value;
 
     speechSynthesis.speak(utterance);
@@ -242,7 +241,9 @@ function readAloud(txt) {
  */
 function highlightWord(e) {
     if (e.name != "word") return;
-    wordElem != null && wordElem.classList.remove(className.word)
+
+    if (wordElem instanceof HTMLElement)
+        wordElem.classList.remove(className.word)
 
     if (wordIndex < elem.children.length) {
         wordElem = elem.children.item(wordIndex++)
@@ -264,7 +265,7 @@ class Transformer {
         const words = elem.innerText.split(" ");
 
         if (resumed) {
-            for (let i = 0; i < wordIndex; i ++) {
+            for (let i = 0; i < wordIndex; i++) {
                 read += words[i] + " ";
             }
         } else 
@@ -277,15 +278,14 @@ class Transformer {
             )
             .join(' ');
             
-        if(!isElementInViewport(elem)) {
-            elem.scrollIntoView({block:"start"})
-        }
+        if(!isElementInViewport(elem))
+            elem.scrollIntoView({block:"start"});
 
         return read.length;
     }
 
     static revert() {
-        if (this.last == null) return;
+        if (!(this.last instanceof HTMLElement)) return;
         this.last.innerHTML = this.clone
         this.last.classList.remove(className.para)
     }
