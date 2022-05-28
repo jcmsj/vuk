@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, reactive} from "vue";
+import { ref, onMounted } from "vue";
 import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/reactives";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";

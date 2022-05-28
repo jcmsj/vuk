@@ -79,13 +79,15 @@ async function loadBookFromFile(file, cached = false) {
     })
 
     epub.on("parsed-spine", async() => {
+        console.log("Spine: ", epub.spine);
+    })
+
+    epub.on("parsed-flow", async() => {
       console.log("Flow: ", epub.flow);
     })
 
     epub.on("parsed-toc", async() => {
-        //Todo: Draw to sidebar
         console.log("TOC: ", epub.toc);
-        console.log("Spine: ", epub.spine);
     })
 
    epub.on("parsed-metadata", async() => {
