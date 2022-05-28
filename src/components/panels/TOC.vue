@@ -1,5 +1,7 @@
 <template>
-    <div v-if="TOC.items.size == 0">
+    <div v-if="TOC.items.size == 0"
+        class="default-text"
+    >
         Table of Contents
     </div>
     <NodeStart

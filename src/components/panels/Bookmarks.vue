@@ -1,5 +1,7 @@
 <template>
-    <div>
+    <div
+        class="default-text"
+    >
         Bookmarks
     </div>
 </template>

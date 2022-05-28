@@ -86,24 +86,27 @@ function changeTab(i) {
 }
 
 </script>
+<style lang="sass">
+.default-text
+  text-align: center
+
+</style>
 <style lang='sass' scoped>
 aside
   display: flex
   background-color: wheat
 
-  @media screen and (hover: none) and (max-width: 1024px)
+  @media screen and (max-width: 1024px)
     flex-direction: column
-
 
 section
   padding: 5px
   overflow-y: auto
-  resize: horizontal
   flex-direction: column
   display: none
   transition: transform 100ms
 
-  @media screen and (hover: none) and (max-width: 1024px)
+  @media screen and (max-width: 1024px)
     transform: translateY(-30vh)
     transition: max-height 70ms
     max-height: 0
@@ -113,11 +116,12 @@ section
       transform: translateY(0)
       display: flex
 
-  @media screen and (hover: hover) and (min-width: 1024px)
+  @media screen and (min-width: 1024px)
     transform: translateX(-30vw)
     transition: max-width 70ms
     display: flex
     max-width: 0
+    resize: horizontal
 
     &[active="true"]
       max-width: 30vw
@@ -142,4 +146,5 @@ nav
 
   @media screen and (hover: hover) and (min-width: 1024px)
     display: none
+
 </style>
