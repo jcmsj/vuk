@@ -105,6 +105,9 @@ main
     overflow-y: auto
     overflow-x: hidden
 
+    @media screen and (hover: none) and (max-width: 1280px) 
+        font-size: smaller
+    
 div.chapter
     flex: 1
     margin: 1vh 1vw
