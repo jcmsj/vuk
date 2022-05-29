@@ -40,5 +40,11 @@
     1. Remember voice
 
 1. Custom keybinds
+    1. Load from json
+    1. Settings panel
+    
+1. Improve UI
+    1. Use SVG icons
+    1. Themes
 ## Current feature in dev:
 Bookmarks
