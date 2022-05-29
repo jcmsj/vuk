@@ -27,7 +27,7 @@
 1. Bookmarks
     1. Last read.
     1. last spoken by TTS.
-    1. User-defined.
+    1. [-] User-defined.
 
 1. Text-to-speech
     1. Use media controls.
@@ -41,4 +41,4 @@
         1. voice used.
     1. Custom keybinds
 ## Current feature in dev:
-TTS
+Bookmarks

@@ -28,6 +28,7 @@
 import { ref, onMounted } from "vue";
 import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/reactives";
+import { Bookmarks } from "../modules/Bookmark";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
 import vHeader from "./Header.vue"
 import vFooter from "./Footer.vue"
@@ -35,7 +36,8 @@ import WelcomePage from "./WelcomePage.vue"
 let amount = 0;
 const 
     text = ref(null),
-    pageContextMenu = ref(null)
+    pageContextMenu = ref(null),
+    righted = ref(null)
 ;
 
 const pageMode = {
@@ -62,7 +64,9 @@ const menuItems = [
     {
         name: "&#x1F516;",
         type:"bookmark",
-        cb() {}
+        cb() {
+            Bookmarks.mark(righted.value)
+        }
     },
     {
         name: "&#x1F4CB;",
@@ -76,7 +80,13 @@ function optionClicked({item, option}) {
     console.log(item, option);
 }
 
+/**
+ * 
+ * @param {Event} e 
+ * @param {string} key 
+ */
 function showContextMenu(e) {
+    righted.value = e.target
     pageContextMenu.value.showMenu(e);
 }
 

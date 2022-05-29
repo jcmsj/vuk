@@ -95,7 +95,8 @@ async function loadBookFromFile(file, cached = false) {
             TOC.items = this.toc;
         },
         "parsed-metadata": function() {
-            title.value = this.metadata.title
+            console.log("Meta:", this.metadata);
+            useTitle(this.metadata.title)
         },
         "loaded-chapters": function() {
             onBookLoaded()
