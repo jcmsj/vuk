@@ -8,8 +8,8 @@ export const Bookmarks = reactiveMap({
      * 
      * @param {HTMLElement} elem 
      */
-    mark(elem) {
-        const s = generateSelector(elem)
+    mark(elem, percentage=0) {
+        const s = generateSelector(elem, document.querySelector("#app"))
         if (elem.classList.contains("bookmark")) {
             Bookmarks.unMark(s);
             return false;
@@ -23,6 +23,8 @@ export const Bookmarks = reactiveMap({
             default:
                 v = elem.innerText.slice(0, this.charPreview)
         }
+        v+= " - "+ percentage + "%";
+
         elem.classList.add(this.className)
         Bookmarks.items.set(s, v);
         return true

@@ -39,6 +39,7 @@ import {get, set, clear} from "idb-keyval"
 import { onBookLoaded } from "../tts/TTS.js";
 import {Flow, TOC} from "../../modules/reactives";
 import simplifyHTMLTree from "../../modules/simplifyHTMLTree";
+import { Bookmarks } from "../../modules/Bookmark.js"
 const title = useTitle()
 
 //Refs
@@ -70,6 +71,9 @@ async function selectFile() {
  */
 async function loadBookFromFile(file, cached = false) {
     const epub = new Epub(file, simplifyHTMLTree)
+    Bookmarks.items.clear()
+    Flow.items.clear()
+    TOC.items.clear()
     epub.open({
         "parsed-root": async function() {
             this.parseRootFile(this.rootXML)

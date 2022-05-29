@@ -65,7 +65,10 @@ const menuItems = [
         name: "&#x1F516;",
         type:"bookmark",
         cb() {
-            Bookmarks.mark(righted.value)
+            Bookmarks.mark(
+                righted.value,
+                getScrollPercentage(text.value)
+            )
         }
     },
     {
@@ -74,6 +77,16 @@ const menuItems = [
         cb() {}
     }
 ]
+
+/**
+ * 
+ * @param {HTMLElement} elem 
+ */
+function getScrollPercentage(elem) {
+    let p = (elem.scrollTop / elem.scrollHeight * 100).toFixed(2)
+    console.log(p);
+    return p
+}
 
 function optionClicked({item, option}) {
     option.cb()
