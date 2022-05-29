@@ -34,9 +34,11 @@
 import { ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
-import {EnhancedEpub} from "../../modules/EnhancedEpub.js";
+import Epub from "@jcsj/epub"
 import {get, set, clear} from "idb-keyval"
 import { onBookLoaded } from "../tts/TTS.js";
+import {Flow, TOC} from "../../modules/reactives";
+import simplifyHTMLTree from "../../modules/simplifyHTMLTree";
 const title = useTitle()
 
 //Refs
@@ -67,38 +69,38 @@ async function selectFile() {
  * @param {File} file
  */
 async function loadBookFromFile(file, cached = false) {
-    const epub = new EnhancedEpub(file)
-    epub.open()
-
-    epub.on("parsed-root", async() => {
-        epub.parseRootFile(epub.rootXML)
+    const epub = new Epub(file, simplifyHTMLTree)
+    epub.open({
+        "parsed-root": async function() {
+            this.parseRootFile(this.rootXML)
+        },
+        "parsed-manifest": function() {
+            console.log("Manifest: ", this.manifest);
+        },
+        "parsed-spine": function() {
+            console.log("Spine: ", this.spine);
+        },
+        "parsed-flow": async function() {
+            console.log("Flow: ", this.flow);
+            for (const [key, item] of this.flow) {    
+                Flow.items.set(
+                    key, 
+                    await this.getContent(item.id)
+                )
+            }
+            this.emit("loaded-chapters")
+        },
+        "parsed-toc": function() {
+            console.log("TOC: ", this.toc);
+            TOC.items = this.toc;
+        },
+        "parsed-metadata": function() {
+            title.value = this.metadata.title
+        },
+        "loaded-chapters": function() {
+            onBookLoaded()
+        }
     })
-
-    epub.on("parsed-manifest", async() => {
-      console.log("Manifest: ", epub.manifest);
-    })
-
-    epub.on("parsed-spine", async() => {
-        console.log("Spine: ", epub.spine);
-    })
-
-    epub.on("parsed-flow", async() => {
-      console.log("Flow: ", epub.flow);
-    })
-
-    epub.on("parsed-toc", async() => {
-        console.log("TOC: ", epub.toc);
-    })
-
-   epub.on("parsed-metadata", async() => {
-
-    })
-
-  epub.on("loaded", async() => {
-    title.value = epub.metadata.title
-  })
-
-  epub.on("loaded-chapters", onBookLoaded) 
 }
 
 
