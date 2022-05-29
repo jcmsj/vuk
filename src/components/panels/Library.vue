@@ -36,7 +36,7 @@ import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import Epub from "@jcsj/epub"
 import {get, set, clear} from "idb-keyval"
-import { onBookLoaded } from "../tts/TTS.js";
+import { allowedTags, onBookLoaded, setSpeechTarget } from "../tts/TTS.js";
 import {Flow, TOC} from "../../modules/reactives";
 import simplifyHTMLTree from "../../modules/simplifyHTMLTree";
 import { Bookmarks } from "../../modules/Bookmark.js"
@@ -102,8 +102,15 @@ async function loadBookFromFile(file, cached = false) {
             console.log("Meta:", this.metadata);
             useTitle(this.metadata.title)
         },
-        "loaded-chapters": function() {
-            onBookLoaded()
+        "loaded-chapters": async function() {
+            await Bookmarks.load()
+            for (const k of [...Bookmarks.items.keys()].reverse()) {
+                const elem = document.querySelector(k)
+                if (setSpeechTarget(elem))
+                    return;
+            }
+
+            onBookLoaded();
         }
     })
 }

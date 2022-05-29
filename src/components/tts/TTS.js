@@ -8,7 +8,7 @@ const className = {
 }
 
 const allowedTagsSelector = "h1, h2, h3, h4, h5, h6, a, p, div";
-const allowedTags = /^(P|A|H[1-6])$/;
+export const allowedTags = /^(P|A|H[1-6])$/;
 var elem = null
 var wordIndex = 0;
 var wordElem = null;
@@ -96,9 +96,13 @@ function isElementInViewport (el) {
  * @param {HTMLElement} _elem 
  */
 export function setSpeechTarget(_elem) {
+    if (!allowedTags.test(_elem.tagName))
+        return false
+
     Transformer.last = elem;
     elem = _elem;
     console.log("R", elem);
+    return true;
 }
 
 export function onBookLoaded() {

@@ -84,7 +84,6 @@ const menuItems = [
  */
 function getScrollPercentage(elem) {
     let p = (elem.scrollTop / elem.scrollHeight * 100).toFixed(2)
-    console.log(p);
     return p
 }
 
@@ -113,6 +112,7 @@ onKeyUp("ArrowLeft", e=> {
 
 onMounted(() => {
     pageMode.amount = document.documentElement.clientHeight
+    Bookmarks.load()
 })
 </script>
 
