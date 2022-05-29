@@ -12,7 +12,11 @@
             :items="item.navPoint"
         >
         </NodeEnd>
-        <a v-else class="item"
+
+        <!-- Leaf -->
+        <a 
+            v-else 
+            class="item"
             :href="'#' + item.id"
         >
         {{item.title}}
