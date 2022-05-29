@@ -1,7 +1,7 @@
 import Epub from "@jcsj/epub";
 import {Flow, TOC} from "./reactives";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-class EnhancedEpub extends Epub {
+export class EnhancedEpub extends Epub {
     /**
      * 
      * @param {File} file 
@@ -9,7 +9,7 @@ class EnhancedEpub extends Epub {
     constructor(file) {
         super(file, simplifyHTMLTree)
         this.done = false;
-        Flow.items = new Map();
+        Flow.items = new Map(); //Reset
         this.on("parsed-flow", async() => {
             for (const [key, item] of this.flow) {    
                 Flow.items.set(
@@ -28,5 +28,3 @@ class EnhancedEpub extends Epub {
         })
     }
 }
-
-export default EnhancedEpub;
