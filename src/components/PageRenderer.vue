@@ -11,7 +11,7 @@
         :key="key"
         :id="key"
         v-html="part"
-        @contextmenu.prevent.stop="showContextMenu($event, key)"
+        @contextmenu.prevent.stop="showContextMenu($event)"
         >
     </div>
     <vFooter />
@@ -76,8 +76,8 @@ function optionClicked({item, option}) {
     console.log(item, option);
 }
 
-function showContextMenu(e, item) {
-    pageContextMenu.value.showMenu(e, item);
+function showContextMenu(e) {
+    pageContextMenu.value.showMenu(e);
 }
 
 onKeyUp("ArrowRight", e=> {
