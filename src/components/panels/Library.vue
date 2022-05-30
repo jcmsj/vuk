@@ -36,10 +36,11 @@ import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import Epub from "@jcsj/epub"
 import {get, set, clear} from "idb-keyval"
-import { allowedTags, onBookLoaded, setSpeechTarget } from "../tts/TTS.js";
+import { onBookLoaded, setSpeechTarget } from "../tts/TTS.js";
 import {Flow, TOC} from "../../modules/reactives";
 import simplifyHTMLTree from "../../modules/simplifyHTMLTree";
 import { Bookmarks } from "../../modules/Bookmark.js"
+import { idb } from "../idb.js"
 const title = useTitle()
 
 //Refs
@@ -128,7 +129,7 @@ async function setLibrary() {
     if (!directoryHandle)
         return
 
-    set("last-working-dir", directoryHandle).then(() => {
+    set(idb.dir, directoryHandle).then(() => {
         restoreLibrary()
     })
 }
@@ -147,11 +148,14 @@ function getRootDir() {
 }
 
 async function getLastWorkingDir() {
-    const handle = await get("last-working-dir");
+    const handle = await get(idb.dir);
 
     if (await verifyPermission(handle, "read")) {
         return handle
     }
+
+    alert("Please allow the e-reader to READ the contents of the directory.")
+    console.log("Failed to get directory permission");
 
     return null;
 }
@@ -231,8 +235,6 @@ async function verifyPermission(handle, mode = "read") {
         return true;
     }
     // The user didn't grant permission.
-    alert("Please allow the e-reader to READ the contents of the directory.")
-    console.log("Failed to get directory permission");
     return false;
 }
 

@@ -1,5 +1,6 @@
 import {ref, reactive} from "vue";
 import {get, set} from "idb-keyval";
+import { idb } from "../idb";
 const className = {
     para: "s-read",
     word: "current-word",
@@ -41,11 +42,11 @@ export const speech_rate = reactive({
             return;
 
         this.value = n;
-        set("speech-rate", this.value);
+        set(idb.speech_rate, this.value);
     }
 })
 
-get("speech-rate").then(n => {
+get(idb.speech_rate).then(n => {
     speech_rate.set(n || 1);
 })
 

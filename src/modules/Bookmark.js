@@ -1,6 +1,7 @@
 import { reactiveMap } from "./reactives";
 import generateSelector from "./generateSelector"
 import {get, set} from "idb-keyval"
+import { idb_prefixes } from "../components/idb";
 export const Bookmarks = reactiveMap({
     className: "bookmark",
     charPreview: 20,
@@ -10,7 +11,7 @@ export const Bookmarks = reactiveMap({
      */
     mark(elem, percentage=0) {
         const s = generateSelector(elem, document.querySelector("#app"))
-        if (elem.classList.contains("bookmark")) {
+        if (elem.classList.contains(this.className)) {
             Bookmarks.unMark(s);
             return false;
         }
@@ -36,14 +37,16 @@ export const Bookmarks = reactiveMap({
         this.sync()
     },
     async load() {
-        const items = await get(`bookmark-${document.title}`)
+        const items = await get(idb_prefixes.bookmark + document.title)
         if (items instanceof Object ) {
             this.items = new Map(Object.entries(items))
         }
     },
     sync() {
         try {
-            set(`bookmark-${document.title}`, Object.fromEntries(Bookmarks.items));
+            set(
+                idb_prefixes.bookmark + document.title, 
+                Object.fromEntries(Bookmarks.items));
         } catch (e) {
             console.log(e);
         }
