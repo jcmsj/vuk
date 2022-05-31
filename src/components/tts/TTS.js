@@ -8,8 +8,8 @@ const className = {
     chapter : "chapter"
 }
 
-const allowedTagsSelector = "h1, h2, h3, h4, h5, h6, a, p, div";
-export const allowedTags = /^(P|A|H[1-6])$/;
+const allowedTagsSelector = "h1, h2, h3, h4, h5, h6, a, p, div, span";
+export const allowedTags = /^(P|A|H[1-6]|SPAN)$/;
 var elem = null
 var wordIndex = 0;
 var wordElem = null;
@@ -97,8 +97,11 @@ function isElementInViewport (el) {
  * @param {HTMLElement} _elem 
  */
 export function setSpeechTarget(_elem) {
-    if (!allowedTags.test(_elem.tagName))
+    if (!(_elem instanceof HTMLElement)
+    || !allowedTags.test(_elem.tagName)) {
+        console.warn("Invalid speech target:", _elem);
         return false
+    }
 
     Transformer.last = elem;
     elem = _elem;
