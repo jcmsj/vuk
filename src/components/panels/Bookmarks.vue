@@ -16,8 +16,12 @@
 <script setup>
 import { Bookmarks } from '../../modules/Bookmark';
 function focus(selector) {
-    console.log(selector);
-    document.querySelector(selector).scrollIntoView()
+    console.log("Bookmark clicked:", selector);
+    const elem = document.querySelector(selector);
+    if (elem instanceof HTMLElement)
+        elem.scrollIntoView()
+    else
+        console.warn("Invalid selector:", selector);
 }
 </script>
 <style lang='sass'>
