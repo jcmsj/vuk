@@ -9,7 +9,7 @@ const className = {
 }
 
 const allowedTagsSelector = "h1, h2, h3, h4, h5, h6, a, p, div, span";
-export const allowedTags = /^(P|A|H[1-6]|SPAN)$/;
+export const allowedTags = /^(P|A|H[1-6]|SPAN|DIV)$/;
 var elem = null
 var wordIndex = 0;
 var wordElem = null;
@@ -135,19 +135,18 @@ export function startReading() {
 }
 
 function moveSpeechCursor(target) {
-    if (!isReading.value)
+    if (!isReading.value) {
+        console.warn("Not in reading state");
         return;
+    }
 
     wordIndex = 0;
     Transformer.revert();
-    if (!isReading.value) return;
 
     setSpeechTarget(target);
-    try {
-        beforeSpeak(target.innerText);
-    }
-    catch(e) {
-        console.log(target);
+
+    if (!beforeSpeak(target.innerText)) {
+        moveSpeechCursor(nextReadable(target))
     }
 }
 
@@ -158,8 +157,10 @@ function moveSpeechCursor(target) {
 function beforeSpeak(txt = "") {
     if (txt.length == 0) {
         txt = lastSelectedText
-    } else
+        return false;
+    } else {
         lastSelectedText = txt;
+    }
     
     const alreadyRead = Transformer.transform()
     if (alreadyRead > 0)
@@ -173,6 +174,8 @@ function beforeSpeak(txt = "") {
         moveSpeechCursor(nextReadable(elem));
     };
     isReading.value = true;
+
+    return true;
 }
 
 function nextReadable(element, property = "nextElementSibling") {
@@ -183,11 +186,15 @@ function nextReadable(element, property = "nextElementSibling") {
         element = element.parentElement
     }
 
+    //When the element is empty, find next
+    if (target.innerText.length == 0) 
+        return nextReadable(target,property)
+
     if (target.classList != null 
         && target.classList.contains(className.chapter)
     )
         target = findFirstReadable(target);
-
+    
     return target;
 }
 
