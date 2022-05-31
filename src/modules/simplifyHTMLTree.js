@@ -4,21 +4,26 @@ const type = {
 }
 /**
  * 
- * @param {HTMLDivElement} fragment
- * @returns {HTMLDivElement}
+ * @param {HTMLElement} fragment
+ * @returns {HTMLElement}
  * Simplifies HTML structure of chapters by keeping the nearest descendant that contains the actual text as well as removing containers for IMGs.
  */
 function simplifyHTMLTree(fragment) {
+
+    if (!(fragment instanceof HTMLElement))
+        throw new TypeError("Not an element")
+
     let rootElem = fragment
     let end = false;
-    while(!end) {
+    let tries = 100
+    while(!end && tries) {
         switch(rootElem.childElementCount) {
             case 0:
                 //If the deepest descendant is an IMG then it must be a cover page.
-                if (rootElem.tagName == "IMG") {
+                if (rootElem instanceof HTMLImageElement) {
                     end = type.cover;
                 } else {
-                    rootElem = rootElem.parentElement
+                    rootElem = rootElem.parentElement.nextElementSibling
                 }
             break;
             case 1:
@@ -30,6 +35,11 @@ function simplifyHTMLTree(fragment) {
                 end = type.chapter;
             break;
         }
+
+        tries--;
+    }
+    if (tries == 0) {
+        throw Error("inifnite loop:", rootElem)
     }
     if (end == type.cover) {
         const div = document.createElement("div")
