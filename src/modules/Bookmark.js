@@ -31,8 +31,17 @@ export const Bookmarks = reactiveMap({
         this.sync()
         return true
     },
+    /**
+     * 
+     * @param {String} selector 
+     */
     unMark(selector) {
-        document.querySelector(selector).classList.remove(this.className)
+        const elem = document.querySelector(selector)
+        if (elem instanceof HTMLElement 
+        && elem.classList instanceof DOMTokenList) {
+            elem.classList.remove(this.className)
+        }
+        
         Bookmarks.items.delete(selector)
         this.sync()
     },
