@@ -98,7 +98,7 @@ function beforeSpeak(txt = "") {
         lastSelectedText = txt;
     }
     
-    const {element , index} = Transformer.transform(gElement, gWordIndex)
+    const {element , index} = Transformer.transform(gElement, Word.index)
     Word.setIndex(index);
     txt = txt.slice(Word.index);
     gElement = element;
@@ -108,10 +108,10 @@ function beforeSpeak(txt = "") {
 
     const utterance = readAloud(txt)
     utterance.onstart = e => {
-        Word.highlight(e)
+        Word.highlight(e, gElement)
     }
     utterance.onboundary = e => {
-        Word.highlight(e)
+        Word.highlight(e, gElement)
     }
     utterance.onend = (e) => {
         if (isReading.value)

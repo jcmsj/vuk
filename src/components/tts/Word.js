@@ -11,14 +11,14 @@ export class Word {
      * @param {SpeechSynthesisEvent} e
      * Note: 
      */
-    static highlight(e) {
+    static highlight(e, parentElem) {
         if (e.name != "word") return;
 
         if (this.elem instanceof HTMLElement)
             this.elem.classList.remove(className.word)
 
-        if (this.index < this.elem.parentElement.children.length) {
-            this.elem = this.elem.parentElement.children.item(this.index++)
+        if (this.index < parentElem.children.length) {
+            this.elem = parentElem.children.item(this.index++)
             this.elem.classList.add(className.word);
         }
     }
