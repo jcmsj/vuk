@@ -102,21 +102,26 @@ async function loadBookFromFile(file, cached = false) {
         "parsed-metadata": function() {
             console.log("Meta:", this.metadata);
             useTitle(this.metadata.title)
+            Bookmarks.load()
         },
         "loaded-chapters": async function() {
-            await Bookmarks.load()
+
+            let notBeenSet = true;
             for (const k of [...Bookmarks.items.keys()].reverse()) {
                 const elem = document.querySelector(k)
-                if (setSpeechTarget(elem))
+                elem.classList.add("bookmark")
+                if (notBeenSet && setSpeechTarget(elem)) {
                     elem.scrollIntoView({block:"start"});
-                    return;
+                    notBeenSet = false;
+                }
             }
 
-            onBookLoaded();
+            if (notBeenSet) {
+                onBookLoaded();
+            }
         }
     })
 }
-
 
 async function setLibrary() {
     let directoryHandle = null;
