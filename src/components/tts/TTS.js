@@ -91,17 +91,17 @@ function moveSpeechCursor(target) {
  */
 function beforeSpeak(txt = "") {
     if (txt.length == 0) {
-        txt = lastSelectedText
-        console.warn("Text was already spoken", txt)
         return false;
-    } else {
-        lastSelectedText = txt;
     }
     
-    const {element , index} = Transformer.transform(gElement, Word.index)
-    Word.setIndex(index);
-    txt = txt.slice(Word.index);
+    const {element , charIndex} = Transformer.transform(gElement, Word.index)
     gElement = element;
+    txt = txt.slice(charIndex);
+
+    //If cI is zero, then the narrator is going to speak new text. 
+    if (charIndex == 0) {
+        Word.reset()
+    }
 
     if(!isElementInViewport(gElement))
         gElement.scrollIntoView({block:"start"});
