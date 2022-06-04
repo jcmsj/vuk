@@ -22,7 +22,7 @@
 </div>
 </template>
 <script setup>
-import {speech_rate} from "./TTS.js";
+import {speech_rate} from "./speech_rate";
 
 </script>
 <style lang='sass' scoped>

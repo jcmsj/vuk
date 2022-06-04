@@ -14,7 +14,7 @@
 </template>
 <script setup>
 import {ref, onMounted} from "vue"
-import {voice} from "./TTS.js";
+import {voice} from "./voice";
 const voices = ref([])
 
 // Can't instanstly set voices, must use this.

@@ -1,6 +1,7 @@
-import {ref, reactive} from "vue";
-import {get, set} from "idb-keyval";
-import { idb } from "../idb";
+import {ref} from "vue";
+import { speech_rate } from "./speech_rate";
+import { voice } from "./voice";
+import { getSelectionText, isElementInViewport } from "./helpers";
 const className = {
     para: "s-read",
     word: "current-word",
@@ -8,104 +9,42 @@ const className = {
     chapter : "chapter"
 }
 
-const allowedTagsSelector = "h1, h2, h3, h4, h5, h6, a, p, div, span";
-export const allowedTags = /^(P|A|H[1-6]|SPAN|DIV)$/;
-var elem = null
+const validElems = {
+    selector : "h1, h2, h3, h4, h5, h6, a, p, div, span",
+    RE : /^(P|A|H[1-6]|SPAN|DIV)$/
+}
+
+var gElement = null
 var wordIndex = 0;
 var wordElem = null;
 var lastSelectedText = "";
-export const speech_overlay = reactive({
-    clone: "",
-    stats : {}
-});
-export const voice = reactive({
-    value : null,
-    set(name) {
-        this.value = speechSynthesis
-            .getVoices()
-            .find(v => v.name == name)
-            || null
-    }
-});
-
-export const speech_rate = reactive({
-    value : 1,
-    min : 0.25,
-    max : 3,
-
-    /**
-     * @param {Number} n 
-     * @returns 
-     */
-    set(n) {
-        if (n > this.max || n < this.min)
-            return;
-
-        this.value = n;
-        set(idb.speech_rate, this.value);
-    }
-})
-
-get(idb.speech_rate).then(n => {
-    speech_rate.set(n || 1);
-})
 
 export const isReading = ref(false);
 export function identifySpeechTarget(e) {
-    const [_elem] = e.path.filter(_elem => allowedTags.test(_elem.tagName))
+    const [elem] = e.path.filter(elem => validElems.RE.test(elem.tagName))
 
-    if (!_elem || _elem.isSameNode(elem)) return;
+    if (!elem || elem.isSameNode(gElement)) return;
 
     const wasReading = isReading.value;
     stopReading()
-    setSpeechTarget(_elem)
+    setSpeechTarget(elem)
     if (wasReading)
         startReading();
 }
 
 /**
- * https://stackoverflow.com/questions/5379120/get-the-highlighted-selected-text * 
- * @returns String
+ * @param {HTMLElement} elem 
  */
- export function getSelectionText() {
-    let text = "";
-    if (window.getSelection)
-        text = window.getSelection().toString();
-    else if (document.selection && document.selection.type != "Control")
-        text = document.selection.createRange().text;
-
-    return text;
-}
-
-/**
- * https://stackoverflow.com/questions/123999/how-can-i-tell-if-a-dom-element-is-visible-in-the-current-viewport
- * @param {HTMLElement} el 
- * @returns boolean
- */
-function isElementInViewport (el) {
-
-    const rect = el.getBoundingClientRect();
-
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && 
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-}
-/**
- * @param {HTMLElement} _elem 
- */
-export function setSpeechTarget(_elem) {
-    if (!(_elem instanceof HTMLElement)
-    || !allowedTags.test(_elem.tagName)) {
-        console.warn("Invalid speech target:", _elem);
+export function setSpeechTarget(elem) {
+    if (!(elem instanceof HTMLElement)
+    || !validElems.RE.test(elem.tagName)) {
+        console.warn("Invalid speech target:", elem);
         return false
     }
 
-    Transformer.last = elem;
-    elem = _elem;
-    console.log("R", elem);
+    Transformer.last = gElement;
+    gElement = elem;
+    console.log("R", gElement);
     return true;
 }
 
@@ -123,10 +62,10 @@ export function onBookLoaded() {
     )
 }
 export function startReading() {
-    if (elem == null) return
+    if (gElement == null) return
     
     //Start reading at the selected text
-    let txt = elem.innerText;
+    let txt = gElement.innerText;
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
     beforeSpeak((txt == lastSelectedText) 
@@ -167,30 +106,29 @@ function beforeSpeak(txt = "") {
         txt = txt.slice(alreadyRead);
 
     const utterance = readAloud(txt)
-    //speech_overlay.clone = elem.outerHTML;
     utterance.onstart = highlightWord
     utterance.onboundary = highlightWord
     utterance.onend = (e) => {
-        moveSpeechCursor(nextReadable(elem));
+        moveSpeechCursor(nextReadable(gElement));
     };
     isReading.value = true;
 
     return true;
 }
 
-function nextReadable(element, property = "nextElementSibling") {
+function nextReadable(elem, property = "nextElementSibling") {
     let target = null
     while(target == null) {
-        target = element[property] 
+        target = elem[property] 
             || null;
-        element = element.parentElement
+        elem = elem.parentElement
     }
 
     //When the element is empty, find next
     if (target.innerText.length == 0) 
         return nextReadable(target,property)
 
-    if (target.classList != null 
+    if (target.classList instanceof DOMTokenList
         && target.classList.contains(className.chapter)
     )
         target = findFirstReadable(target);
@@ -215,7 +153,7 @@ function findFirstReadable(chapterElem) {
     if (chapterElem.innerText.length == 0)
         return findFirstReadable(chapterElem.nextElementSibling)
 
-    let target = chapterElem.querySelector(allowedTagsSelector);
+    let target = chapterElem.querySelector(validElems.selector);
     //todo: Traverse tree since the target may contain childs.
     
     return target;
@@ -224,15 +162,6 @@ function findFirstReadable(chapterElem) {
 export function toggleReading() {
     isReading.value ? stopReading():startReading();
 }
-
-/* export function pauseResume() {
-    if (isReading.value) {
-        speechSynthesis.pause()
-    } else {
-        speechSynthesis.resume()
-    }
-    isReading.value = !isReading.value
-} */
 
 /**
  * @param {string} txt 
@@ -260,8 +189,8 @@ function highlightWord(e) {
     if (wordElem instanceof HTMLElement)
         wordElem.classList.remove(className.word)
 
-    if (wordIndex < elem.children.length) {
-        wordElem = elem.children.item(wordIndex++)
+    if (wordIndex < gElement.children.length) {
+        wordElem = gElement.children.item(wordIndex++)
         wordElem.classList.add(className.word);
     }
 }
@@ -270,14 +199,14 @@ class Transformer {
     clone = null;
     last = null;
     static transform() {
-        let resumed = elem.isSameNode(this.last)
+        let resumed = gElement.isSameNode(this.last)
 
-        this.last = elem;
-        this.clone = elem.innerHTML;
-        elem.classList.add(className.para)
+        this.last = gElement;
+        this.clone = gElement.innerHTML;
+        gElement.classList.add(className.para)
         
         let read = ""
-        const words = elem.innerText.split(" ");
+        const words = gElement.innerText.split(" ");
 
         if (resumed) {
             for (let i = 0; i < wordIndex; i++) {
@@ -286,15 +215,15 @@ class Transformer {
         } else 
             wordIndex = 0;
 
-        elem.innerHTML =
+        gElement.innerHTML =
             words
             .map(word =>
                 `<span>${word}</span>`
             )
             .join(' ');
             
-        if(!isElementInViewport(elem))
-            elem.scrollIntoView({block:"start"});
+        if(!isElementInViewport(gElement))
+            gElement.scrollIntoView({block:"start"});
 
         return read.length;
     }

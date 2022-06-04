@@ -106,8 +106,7 @@ async function loadBookFromFile(file, cached = false) {
         "loaded-chapters": async function() {
             await Bookmarks.load()
             for (const k of [...Bookmarks.items.keys()].reverse()) {
-                const elem = document.querySelector(k)
-                if (setSpeechTarget(elem))
+                if (setSpeechTarget(document.querySelector(k)))
                     return;
             }
 

@@ -20,7 +20,7 @@
 </template>
 <script setup>
 import {toggleReading } from "./TTS.js";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { onKeyUp } from "@vueuse/core";
 
 import SpeechRateController from "./SpeechRateController.vue"
