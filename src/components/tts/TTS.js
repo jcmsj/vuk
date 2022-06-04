@@ -88,13 +88,13 @@ function moveSpeechCursor(target) {
  */
 function beforeSpeak(txt = "") {
     if (txt.length == 0) {
+        //Todo: Add warning, since it may hint that there is an issue with IdentifySpeechTarget
         return false;
     }
     
     const {element , charIndex} = Transformer.transform(gElement, Word.index)
     gElement = element;
     txt = txt.slice(charIndex);
-
     //If cI is zero, then the narrator is going to speak new text. 
     if (charIndex == 0) {
         Word.reset()
