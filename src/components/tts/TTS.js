@@ -6,7 +6,6 @@ import { Word } from "./Word";
 import { readAloud } from "./narrator";
 //Globals
 var gElement = null
-var lastSelectedText = "";
 
 export const isReading = ref(false);
 export function identifySpeechTarget(e) {
@@ -64,9 +63,7 @@ export function startReading() {
     let txt = gElement.innerText;
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
-    beforeSpeak(txt == lastSelectedText 
-        ? "": txt
-    );
+    beforeSpeak(txt);
 }
 
 function moveSpeechCursor(target) {
