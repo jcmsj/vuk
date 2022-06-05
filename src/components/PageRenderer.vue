@@ -1,6 +1,5 @@
 <template>
 <main ref="text">
-    <vHeader />
     <WelcomePage
         v-if="Flow.items.size == 0"
     />
@@ -14,13 +13,13 @@
         @contextmenu.prevent.stop="showContextMenu($event)"
         >
     </div>
-    <vFooter />
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
         ref="pageContextMenu"
         @option-clicked="optionClicked"
     />
+    <vFooter />
 </main>
 </template>
 
@@ -30,7 +29,6 @@ import { onKeyStroke, onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/reactives";
 import { Bookmarks } from "../modules/Bookmark";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
-import vHeader from "./Header.vue"
 import vFooter from "./Footer.vue"
 import WelcomePage from "./WelcomePage.vue"
 let amount = 0;
@@ -44,7 +42,7 @@ const pageMode = {
     amount : 0,
     pages : 0,
     move(n) {
-    if (n == 0)
+        if (n == 0)
             return
         
         text.value.scrollBy(0, amount * n)

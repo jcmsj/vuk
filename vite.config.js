@@ -21,17 +21,17 @@ export default defineConfig({
         "theme_color":"#FFFFFF",
         "icons" : [
           {
-            "src": "./public/app.webp",
+            "src": "/app.webp",
             "sizes":"512x512",
             "type":"image/webp"
           },
           {
-            "src": "./public/app.png",
+            "src": "/app.png",
             "sizes":"512x512",
-            "type":"image/webp"
+            "type":"image/png"
           },
           {
-            "src":"./public/favicon.ico",
+            "src":"/favicon.ico",
             "sizes":"32x32",
           }
         ]
