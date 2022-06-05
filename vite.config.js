@@ -26,6 +26,11 @@ export default defineConfig({
             "type":"image/webp"
           },
           {
+            "src": "./public/app.png",
+            "sizes":"512x512",
+            "type":"image/webp"
+          },
+          {
             "src":"./public/favicon.ico",
             "sizes":"32x32",
           }
