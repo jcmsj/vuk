@@ -44,6 +44,7 @@ button.btn
   background: var(--color-2-d)
   border: none
   border-radius: 5px
+  font-size: 1.3rem
   &:hover
     background: var(--color-2-d2)
 
