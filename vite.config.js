@@ -21,18 +21,24 @@ export default defineConfig({
         "theme_color":"#FFFFFF",
         "icons" : [
           {
-            "src": "/app.webp",
+            "src": "/vuk.webp",
             "sizes":"512x512",
             "type":"image/webp"
           },
           {
-            "src": "/app.png",
+            "src": "/vuk-t.png",
             "sizes":"512x512",
-            "type":"image/png"
+            "type":"image/png",
+            "purpose": "maskable"
+          },
+          {
+            "src": "/vuk-p.png",
+            "sizes":"512x512",
+            "type":"image/png",
           },
           {
             "src":"/favicon.ico",
-            "sizes":"32x32",
+            "sizes":"128x128",
           }
         ]
       }
