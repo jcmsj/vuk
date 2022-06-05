@@ -58,13 +58,7 @@ function toggleAside() {
   isDisplayed.value = !isDisplayed.value
 }
 
-function hideAside(e = null) {
-
-    if (e instanceof PointerEvent) {
-      if (e.pointerType == "mouse")
-        return;
-    }
-
+function hideAside() {
     isDisplayed.value = false
 }
 
