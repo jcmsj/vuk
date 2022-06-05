@@ -21,6 +21,7 @@
     "@vitejs/plugin-vue": "^2.3.3",
     "sass": "^1.52.2",
     "vite": "^2.9.9",
-    "vite-plugin-mkcert": "^1.6.4"
+    "vite-plugin-mkcert": "^1.6.4",
+    "workbox-window": "^6.5.3"
   }
 }

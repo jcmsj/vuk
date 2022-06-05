@@ -12,6 +12,7 @@ specifiers:
   vite-plugin-pwa: ^0.12.0
   vue: ^3.2.36
   vue-simple-context-menu: ^4.0.4
+  workbox-window: ^6.5.3
 
 dependencies:
   '@jcsj/epub': link:../epub
@@ -27,6 +28,7 @@ devDependencies:
   sass: 1.52.2
   vite: 2.9.9_sass@1.52.2
   vite-plugin-mkcert: 1.6.4_sass@1.52.2
+  workbox-window: 6.5.3
 
 packages:
 
@@ -1429,7 +1431,6 @@ packages:
 
   /@types/trusted-types/2.0.2:
     resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
-    dev: false
 
   /@vitejs/plugin-vue/2.3.3_vite@2.9.9+vue@3.2.36:
     resolution: {integrity: sha512-SmQLDyhz+6lGJhPELsBdzXGc+AcaT8stgkbiTFGpXPe8Tl1tJaBw1A6pxDqDuRsVkD8uscrkx3hA7QDOoKYtyw==}
@@ -3169,7 +3170,6 @@ packages:
 
   /workbox-core/6.5.3:
     resolution: {integrity: sha512-Bb9ey5n/M9x+l3fBTlLpHt9ASTzgSGj6vxni7pY72ilB/Pb3XtN+cZ9yueboVhD5+9cNQrC9n/E1fSrqWsUz7Q==}
-    dev: false
 
   /workbox-expiration/6.5.3:
     resolution: {integrity: sha512-jzYopYR1zD04ZMdlbn/R2Ik6ixiXbi15c9iX5H8CTi6RPDz7uhvMLZPKEndZTpfgmUk8mdmT9Vx/AhbuCl5Sqw==}
@@ -3246,7 +3246,6 @@ packages:
     dependencies:
       '@types/trusted-types': 2.0.2
       workbox-core: 6.5.3
-    dev: false
 
   /wrappy/1.0.2:
     resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}
