@@ -2,16 +2,19 @@
 <div class="r"> 
     <button 
         @click="selectFile"
+        class="btn"
     >
     Open 📖
     </button>
     <button
         @click="setLibrary"
+        class="btn"
     >
     Set 📂
     </button>
     <button
         @click="restoreLibrary"
+        class="btn"
     >
     ↻ 📂
     </button>

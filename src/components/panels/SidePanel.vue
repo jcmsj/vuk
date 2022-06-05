@@ -8,18 +8,21 @@
       <button
         @click="changeTab(0)"
         title="File explorer"
+        class="btn"
       >
       📂
       </button>
       <button
         @click="changeTab(1)"
         title="Table of contents"
+        class="btn"
       >
       📋
       </button>
       <button
         @click="changeTab(2)"
         title="Bookmarks"
+        class="btn"
       >
       &#x1F516;
       </button>

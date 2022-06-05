@@ -18,6 +18,15 @@ useTitle("Vuk | An EPUB reader for the web.")
 
 <!-- Note the FF styles will be applied for the entire APP -->
 <style lang="sass">
+:root 
+  --color-1-t: #c0a7e8
+  --color-1: #8250D2
+  --color-2-t: #f8e7c9
+  --color-2: wheat
+  --color-2-d: #dcc7a1
+  --color-2-d2: #c4b18f
+  --color-3: white
+
 body
   margin: 0
   padding: 0
@@ -31,7 +40,26 @@ body
   @media screen and (hover: hover) and (min-width: 1024px)
     flex-direction: row
 
+button.btn
+  background: var(--color-2-d)
+  border: none
+  border-radius: 5px
+  &:hover
+    background: var(--color-2-d2)
+
 %padV1
   padding: 1vh 1vw
+
+/* width */
+::-webkit-scrollbar
+  width: 10px
+
+/* Track */
+::-webkit-scrollbar-track
+  background-color: var(--color-2)
+
+/* Handle */
+::-webkit-scrollbar-thumb
+  background-color: var(--color-1)
 
 </style>

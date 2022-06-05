@@ -52,9 +52,10 @@ span.current-word
 section
     display: flex
     justify-content: space-between
-    background-color: gray
+    background-color: var(--color-1)
     padding: 3px
-
+    font-size: 1.7rem
+    color: var(--color-3)
 .pop-up
     font-size: smaller
     padding: 1vh 1vw
@@ -63,7 +64,7 @@ section
     position: absolute
     right: 0
     bottom: 7vh
-    color: white
+    color: var(--color-3)
     flex-direction: column
 
     &[active="true"]
