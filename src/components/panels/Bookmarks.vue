@@ -1,6 +1,6 @@
 <template>
     <ol>
-        <b>Bookmarks</b>
+        <b class="tab-label">Bookmarks</b>
         <li
             v-for="[key, previewText] of Bookmarks.items"
             :key="key"

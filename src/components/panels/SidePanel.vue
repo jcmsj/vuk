@@ -90,6 +90,8 @@ function changeTab(i) {
 .default-text
   text-align: center
 
+b.tab-label
+  text-align: center
 </style>
 <style lang='sass' scoped>
 aside
@@ -110,7 +112,7 @@ section
     transform: translateY(-30vh)
     transition: max-height 70ms
     max-height: 0
-
+    padding: 1vh 1vw
     &[active="true"]
       max-height: 30vh
       transform: translateY(0)
@@ -136,6 +138,7 @@ section
 nav
   display: flex
   row-gap: 1vh
+  column-gap: 1vw
   padding: 3px
 
   @media screen and (hover: hover) and (min-width: 1024px)

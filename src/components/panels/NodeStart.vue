@@ -13,7 +13,6 @@
         >
         </NodeEnd>
 
-        <!-- Leaf -->
         <a 
             v-else 
             class="item"
@@ -24,7 +23,6 @@
     </div>
 </div>
 </template>
-
 <script setup>
 import {ref} from "vue"
 import NodeEnd from "./NodeEnd.vue";
