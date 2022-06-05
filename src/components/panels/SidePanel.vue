@@ -1,7 +1,7 @@
 <template>
-  <aside
-  >
-    <nav>
+  <aside>
+    <nav
+    >
       <!-- <button class="mobile-nav">
       &#9776;
       </button> -->
@@ -47,7 +47,7 @@
   </aside>
 </template>
 <script setup>
-import {ref} from "vue"
+import { ref } from "vue"
 import {onKeyUp} from "@vueuse/core"
 import vTOC from "./TOC.vue"
 import vLibrary from "./Library.vue";
@@ -58,12 +58,22 @@ function toggleAside() {
   isDisplayed.value = !isDisplayed.value
 }
 
-function hideAside() {
+function hideAside(e = null) {
+
+    if (e instanceof PointerEvent) {
+      if (e.pointerType == "mouse")
+        return;
+    }
+
     isDisplayed.value = false
 }
 
 function showAside() {
     isDisplayed.value = true
+
+    document
+      .querySelector("main")
+      .addEventListener("scroll", hideAside, {once:true});
 }
 
 const tabIndex = ref(0);
