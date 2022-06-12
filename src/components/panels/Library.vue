@@ -34,17 +34,12 @@
 </div>
 </template>
 <script setup>
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
-import Epub from "@jcsj/epub"
 import {get, set, clear} from "idb-keyval"
-import { onBookLoaded, setSpeechTarget } from "../tts/TTS.js";
-import {Flow, TOC} from "../../modules/reactives";
-import simplifyHTMLTree from "../../modules/simplifyHTMLTree";
-import { Bookmarks } from "../../modules/Bookmark.js"
+import {loadBookFromFile, loadBookFromHandle} from "../../modules/fileReader"
 import { idb } from "../idb.js"
-const title = useTitle()
 
 //Refs
 const 
@@ -55,75 +50,11 @@ const
     levels = ref([])
 ;
 
-/**
- * @param {FileSystemFileHandle} handle 
- */
-async function loadBookFromHandle(handle) {
-    await loadBookFromFile(
-        await handle.getFile()
-    )
-}
-
 async function selectFile() {
     const file = await fileOpen({
         mimeTypes: ['application/epub+zip'],
     });
     loadBookFromFile(file);
-}
-/**
- * @param {File} file
- */
-async function loadBookFromFile(file, cached = false) {
-    const epub = new Epub(file, simplifyHTMLTree)
-    Bookmarks.items.clear()
-    Flow.items.clear()
-    TOC.items.clear()
-    epub.open({
-        "parsed-root": async function() {
-            this.parseRootFile(this.rootXML)
-        },
-        "parsed-manifest": function() {
-            console.log("Manifest: ", this.manifest);
-        },
-        "parsed-spine": function() {
-            console.log("Spine: ", this.spine);
-        },
-        "parsed-flow": async function() {
-            console.log("Flow: ", this.flow);
-            for (const [key, item] of this.flow) {    
-                Flow.items.set(
-                    key, 
-                    await this.getContent(item.id)
-                )
-            }
-            this.emit("loaded-chapters")
-        },
-        "parsed-toc": function() {
-            console.log("TOC: ", this.toc);
-            TOC.items = this.toc;
-        },
-        "parsed-metadata": function() {
-            console.log("Meta:", this.metadata);
-            useTitle(this.metadata.title)
-            Bookmarks.load()
-        },
-        "loaded-chapters": async function() {
-
-            let notBeenSet = true;
-            for (const k of [...Bookmarks.items.keys()].reverse()) {
-                const elem = document.querySelector(k)
-                elem.classList.add("bookmark")
-                if (notBeenSet && setSpeechTarget(elem)) {
-                    elem.scrollIntoView({block:"start"});
-                    notBeenSet = false;
-                }
-            }
-
-            if (notBeenSet) {
-                onBookLoaded();
-            }
-        }
-    })
 }
 
 async function setLibrary() {
@@ -246,7 +177,6 @@ async function verifyPermission(handle, mode = "read") {
     // The user didn't grant permission.
     return false;
 }
-
 </script>
 <style lang='sass' scoped>
 button
