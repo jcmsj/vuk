@@ -14,14 +14,14 @@
     "browser-fs-access": "^0.29.6",
     "idb-keyval": "^6.1.0",
     "vite-plugin-pwa": "^0.12.0",
-    "vue": "^3.2.36",
+    "vue": "^3.2.37",
     "vue-simple-context-menu": "^4.0.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
-    "sass": "^1.52.2",
-    "vite": "^2.9.9",
-    "vite-plugin-mkcert": "^1.6.4",
+    "sass": "^1.52.3",
+    "vite": "^2.9.12",
+    "vite-plugin-mkcert": "^1.7.1",
     "workbox-window": "^6.5.3"
   }
 }
