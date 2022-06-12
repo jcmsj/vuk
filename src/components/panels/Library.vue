@@ -34,7 +34,7 @@
 </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue"
+import { ref } from "vue"
 import {onKeyUp, useTitle} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import {get, set, clear} from "idb-keyval"
