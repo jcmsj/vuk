@@ -52,7 +52,7 @@ import {onKeyUp} from "@vueuse/core"
 import vTOC from "./TOC.vue"
 import vLibrary from "./Library.vue";
 import vBookmarks from "./Bookmarks.vue"
-
+const tabIndex = ref(0);
 const isDisplayed = ref(false);
 function toggleAside() {
   isDisplayed.value = !isDisplayed.value
@@ -70,7 +70,6 @@ function showAside() {
       .addEventListener("scroll", hideAside, {once:true});
 }
 
-const tabIndex = ref(0);
 
 ["f", "c", "b"].map((key, i) => {
   onKeyUp(key, e => {
