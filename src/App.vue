@@ -1,13 +1,16 @@
   /* eslint-disable no-unused-vars */
 <script setup>
-import {ref} from "vue"
+import {onMounted, ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
 import SidePanel from "./components/panels/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
-
+import {loadBookFromLauncher} from "./modules/loadBookFromFile"
 useTitle("Vuk | An EPUB reader for the web.")
 
+onMounted(() => {
+  loadBookFromLauncher();
+})
 </script>
 <template>
   <SidePanel 
