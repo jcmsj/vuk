@@ -5,7 +5,7 @@ import { useTitle } from "@vueuse/core"
 //Components
 import SidePanel from "./components/panels/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
-import {loadBookFromLauncher} from "./modules/loadBookFromFile"
+import {loadBookFromLauncher} from "./modules/fileReader"
 useTitle("Vuk | An EPUB reader for the web.")
 
 onMounted(() => {
