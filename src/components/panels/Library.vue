@@ -50,38 +50,38 @@ const
     levels = ref([])
 ;
 
-const epubMime = "application/epub+zip"
+const epubMime = "application/epub+zip";
+
 async function selectFile() {
-    const file = await fileOpen({
-        mimeTypes: [epubMime],
-    });
-    loadBookFromFile(file);
+    loadBookFromFile(
+        await fileOpen({
+            mimeTypes: [epubMime],
+        })
+    );
 }
 
 async function setLibrary() {
-    let directoryHandle = null;
+    let handle = null;
     try {
-        [{directoryHandle}] = await directoryOpen();
+        [{handle}] = await directoryOpen();
     } catch (e) {
         console.log(e);
         return
     }
 
-    if (!directoryHandle)
-        return
-
-    set(idb.dir, directoryHandle).then(() => {
+    if (handle instanceof FileSystemDirectoryHandle) {
+        await set(idb.dir, directoryHandle)
         restoreLibrary()
-    })
+    }
+
 }
 
-function setRootDir(dirHandle) {
-    if (dirHandle == null) {
+function setRootDir(handle) {
+    if (handle == null) {
         return
     }
 
-    hRoot.value = dirHandle
-    return dirHandle
+    hRoot.value = handle
 }
 
 function getRootDir() {
@@ -106,40 +106,38 @@ async function restoreLibrary() {
         return
     }
 
-    setCurrentDir(
-        setRootDir(await getLastWorkingDir())
-    )
+    setRootDir(await getLastWorkingDir())
+    setCurrentDir(hRoot.value)
 }
 
 onKeyUp("f", e=> {
     restoreLibrary();
 }, {target:document})
 /**
- * @param {FileSystemDirectoryHandle} dirHandle
+ * @param {FileSystemDirectoryHandle} handle
  */
-async function traverse(dirHandle) {
-    if (dirHandle == undefined || dirHandle == null) {
-        dirHandle = hRoot.value
-    }
+async function traverse(handle) {
+    if (!(handle instanceof FileSystemDirectoryHandle))
+        handle = hRoot.value
 
-    if (await dirHandle.isSameEntry(hCurrent.value)) {
+    if (await handle.isSameEntry(hCurrent.value)) {
         return
     }
 
-    if (await hRoot.value.isSameEntry(dirHandle)) {
+    if (await hRoot.value.isSameEntry(handle)) {
         levels.value = [];
     } else {
         levels.value.push(hCurrent.value);
     }
-    setCurrentDir(dirHandle)
+    setCurrentDir(handle)
 }
 
 async function moveUp() {
     setCurrentDir(levels.value.pop())
 }
 
-async function setCurrentDir(dirHandle) {
-    hCurrent.value = dirHandle
+async function setCurrentDir(handle) {
+    hCurrent.value = handle
     sortDir();
 }
 
@@ -183,7 +181,7 @@ async function verifyPermission(handle, mode = "read") {
 button
     display: block
     margin: 1vh 1vw
-    
+
 .book, .directory
     cursor: pointer
     
