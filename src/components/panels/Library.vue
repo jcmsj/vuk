@@ -50,9 +50,10 @@ const
     levels = ref([])
 ;
 
+const epubMime = "application/epub+zip"
 async function selectFile() {
     const file = await fileOpen({
-        mimeTypes: ['application/epub+zip'],
+        mimeTypes: [epubMime],
     });
     loadBookFromFile(file);
 }
@@ -150,7 +151,7 @@ async function sortDir() {
         for await (const [key, h] of hCurrent.value.entries()) {
             if (h.kind == "file") {
                 const file = await h.getFile()
-                if (file.type == "application/epub+zip")
+                if (file.type == epubMime)
                     books.value[key] = h
             } else {
                 dirs.value[key] = h
