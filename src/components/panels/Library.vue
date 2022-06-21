@@ -95,7 +95,7 @@ function setRootDir(handle) {
 async function getLastWorkingDir() {
     const handle = await get(idb.dir);
 
-    if (!notADirectoryHandle(handle)) //Maybe a new user
+    if (notADirectoryHandle(handle)) //Maybe a new user
         return
 
     if (await verifyPermission(handle, "read")) {
