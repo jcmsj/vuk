@@ -9,9 +9,9 @@ var gElement = null
 
 export const isReading = ref(false);
 export function identifySpeechTarget(e) {
-    const [elem] = e.path.filter(elem => validElems.RE.test(elem.tagName))
+    const elem = e.target;
 
-    if (!elem || elem.isSameNode(gElement)) return;
+    if (elem.isSameNode(gElement) || !validElems.RE.test(elem.tagName)) return;
 
     const wasReading = isReading.value;
     stopReading()
