@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { onKeyStroke, onKeyUp} from "@vueuse/core";
+import { onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/reactives";
 import { Bookmarks } from "../modules/Bookmark";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
