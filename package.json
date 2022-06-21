@@ -1,18 +1,18 @@
 {
-  "name": "ebook-reader",
+  "name": "Vuk",
   "private": true,
   "version": "0.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "upsurge": "vite build && cd dist && surge --domain https://ebook-reader.surge.sh/"
+    "upsurge": "vite build && cd dist && surge --domain https://vuk-pwa.surge.sh/"
   },
   "dependencies": {
     "@jcsj/epub": "link:D:/code/epub",
-    "@vueuse/core": "^8.6.0",
+    "@vueuse/core": "^8.7.4",
     "browser-fs-access": "^0.29.6",
-    "idb-keyval": "^6.1.0",
+    "idb-keyval": "^6.2.0",
     "vite-plugin-pwa": "^0.12.0",
     "vue": "^3.2.37",
     "vue-simple-context-menu": "^4.0.4"
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
     "sass": "^1.52.3",
-    "typescript": "^4.7.3",
+    "typescript": "^4.7.4",
     "vite": "^2.9.12",
     "vite-plugin-mkcert": "^1.7.2",
     "workbox-window": "^6.5.3"

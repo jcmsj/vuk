@@ -27,3 +27,4 @@ test*
 in-dev*
 \#*
 .\#*
+certs/
