@@ -2,19 +2,20 @@
     <ol>
         <b class="tab-label">Bookmarks</b>
         <li
-            v-for="[key, previewText] of Bookmarks.items"
+            v-for="[key, bm] of Bookmarks.items"
             :key="key"
             class="bookmark-link"
             @click="focus(key)"
             @dblclick="Bookmarks.unMark(key)"
             :title="key"
         >
-        {{previewText}}
+        {{bm.toString()}}
         </li>
     </ol>
 </template>
 <script setup>
-import { Bookmarks } from '../../modules/Bookmark';
+import { Bookmarks } from '../../modules/Bookmarks';
+import { Bookmark } from '../../modules/Bookmark';
 function focus(selector) {
     const elem = document.querySelector(selector);
     if (elem instanceof HTMLElement)

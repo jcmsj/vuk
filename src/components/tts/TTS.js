@@ -4,8 +4,8 @@ import { getSelectionText, isElementInViewport } from "./helpers";
 import { Transformer } from "./Transformer";
 import { Word } from "./Word";
 import { readAloud } from "./narrator";
-import {Bookmarks} from "../../modules/Bookmark"
-
+import {Bookmarks} from "../../modules/Bookmarks"
+import { getReadingProgress } from "../../modules/useMainElem";
 //Globals
 var gElement = null
 
@@ -16,6 +16,7 @@ export function identifySpeechTarget(e) {
     if (elem.isSameNode(gElement) || !validElems.RE.test(elem.tagName)) return;
 
     const wasReading = isReading.value;
+
     stopReading()
     setSpeechTarget(elem)
 
@@ -166,19 +167,21 @@ function findFirstReadable(chapterElem) {
 }
 
 /**
- * An interface for the Vue to toggle reading.
+ * An interface for Vue to toggle reading.
  */
 export function toggleReading() {
     if (isReading.value) {
         stopReading()
-        //Todo: Determine a way to access the progress from PageRenderer
-        Bookmarks.saveProgress(gElement, 0); 
+        Bookmarks.saveProgress(gElement, getReadingProgress()); 
     } else {
         startReading()
     }
 }
 
 export function stopReading() {
+    if (!isReading.value)
+        return
+
     speechSynthesis.cancel();
     isReading.value = false;
     Transformer.revert();

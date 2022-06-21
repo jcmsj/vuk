@@ -1,8 +1,8 @@
 import Epub from "@jcsj/epub"
-import { onBookLoaded, setSpeechTarget } from "../components/tts/TTS";
+import { onBookLoaded } from "../components/tts/TTS";
 import {Flow, TOC} from "./reactives";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { Bookmarks } from "./Bookmark.js"
+import { Bookmarks } from "./Bookmarks"
 import { useTitle } from "@vueuse/core";
 /**
  * @param {File} file

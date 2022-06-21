@@ -1,5 +1,5 @@
 <template>
-<main ref="text">
+<main ref="mainElem">
     <div
         @mouseup="identifySpeechTarget"
         class="chapter"
@@ -22,30 +22,15 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { onKeyUp} from "@vueuse/core";
 import {Flow} from "../modules/reactives";
-import { Bookmarks } from "../modules/Bookmark";
+import { Bookmarks } from "../modules/Bookmarks";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
 import vFooter from "./Footer.vue"
-let amount = 0;
-const 
-    text = ref(null),
-    pageContextMenu = ref(null),
-    righted = ref(null)
-;
+import {mainElem, getReadingProgress} from "../modules/useMainElem"
 
-const pageMode = {
-    amount : 0,
-    pages : 0,
-    move(n) {
-        if (n == 0)
-            return
-        
-        text.value.scrollBy(0, amount * n)
+const pageContextMenu = ref(null)
+var righted = null
 
-        this.pages += n
-    }
-}
 const menuItems = [
     {
         name: "&#x1F50A;",
@@ -60,8 +45,8 @@ const menuItems = [
         type:"bookmark",
         cb() {
             Bookmarks.mark(
-                righted.value,
-                getScrollPercentage(text.value)
+                righted,
+                getReadingProgress()
             )
         }
     },
@@ -71,15 +56,6 @@ const menuItems = [
         cb() {}
     }
 ]
-
-/**
- * 
- * @param {HTMLElement} elem 
- */
-function getScrollPercentage(elem) {
-    let p = (elem.scrollTop / elem.scrollHeight * 100).toFixed(2)
-    return p
-}
 
 function optionClicked({item, option}) {
     option.cb()
@@ -92,20 +68,11 @@ function optionClicked({item, option}) {
  * @param {string} key 
  */
 function showContextMenu(e) {
-    righted.value = e.target
+    righted = e.target
     pageContextMenu.value.showMenu(e);
 }
 
-onKeyUp("ArrowRight", e=> {
-    pageMode.move()
-})
-
-onKeyUp("ArrowLeft", e=> {
-    pageMode.move(-1)
-})
-
 onMounted(() => {
-    pageMode.amount = document.documentElement.clientHeight
     Bookmarks.load()
 })
 </script>
