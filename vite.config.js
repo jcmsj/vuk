@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import mkcert from 'vite-plugin-mkcert'
-import { VitePWA } from 'vite-plugin-pwa'
+import vitePWA from './vitePWA'
 // https://vitejs.dev/config/
 
 export default defineConfig({
@@ -13,51 +13,11 @@ export default defineConfig({
         open: "./index.html",
         port: 80
     },
-    plugins: [mkcert(), vue(),
-    VitePWA({
-        registerType: 'autoUpdate',
-        manifest: {
-            "name": "Vuk",
-            "background_color": "white",
-            "theme_color": "#FFFFFF",
-            "icons": [
-                {
-                    "src": "/vuk.webp",
-                    "sizes": "512x512",
-                    "type": "image/webp"
-                },
-                {
-                    "src": "/vuk-t.png",
-                    "sizes": "512x512",
-                    "type": "image/png",
-                    "purpose": "maskable"
-                },
-                {
-                    "src": "/vuk-p.png",
-                    "sizes": "512x512",
-                    "type": "image/png",
-                },
-                {
-                    "src": "/favicon.ico",
-                    "sizes": "128x128",
-                }
-            ],
-            "file_handlers": [
-                {
-                    "action": "/open-epub",
-                    "launch_type": "single-client",
-                    "accept": {
-                        "application/epub+zip": [".epub"],
-                    },
-                    "icons": [{
-                        "src": "favicon.ico",
-                        "sizes": "128x128",
-                        "type": "image/png"
-                    }]
-                }
-            ]
-        }
-    })],
+    plugins: [
+        mkcert(), 
+        vue(),
+        vitePWA
+    ],
     build: {
         rollupOptions: {
 
