@@ -5,29 +5,48 @@ import { idb_prefixes } from "../components/idb";
 export const Bookmarks = reactiveMap({
     className: "bookmark",
     charPreview: 20,
+    root : document.querySelector("#app"),
+
+    /**
+     * 
+     * @param {HTMLElement} elem 
+     * @param {Number} percentage 
+     * @returns an obj of a selector and bookmark text.
+     */
+    _mark(elem, percentage=0) {
+        const selector = generateSelector(elem, this.root)
+
+        if (elem.classList.contains(this.className)) {
+            return null;
+        }
+
+        let text = "";
+        switch(elem.tagName) {
+            case "IMG":
+                text = elem.alt
+                break;
+            default:
+                text = elem.innerText.slice(0, this.charPreview)
+        }
+        text += ` - ${percentage}%`;
+
+        return {selector,text}
+    },
     /**
      * 
      * @param {HTMLElement} elem 
      */
     mark(elem, percentage=0) {
-        const s = generateSelector(elem, document.querySelector("#app"))
-        if (elem.classList.contains(this.className)) {
-            Bookmarks.unMark(s);
+        const {selector,text} = this._mark(elem, percentage);
+
+        if (selector == null || text == null) {
+            Bookmarks.unMark(selector);
             return false;
         }
 
-        let v = "";
-        switch(elem.tagName) {
-            case "IMG":
-                v = elem.alt
-                break;
-            default:
-                v = elem.innerText.slice(0, this.charPreview)
-        }
-        v+= " - "+ percentage + "%";
-
         elem.classList.add(this.className)
-        Bookmarks.items.set(s, v);
+
+        Bookmarks.items.set(selector, text);
         this.sync()
         return true
     },
@@ -52,14 +71,11 @@ export const Bookmarks = reactiveMap({
         }
     },
     sync() {
-        try {
-            set(
-                idb_prefixes.bookmark + document.title, 
-                Object.fromEntries(Bookmarks.items));
-        } catch (e) {
-            console.log(e);
-        }
+        this.setOrLog(
+            idb_prefixes.bookmark + document.title, 
+            Object.fromEntries(Bookmarks.items));
     },
+
     get(n) {
         let i = 0
         for (const pair of this.items) {
@@ -69,5 +85,34 @@ export const Bookmarks = reactiveMap({
         }
 
         return null
+    },
+
+    saveProgress(elem, percentage = 0) {
+        const {selector, text } = this._mark(elem, percentage)
+
+        if (selector == null || text == null) {
+            console.error(`Failed to save progress for ${elem}`)
+            return;
+        }
+
+        this.setOrLog(
+            idb_prefixes.bookmark + idb_prefixes.auto + document.title,
+            {selector, text}
+        )
+    },
+
+    /**
+     * Set a value with a key.
+     *
+     * @param key
+     * @param value
+     * @param customStore Method to get a custom store. Use with caution (see the docs).
+     */
+    async setOrLog(key, value, customeStore = undefined) {
+        try {
+            set(key, value, customeStore)
+        } catch (e) {
+            console.log(e);
+        }
     }
 })
