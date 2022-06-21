@@ -1,5 +1,5 @@
 <template>
-<div class="welcome-page">
+<main class="welcome-page">
     <div
         class="no-kb"
     >
@@ -19,7 +19,7 @@
         <kbd>F</kbd> - Show File explorer
         </span>
     </div>
-</div>
+</main>
 </template>
 <script setup>
 

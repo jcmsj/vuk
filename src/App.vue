@@ -1,4 +1,3 @@
-  /* eslint-disable no-unused-vars */
 <script setup>
 import {onMounted, ref} from "vue"
 import { useTitle } from "@vueuse/core"
@@ -6,6 +5,9 @@ import { useTitle } from "@vueuse/core"
 import SidePanel from "./components/panels/SidePanel.vue"
 import PageRenderer from "./components/PageRenderer.vue"
 import {loadBookFromLauncher} from "./modules/fileReader"
+import WelcomePage from "./components/WelcomePage.vue"
+import {Flow} from "./modules/reactives";
+
 useTitle("Vuk | An EPUB reader for the web.")
 
 onMounted(() => {
@@ -15,8 +17,10 @@ onMounted(() => {
 <template>
   <SidePanel 
   ></SidePanel>
-  <PageRenderer>
-  </PageRenderer>
+  <PageRenderer
+    v-if="Flow.items.size"
+  ></PageRenderer>
+  <WelcomePage v-else/>
 </template>
 
 <!-- Note the FF styles will be applied for the entire APP -->
@@ -42,6 +46,19 @@ body
   flex-direction: column
   @media screen and (hover: hover) and (min-width: 1024px)
     flex-direction: row
+
+main
+  display: flex
+  flex-direction: column
+  flex: 1
+  align-items: center
+
+  font-size: 2rem
+  overflow-y: auto
+  overflow-x: hidden
+
+  @media screen and (hover: none) and (max-width: 1280px) 
+      font-size: smaller
 
 button.btn
   background: var(--color-2-d)

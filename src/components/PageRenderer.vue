@@ -1,8 +1,5 @@
 <template>
 <main ref="text">
-    <WelcomePage
-        v-if="Flow.items.size == 0"
-    />
     <div
         @mouseup="identifySpeechTarget"
         class="chapter"
@@ -30,7 +27,6 @@ import {Flow} from "../modules/reactives";
 import { Bookmarks } from "../modules/Bookmark";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
 import vFooter from "./Footer.vue"
-import WelcomePage from "./WelcomePage.vue"
 let amount = 0;
 const 
     text = ref(null),
@@ -115,19 +111,6 @@ onMounted(() => {
 </script>
 
 <style lang='sass' scoped>
-
-main
-    display: flex
-    flex-direction: column
-    flex: 1
-    align-items: center
-
-    font-size: 2rem
-    overflow-y: auto
-    overflow-x: hidden
-
-    @media screen and (hover: none) and (max-width: 1280px) 
-        font-size: smaller
     
 div.chapter
     flex: 1
