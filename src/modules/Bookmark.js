@@ -2,6 +2,7 @@ import { reactiveMap } from "./reactives";
 import generateSelector from "./generateSelector"
 import {get, set} from "idb-keyval"
 import { idb_prefixes } from "../components/idb";
+
 export const Bookmarks = reactiveMap({
     className: "bookmark",
     charPreview: 20,
@@ -114,5 +115,20 @@ export const Bookmarks = reactiveMap({
         } catch (e) {
             console.log(e);
         }
+    },
+
+    reapply() {
+        let notBeenSet = true;
+        
+        for (const k of [...this.items.keys()].reverse()) {
+            const elem = document.querySelector(k)
+            elem.classList.add("bookmark")
+            if (notBeenSet && setSpeechTarget(elem)) {
+                elem.scrollIntoView({block:"start"});
+                notBeenSet = false;
+            }
+        }
+
+        return notBeenSet;
     }
 })

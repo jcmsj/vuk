@@ -42,18 +42,7 @@ export async function loadBookFromFile(file, cached = false) {
             Bookmarks.load()
         },
         "loaded-chapters": async function() {
-
-            let notBeenSet = true;
-            for (const k of [...Bookmarks.items.keys()].reverse()) {
-                const elem = document.querySelector(k)
-                elem.classList.add("bookmark")
-                if (notBeenSet && setSpeechTarget(elem)) {
-                    elem.scrollIntoView({block:"start"});
-                    notBeenSet = false;
-                }
-            }
-
-            if (notBeenSet) {
+            if (Bookmarks.reapply()) {
                 onBookLoaded();
             }
         }
