@@ -4,6 +4,8 @@ import { getSelectionText, isElementInViewport } from "./helpers";
 import { Transformer } from "./Transformer";
 import { Word } from "./Word";
 import { readAloud } from "./narrator";
+import {Bookmarks} from "../../modules/Bookmark"
+
 //Globals
 var gElement = null
 
@@ -18,7 +20,7 @@ export function identifySpeechTarget(e) {
     setSpeechTarget(elem)
 
     /**
-     * Todo: When clicked on another element while reading, move speechcursor to that.
+     * Todo: When another element is clicked while reading, move speechcursor to that.
      * Disabled for now due to conflict with utterance.onend
      */
     /* if (wasReading)
@@ -49,7 +51,7 @@ export function onBookLoaded() {
         setTimeout(onBookLoaded, 500)
         return
     }
-    console.log(ch);
+    console.log("First chapter:", ch);
             
     setSpeechTarget(
         findFirstReadable(ch)
@@ -163,12 +165,20 @@ function findFirstReadable(chapterElem) {
     return target;
 }
 
+/**
+ * An interface for the Vue to toggle reading.
+ */
 export function toggleReading() {
-    isReading.value ? stopReading():startReading();
+    if (isReading.value) {
+        stopReading()
+        //Todo: Determine a way to access the progress from PageRenderer
+        Bookmarks.saveProgress(gElement, 0); 
+    } else {
+        startReading()
+    }
 }
 
 export function stopReading() {
-    if (isReading.value == false) return;
     speechSynthesis.cancel();
     isReading.value = false;
     Transformer.revert();
