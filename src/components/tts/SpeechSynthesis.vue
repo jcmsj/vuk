@@ -20,14 +20,12 @@
 </template>
 <script setup>
 import {toggleReading } from "./TTS.js";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { onKeyUp } from "@vueuse/core";
-
 import SpeechRateController from "./SpeechRateController.vue"
 import MediaControls from "./MediaControls.vue"
 import VoiceSelector from "./VoiceSelector.vue"
 const 
-    select = ref(null),
     showOps = ref(false)
 ;
 
