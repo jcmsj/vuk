@@ -35,7 +35,7 @@
 </template>
 <script setup>
 import { ref } from "vue"
-import {onKeyUp, useTitle} from "@vueuse/core"
+import {onKeyUp} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import {get, set, clear} from "idb-keyval"
 import {loadBookFromFile, loadBookFromHandle} from "../../modules/fileReader"
@@ -52,6 +52,14 @@ const
 
 const epubMime = "application/epub+zip";
 
+function getRootDir() {
+    return hRoot.value
+}
+
+function notADirectoryHandle(h) {
+    return !(h instanceof FileSystemDirectoryHandle)
+}
+
 async function selectFile() {
     loadBookFromFile(
         await fileOpen({
@@ -63,30 +71,27 @@ async function selectFile() {
 async function setLibrary() {
     let handle = null;
     try {
-        [{handle}] = await directoryOpen();
+        [{directoryHandle:handle}] = await directoryOpen();
+
+        if (notADirectoryHandle(handle))
+            throw "Not a directory."
+
     } catch (e) {
         console.log(e);
         return
     }
-
-    if (handle instanceof FileSystemDirectoryHandle) {
-        await set(idb.dir, directoryHandle)
-        restoreLibrary()
-    }
-
+    
+    await set(idb.dir, handle)
+    restoreLibrary()
 }
 
 function setRootDir(handle) {
-    if (handle == null) {
+    if (notADirectoryHandle(handle))
         return
-    }
 
     hRoot.value = handle
 }
 
-function getRootDir() {
-    return hRoot.value
-}
 
 async function getLastWorkingDir() {
     const handle = await get(idb.dir);
@@ -102,12 +107,9 @@ async function getLastWorkingDir() {
 }
 
 async function restoreLibrary() {
-    if (getRootDir() != null) {
-        return
-    }
-
     setRootDir(await getLastWorkingDir())
     setCurrentDir(hRoot.value)
+    sortDir();
 }
 
 onKeyUp("f", e=> {
@@ -117,7 +119,7 @@ onKeyUp("f", e=> {
  * @param {FileSystemDirectoryHandle} handle
  */
 async function traverse(handle) {
-    if (!(handle instanceof FileSystemDirectoryHandle))
+    if (notADirectoryHandle(handle))
         handle = hRoot.value
 
     if (await handle.isSameEntry(hCurrent.value)) {
@@ -138,7 +140,6 @@ async function moveUp() {
 
 async function setCurrentDir(handle) {
     hCurrent.value = handle
-    sortDir();
 }
 
 //The template shows a live view of the contents
