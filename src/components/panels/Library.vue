@@ -111,7 +111,6 @@ async function getLastWorkingDir() {
 async function restoreLibrary() {
     setRootDir(await getLastWorkingDir())
     setCurrentDir(hRoot.value)
-    sortDir();
 }
 
 onKeyUp("f", e=> {
@@ -142,6 +141,7 @@ async function moveUp() {
 
 async function setCurrentDir(handle) {
     hCurrent.value = handle
+    sortDir();
 }
 
 //The template shows a live view of the contents
