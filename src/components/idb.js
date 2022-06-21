@@ -8,6 +8,6 @@ export const idb = {
 }
 
 export const idb_prefixes = {
-    bookmark: "bookmark-"
-    
+    bookmark: "BM--",
+    auto : "auto--"
 }
