@@ -6,8 +6,6 @@ import { idb_prefixes } from "../components/idb";
 export const Bookmarks = reactiveMap({
     className: "bookmark",
     charPreview: 20,
-    root : document.querySelector("#app"),
-
     /**
      * 
      * @param {HTMLElement} elem 
@@ -15,10 +13,11 @@ export const Bookmarks = reactiveMap({
      * @returns an obj of a selector and bookmark text.
      */
     _mark(elem, percentage=0) {
-        const selector = generateSelector(elem, this.root)
+        const selector = generateSelector(elem, document.querySelector("#app"))
 
         if (elem.classList.contains(this.className)) {
-            return null;
+            Bookmarks.unMark(selector);
+            return false;
         }
 
         let text = "";
@@ -38,16 +37,14 @@ export const Bookmarks = reactiveMap({
      * @param {HTMLElement} elem 
      */
     mark(elem, percentage=0) {
-        const {selector,text} = this._mark(elem, percentage);
+        const o = this._mark(elem, percentage);
 
-        if (selector == null || text == null) {
-            Bookmarks.unMark(selector);
+        if (o == false)
             return false;
-        }
 
         elem.classList.add(this.className)
 
-        Bookmarks.items.set(selector, text);
+        Bookmarks.items.set(o.selector, o.text);
         this.sync()
         return true
     },
@@ -89,16 +86,16 @@ export const Bookmarks = reactiveMap({
     },
 
     saveProgress(elem, percentage = 0) {
-        const {selector, text } = this._mark(elem, percentage)
+        const o = this._mark(elem, percentage);
 
-        if (selector == null || text == null) {
+        if (o == false) {
             console.error(`Failed to save progress for ${elem}`)
-            return;
+            return
         }
 
         this.setOrLog(
             idb_prefixes.bookmark + idb_prefixes.auto + document.title,
-            {selector, text}
+            o
         )
     },
 
@@ -119,7 +116,7 @@ export const Bookmarks = reactiveMap({
 
     reapply() {
         let notBeenSet = true;
-        
+
         for (const k of [...this.items.keys()].reverse()) {
             const elem = document.querySelector(k)
             elem.classList.add("bookmark")
