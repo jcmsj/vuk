@@ -54,10 +54,9 @@ export function setSpeechTarget(elem) {
 export function onBookLoaded() {
     const ch = document.querySelector("." + className.chapter);
 
-    if (ch == null) {
-        setTimeout(onBookLoaded, 500)
+    if (ch == null)
         return
-    }
+        
     console.log("First chapter:", ch);
             
     setSpeechTarget(
