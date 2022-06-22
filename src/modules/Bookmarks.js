@@ -1,13 +1,13 @@
 import { reactiveMap } from "./reactives";
-import {Bookmark} from "./Bookmark.ts"
-import {get, set} from "idb-keyval"
+import { Bookmark } from "./Bookmark.ts"
+import { get, set } from "idb-keyval"
 import { idb_prefixes } from "../components/idb";
-import { setSpeechTarget } from "../components/tts/TTS";
+import { setSpeechTarget, isReadable } from "../components/tts/TTS";
 export const Bookmarks = reactiveMap({
     className: "bookmark",
-    auto : {
-        read : null,
-        scroll : null
+    auto: {
+        read: null,
+        scroll: null
     },
     /**
      * 
@@ -15,7 +15,7 @@ export const Bookmarks = reactiveMap({
      * @param {Number} percentage 
      * @returns {Bookmark} an altered Bookmark
      */
-    _mark(elem, percentage=0) {
+    _mark(elem, percentage = 0) {
         const b = Bookmark.from(elem);
 
         if (elem.classList.contains(this.className)) {
@@ -29,7 +29,7 @@ export const Bookmarks = reactiveMap({
     /**
      * @param {HTMLElement} elem 
      */
-    mark(elem, percentage=0) {
+    mark(elem, percentage = 0) {
         const o = this._mark(elem, percentage);
 
         if (o == false)
@@ -46,22 +46,22 @@ export const Bookmarks = reactiveMap({
      */
     unmark(selector) {
         const elem = document.querySelector(selector)
-        if (elem instanceof HTMLElement 
-        && elem.classList instanceof DOMTokenList) {
+        if (elem instanceof HTMLElement
+            && elem.classList instanceof DOMTokenList) {
             elem.classList.remove(this.className)
         }
-        
+
         Bookmarks.items.delete(selector)
         this.sync()
     },
     async load() {
         const items = await get(idb_prefixes.bookmark + document.title)
-        if (!(items instanceof Object ))
+        if (!(items instanceof Object))
             return
 
         this.items = new Map()
         for (const [key, val] of Object.entries(items)) {
-            this.items.set(key,  Bookmark.fromObject(val))
+            this.items.set(key, Bookmark.fromObject(val))
         }
     },
     sync() {
@@ -71,7 +71,7 @@ export const Bookmarks = reactiveMap({
         }
 
         this.setOrLog(
-            idb_prefixes.bookmark + document.title, 
+            idb_prefixes.bookmark + document.title,
             serialized)
     },
 
@@ -129,41 +129,42 @@ export const Bookmarks = reactiveMap({
      * TODO: Sort the bookmarks by the progress(percentage).
      */
     async reapply() {
-        let notBeenSet = true;
-        let bookmarks = [...this.items.keys()].reverse() 
-
         const restore = sel => {
             const lem = document.querySelector(sel)
 
-            if (lem.classList == null)
-                lem.className = this.className
-            else
-                lem.classList.add(this.className)
+            if (lem != null) {
+                if (lem.classList)
+                    lem.classList.add(this.className)
+                else
+                    lem.className = this.className
+            }
 
             return lem
         }
 
-        const refocus = lem => {
-            lem.scrollIntoView({block:"start"});
-        }
-        
-        for (const sel of bookmarks){
-            const elem = restore(sel)
-            if (notBeenSet && setSpeechTarget(elem)) {
-                refocus(elem)
-                notBeenSet = false;
+        let latest = null;
+        let readable = null;
+        for (const bm of [await this.loadProgress(), ...this.items.values()]) {
+            const elem = bm ? restore(bm.selector):null;
+
+            if (elem == null)
+                continue
+
+            if (!latest || bm.percentage > latest.percentage) {
+                latest = bm;
+                if (isReadable(elem))
+                    readable = elem;
             }
         }
 
-        const p = await this.loadProgress();
+        const refocus = lem => lem.scrollIntoView({block: "start"})
 
-        if (p != null) {
-            const last = bookmarks[0];
-            if (!last || p.percentage < last.percentage) {
-                const elem = restore(p.selector)
-                refocus(elem)
-            }
+        if (setSpeechTarget(readable)) {
+            refocus(readable)
+        } else if (latest) {
+            refocus(latest)
         }
-        return notBeenSet;
+
+        return !latest;
     }
 })
