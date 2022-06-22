@@ -142,27 +142,28 @@ export class BookmarkController {
     }
 
     /**
-    * @returns whether there are no bookmarks.
-    * TODO: Sort the bookmarks by the progress(percentage).
-    */
-    static async reapply() {
-        const restore = sel => {
-            const lem = document.querySelector(sel)
+     * Queries the element and adds the bookmark class.
+     */
+    static restore(sel) {
+        const lem = document.querySelector(sel)
 
-            if (lem != null) {
-                if (lem.classList)
-                    lem.classList.add(this.className)
-                else
-                    lem.className = this.className
-            }
-
-            return lem
+        if (lem != null) {
+            if (lem.classList)
+                lem.classList.add(this.className)
+            else
+                lem.className = this.className
         }
 
+        return lem
+    }
+    /**
+    * @returns whether there are no bookmarks.
+    */
+    static async reapply() {
         let latest = null;
         let readable = null;
         for (const bm of [await this.loadProgress(), ...Bookmarks.items.values()]) {
-            const elem = bm ? restore(bm.selector) : null;
+            const elem = bm ? this.restore(bm.selector) : null;
 
             if (elem == null)
                 continue
