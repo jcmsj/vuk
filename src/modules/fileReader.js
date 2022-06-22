@@ -2,7 +2,7 @@ import Epub from "@jcsj/epub"
 import { onBookLoaded } from "../components/tts/TTS";
 import {Flow, TOC} from "./reactives";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { Bookmarks } from "./Bookmarks"
+import { Bookmarks, BookmarkController } from "./Bookmarks"
 import { useTitle } from "@vueuse/core";
 /**
  * @param {File} file
@@ -39,10 +39,10 @@ export async function loadBookFromFile(file, cached = false) {
         "parsed-metadata": function() {
             console.log("Meta:", this.metadata);
             useTitle(this.metadata.title)
-            Bookmarks.load()
+            BookmarkController.load()
         },
         "loaded-chapters": async function() {
-            if (Bookmarks.reapply()) {
+            if (BookmarkController.reapply()) {
                 onBookLoaded();
             }
         }

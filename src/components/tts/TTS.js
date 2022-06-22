@@ -4,7 +4,7 @@ import { getSelectionText, isElementInViewport } from "./helpers";
 import { Transformer } from "./Transformer";
 import { Word } from "./Word";
 import { readAloud } from "./narrator";
-import {Bookmarks} from "../../modules/Bookmarks"
+import { BookmarkController } from "../../modules/Bookmarks"
 import { getReadingProgress } from "../../modules/useMainElem";
 //Globals
 var gElement = null
@@ -56,7 +56,7 @@ export function onBookLoaded() {
 
     if (ch == null)
         return
-        
+
     console.log("First chapter:", ch);
             
     setSpeechTarget(
@@ -173,7 +173,7 @@ function findFirstReadable(chapterElem) {
 export function toggleReading() {
     if (isReading.value) {
         stopReading()
-        Bookmarks.saveProgress(
+        BookmarkController.saveProgress(
             gElement, 
             getReadingProgress()
         ); 

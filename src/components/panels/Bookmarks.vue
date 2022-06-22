@@ -6,7 +6,7 @@
             :key="key"
             class="bookmark-link"
             @click="focus(key)"
-            @dblclick="Bookmarks.unmark(key)"
+            @dblclick="BookmarkController.unmark(key)"
             :title="key"
         >
         {{bm.text}} - {{bm.percentage}}%
@@ -14,8 +14,7 @@
     </ol>
 </template>
 <script setup>
-import { Bookmarks } from '../../modules/Bookmarks';
-import { Bookmark } from '../../modules/Bookmark';
+import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
 function focus(selector) {
     const elem = document.querySelector(selector);
     if (elem instanceof HTMLElement)

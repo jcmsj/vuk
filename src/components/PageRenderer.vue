@@ -23,7 +23,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import {Flow} from "../modules/reactives";
-import { Bookmarks } from "../modules/Bookmarks";
+import { BookmarkController } from "../modules/Bookmarks";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
 import vFooter from "./Footer.vue"
 import {mainElem, getReadingProgress} from "../modules/useMainElem"
@@ -44,7 +44,7 @@ const menuItems = [
         name: "&#x1F516;",
         type:"bookmark",
         cb() {
-            Bookmarks.toggle(
+            BookmarkController.toggle(
                 righted
             )
         }
@@ -71,9 +71,9 @@ function showContextMenu(e) {
     pageContextMenu.value.showMenu(e);
 }
 
-onMounted(() => {
+/* onMounted(() => {
     Bookmarks.load()
-})
+}) */
 </script>
 
 <style lang='sass' scoped>
