@@ -15,7 +15,7 @@ export function identifySpeechTarget(e) {
 
     if (elem.isSameNode(gElement) || !validElems.RE.test(elem.tagName)) return;
 
-    const wasReading = isReading.value;
+    //const wasReading = isReading.value;
 
     stopReading()
     setSpeechTarget(elem)
@@ -29,11 +29,17 @@ export function identifySpeechTarget(e) {
 }
 
 /**
+ * 
+ * @param {HTMLElement} lem 
+ */
+export function isReadable(lem) {
+    return (lem instanceof HTMLElement) && validElems.RE.test(lem.tagName)
+}
+/**
  * @param {HTMLElement} elem 
  */
 export function setSpeechTarget(elem) {
-    if (!(elem instanceof HTMLElement)
-    || !validElems.RE.test(elem.tagName)) {
+    if (!isReadable(elem)) {
         console.warn("Invalid speech target:", elem);
         return false
     }
@@ -60,10 +66,8 @@ export function onBookLoaded() {
 }
 
 export function startReading() {
-    if (!(gElement instanceof HTMLElement)) return
-    
     //Start reading at the selected text
-    let txt = gElement.innerText;
+    let txt = gElement.innerText || "";
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
     beforeSpeak(txt);
@@ -71,7 +75,6 @@ export function startReading() {
 
 function moveSpeechCursor(target) {
     if (!isReading.value) {
-        console.warn("Not in reading state");
         return;
     }
 
@@ -114,8 +117,7 @@ function beforeSpeak(txt = "") {
         Word.highlight(e, gElement)
     }
     utterance.onend = (e) => {
-        if (isReading.value)
-            moveSpeechCursor(nextReadable(gElement));
+        moveSpeechCursor(nextReadable(gElement));
     };
 
     isReading.value = true;
@@ -172,7 +174,10 @@ function findFirstReadable(chapterElem) {
 export function toggleReading() {
     if (isReading.value) {
         stopReading()
-        Bookmarks.saveProgress(gElement, getReadingProgress()); 
+        Bookmarks.saveProgress(
+            gElement, 
+            getReadingProgress()
+        ); 
     } else {
         startReading()
     }
