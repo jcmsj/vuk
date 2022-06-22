@@ -26,7 +26,7 @@
 
 1. Bookmarks
     1. Last read.
-    1. last spoken by TTS.
+    1. ✓ last spoken by TTS.
     1. ✓ User-defined.
     1. ✓ Autoload from IDB
 
