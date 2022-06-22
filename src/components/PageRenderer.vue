@@ -44,9 +44,8 @@ const menuItems = [
         name: "&#x1F516;",
         type:"bookmark",
         cb() {
-            Bookmarks.mark(
-                righted,
-                getReadingProgress()
+            Bookmarks.toggle(
+                righted
             )
         }
     },

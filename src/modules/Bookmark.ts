@@ -3,34 +3,17 @@ import generateSelector from "./generateSelector"
 import { getReadingProgress } from "./useMainElem";
 
 export class Bookmark {
-    selector: String;
-    text: String;
-    percentage: number;
     static charPreview = 20;
 
-    constructor(selector:String, text:String, percentage:number=0) {
-        this.selector = selector;
-        text.replace('"', "\"")
-        this.text = text;
-        this.percentage = percentage;
-    }
-
-    toString() {
-        return `${this.text} - ${this.percentage}%`
-    }
-
-    toJSON() {
-        return `{"selector":"${this.selector}","text":"${this.text}","percentage":${this.percentage}}`
-    }
-
-    toObject() {
+    static create(selector:string, text:string, percentage:number = 0) {
         return {
-            selector: this.selector,
-            text : this.text,
-            percentage: this.percentage
+            selector,
+            text : text.replace('"', "\""),
+            percentage
         }
     }
-    static from(elem) {
+
+    static from(elem, percentage = getReadingProgress()) {
         const reap = () =>  {
             switch(elem.tagName) {
                 case "IMG":
@@ -39,20 +22,14 @@ export class Bookmark {
                     return elem.innerText.slice(0, Bookmark.charPreview)
             }
         }
-
-        return new Bookmark(
+        return Bookmark.create(
             generateSelector(elem, document.querySelector("#app")),
             reap(),
-            getReadingProgress()
+            percentage
         )
     }
 
-    static fromJSON(str:string) {
-        const o = JSON.parse(str)
-        return this.fromObject(o)
-    }
-
-    static fromObject(o) {
-        return new Bookmark(o.selector, o.text, o.percentage);
+    static clone(proxy) {
+        return this.create(proxy.selector, proxy.text, proxy.percentage);
     }
 }

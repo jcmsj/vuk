@@ -6,10 +6,10 @@
             :key="key"
             class="bookmark-link"
             @click="focus(key)"
-            @dblclick="Bookmarks.unMark(key)"
+            @dblclick="Bookmarks.unmark(key)"
             :title="key"
         >
-        {{bm.toString()}}
+        {{bm.text}} - {{bm.percentage}}%
         </li>
     </ol>
 </template>

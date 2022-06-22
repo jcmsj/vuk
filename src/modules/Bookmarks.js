@@ -9,36 +9,15 @@ export const Bookmarks = reactiveMap({
         read: null,
         scroll: null
     },
-    /**
-     * 
-     * @param {HTMLElement} elem 
-     * @param {Number} percentage 
-     * @returns {Bookmark} an altered Bookmark
-     */
-    _mark(elem, percentage = 0) {
-        const b = Bookmark.from(elem);
 
-        if (elem.classList.contains(this.className)) {
-            Bookmarks.unmark(b.selector);
-            return false;
+    /**
+     * @param {HTMLElement} elem 
+     */
+    mark(elem) {
+        return {
+            exists: elem.classList.contains(this.className),
+            bookmark: Bookmark.from(elem)
         }
-        b.percentage = percentage
-
-        return b
-    },
-    /**
-     * @param {HTMLElement} elem 
-     */
-    mark(elem, percentage = 0) {
-        const o = this._mark(elem, percentage);
-
-        if (o == false)
-            return false;
-
-        elem.classList.add(this.className)
-        Bookmarks.items.set(o.selector, o);
-        this.sync()
-        return true
     },
     /**
      * 
@@ -51,8 +30,22 @@ export const Bookmarks = reactiveMap({
             elem.classList.remove(this.className)
         }
 
-        Bookmarks.items.delete(selector)
+        this.items.delete(selector)
         this.sync()
+    },
+
+    toggle(elem, percentage=0) {
+        const {exists, bookmark} = this.mark(elem, percentage);
+
+        if (exists) {
+            this.unmark(bookmark.selector)
+            return false;
+        }
+
+        elem.classList.add(this.className)
+        this.items.set(bookmark.selector, bookmark);
+        this.sync()
+        return true
     },
     async load() {
         const items = await get(idb_prefixes.bookmark + document.title)
@@ -60,19 +53,21 @@ export const Bookmarks = reactiveMap({
             return
 
         this.items = new Map()
-        for (const [key, val] of Object.entries(items)) {
-            this.items.set(key, Bookmark.fromObject(val))
+        for (const [key, bookmark] of Object.entries(items)) {
+            this.items.set(key, bookmark)
         }
     },
     sync() {
         const serialized = {}
         for (const [key, bookmark] of Bookmarks.items) {
-            serialized[key] = bookmark.toObject()
+            //Since Vue uses proxy objects, the real objects need to be recreated.
+            serialized[key] = Bookmark.clone(bookmark)
         }
 
         this.setOrLog(
             idb_prefixes.bookmark + document.title,
-            serialized)
+            serialized
+        )
     },
 
     get(n) {
@@ -87,16 +82,11 @@ export const Bookmarks = reactiveMap({
     },
 
     saveProgress(elem, percentage = 0) {
-        const bm = this._mark(elem, percentage);
-
-        if (bm == false) {
-            console.error(`Failed to save progress for ${elem}`)
-            return
-        }
+        const {bookmark} = this.mark(elem, percentage);
 
         this.setOrLog(
             idb_prefixes.bookmark + idb_prefixes.auto + document.title,
-            bm.toObject()
+            bookmark
         )
     },
     async loadProgress() {
@@ -111,7 +101,6 @@ export const Bookmarks = reactiveMap({
     },
     /**
      * Set a value with a key.
-     *
      * @param key
      * @param value
      * @param customStore Method to get a custom store. Use with caution (see the docs).
