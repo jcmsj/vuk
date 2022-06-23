@@ -36,30 +36,38 @@ function simplifyHTMLTree(fragment) {
 
         tries--;
     }
+
     if (tries == 0)
         throw Error("inifnite loop:", rootElem);
 
-    if (type.chapter) {
-        for (const IMG of rootElem.querySelectorAll("IMG")) {
-            if (rootElem.isSameNode(IMG.parentElement)) {
-                continue
-            }
+    const div = document.createElement("div")
+    if (end == type.cover) {
+        div.appendChild(rootElem)
+        return div
+    }
 
-            let elem = IMG;
-            //Locates the root's direct child that the IMG element descends from, then replaces it with the IMG. Note that the previous descendant is removed.
-            while(elem = elem.parentElement) {  
-                if (rootElem.isSameNode(elem)) {
-                    rootElem.replaceWith(IMG , elem)
-                    break;
-                }
+    for (const IMG of rootElem.querySelectorAll("IMG")) {
+        if (rootElem.isSameNode(IMG.parentElement)) {
+            continue
+        }
+
+        let elem = IMG;
+        //Locates the root's direct child that the IMG element descends from, then replaces it with the IMG. Note that the previous descendant is removed.
+        while(elem = elem.parentElement) {  
+            if (rootElem.isSameNode(elem)) {
+                rootElem.replaceWith(IMG , elem)
+                break;
             }
         }
     }
-    
-    const div = document.createElement("div")
-    div.appendChild(rootElem)
 
-    return div
+    if (rootElem instanceof DocumentFragment) {
+        [...rootElem.children]
+        .map(lem => div.appendChild(lem))
+        return div
+    }
+    
+    return rootElem
 }
 
 export default simplifyHTMLTree;
