@@ -59,20 +59,19 @@ export async function loadBookFromHandle(handle) {
 }
 
 export async function loadBookFromLauncher() {
-    if ('launchQueue' in window && 'files' in LaunchParams.prototype) {
-        // The File Handling API is supported.
-        launchQueue.setConsumer((launchParams) => {
-          // Nothing to do when the queue is empty.
-          if (!launchParams.files.length) {
-              console.log(
-                "No files to be launched!"
-              );
-            return;
-          }
-          const [handle] = launchParams.files;
-          loadBookFromHandle(handle);
-        });
-    } else {
-        console.log("File Handling API is unsupported");
+    if (!('launchQueue' in window && 'files' in LaunchParams.prototype))  {
+        console.log("File Handling API is unsupported")
+        return
     }
+
+    // The File Handling API is supported.
+    launchQueue.setConsumer((launchParams) => {
+        // Nothing to do when the queue is empty.
+        if (!launchParams.files.length) {
+            console.log("No files to be launched!");
+            return;
+        }
+        const [handle] = launchParams.files;
+        loadBookFromHandle(handle);
+    });
 }
