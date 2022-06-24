@@ -1,23 +1,26 @@
 <template>
 <div class="r"> 
-    <button 
-        @click="selectFile"
-        class="btn"
-    >
-    Open 📖
-    </button>
-    <button
-        @click="setLibrary"
-        class="btn"
-    >
-    Set 📂
-    </button>
-    <button
-        @click="restoreLibrary"
-        class="btn"
-    >
-    ↻ 📂
-    </button>
+    <nav>
+        <button 
+            @click="selectFile"
+            class="btn"
+        >
+        Open 📖
+        </button>
+        <button
+            @click="setLibrary"
+            class="btn"
+        >
+        Set 📂
+        </button>
+        <button
+            @click="restoreLibrary"
+            class="btn"
+        >
+        ↻ 📂
+        </button>
+    </nav>
+
     <div class="directory" v-if="hRoot && hRoot != hCurrent" @click="traverse(hRoot)">/</div>
     <div class="directory" v-if="levels.length" @click="moveUp">../</div>
     <div class="directory" v-for="(handle, dirname) of dirs" 
@@ -184,6 +187,12 @@ async function verifyPermission(handle, mode = "read") {
 button
     display: block
     margin: 1vh 1vw
+
+nav
+    display: inline
+    button
+        display: inline
+        margin: 5px
 .book, .directory
     cursor: pointer
 .directory::before
