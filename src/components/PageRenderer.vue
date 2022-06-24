@@ -20,11 +20,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import {Flow} from "../modules/reactives";
 import { BookmarkController } from "../modules/Bookmarks";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
-import {mainElem, getReadingProgress} from "../modules/useMainElem"
+import {mainElem} from "../modules/useMainElem"
 
 const pageContextMenu = ref(null)
 var righted = null
@@ -69,9 +69,6 @@ function showContextMenu(e) {
     pageContextMenu.value.showMenu(e);
 }
 
-/* onMounted(() => {
-    Bookmarks.load()
-}) */
 </script>
 
 <style lang='sass' scoped>
