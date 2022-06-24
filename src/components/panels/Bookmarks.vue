@@ -33,4 +33,9 @@ function focus(selector) {
     border: 1px solid green
 .bookmark-link
     cursor: pointer
+
+</style>
+<style lang="sass" scoped>
+ol
+    padding-inline-start: 2vw
 </style>
