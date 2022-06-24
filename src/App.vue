@@ -24,7 +24,9 @@ onMounted(() => {
       v-if="Flow.items.size"
     ></PageRenderer>
     <WelcomePage v-else/>
-    <vFooter></vFooter>
+    <vFooter
+      v-if="Flow.items.size"
+    ></vFooter>
   </main>
 
 </template>
