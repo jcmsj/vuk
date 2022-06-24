@@ -7,6 +7,7 @@ import PageRenderer from "./components/PageRenderer.vue"
 import {loadBookFromLauncher} from "./modules/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
 import {Flow} from "./modules/reactives";
+import vFooter from "./components/Footer.vue"
 
 useTitle("Vuk | An EPUB reader for the web.")
 
@@ -17,10 +18,15 @@ onMounted(() => {
 <template>
   <SidePanel 
   ></SidePanel>
-  <PageRenderer
-    v-if="Flow.items.size"
-  ></PageRenderer>
-  <WelcomePage v-else/>
+  <main>
+    <!-- vHeader here -->
+    <PageRenderer
+      v-if="Flow.items.size"
+    ></PageRenderer>
+    <WelcomePage v-else/>
+    <vFooter></vFooter>
+  </main>
+
 </template>
 
 <!-- Note the FF styles will be applied for the entire APP -->

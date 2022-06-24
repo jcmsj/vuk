@@ -1,13 +1,13 @@
 <template>
-<main ref="mainElem">
+<article ref="mainElem">
     <div
         @mouseup="identifySpeechTarget"
+        @contextmenu.prevent.stop="showContextMenu($event)"
         class="chapter"
         v-for="[key, part] of Flow.items" 
         :key="key"
         :id="key"
         v-html="part"
-        @contextmenu.prevent.stop="showContextMenu($event)"
         >
     </div>
     <vue-simple-context-menu
@@ -16,8 +16,7 @@
         ref="pageContextMenu"
         @option-clicked="optionClicked"
     />
-    <vFooter />
-</main>
+</article>
 </template>
 
 <script setup>
@@ -25,7 +24,6 @@ import { ref, onMounted } from "vue";
 import {Flow} from "../modules/reactives";
 import { BookmarkController } from "../modules/Bookmarks";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
-import vFooter from "./Footer.vue"
 import {mainElem, getReadingProgress} from "../modules/useMainElem"
 
 const pageContextMenu = ref(null)
@@ -77,6 +75,8 @@ function showContextMenu(e) {
 </script>
 
 <style lang='sass' scoped>
+@import "src/sass/media_queries"
+@import "src/sass/mixins"
     
 div.chapter
     flex: 1
@@ -98,4 +98,8 @@ div.chapter
     position: sticky
     bottom: 0
 
+article
+    @include lex
+    overflow: inherit
+    width: 100%
 </style>
