@@ -184,13 +184,10 @@ async function verifyPermission(handle, mode = "read") {
 button
     display: block
     margin: 1vh 1vw
-
 .book, .directory
     cursor: pointer
-    
 .directory::before
     content: "\01F4C2 "
-
 .book::before
     content: "📖 "
 </style>

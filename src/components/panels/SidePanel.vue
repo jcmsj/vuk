@@ -100,11 +100,12 @@ b.tab-label
   text-align: center
 </style>
 <style lang='sass' scoped>
+@import "src/sass/media_queries"
 aside
   display: flex
   background-color: wheat
-
-  @media screen and (max-width: 1024px)
+  
+  @include mobile
     flex-direction: column
 
 section
@@ -114,32 +115,33 @@ section
   display: none
   transition: transform 100ms
 
-  @media screen and (max-width: 1024px)
+  @include mobile
     transform: translateY(-30vh)
     transition: max-height 70ms
     max-height: 0
     padding: 1vh 1vw
-    &[active="true"]
+
+    @include active
       max-height: 30vh
       transform: translateY(0)
       display: flex
 
-  @media screen and (min-width: 1024px)
-    transform: translateX(-30vw)
+  @include mobile(min-width)
+    transform: translateX(-25vw)
     transition: max-width 70ms
     display: flex
     max-width: 0
     resize: horizontal
 
-    &[active="true"]
-      max-width: 30vw
+    @include active
+      max-width: 25vw
       transform: translateX(0)
       display: flex
 
 .panel
   display: none
 
-  &[active="true"]
+  @include active
       display: block
 nav
   display: flex
@@ -147,13 +149,12 @@ nav
   column-gap: 1vw
   padding: 3px
 
-  @media screen and (hover: hover) and (min-width: 1024px)
+  @include desk(min-width)
     flex-direction: column
-
 .mobile-nav
   display: block
-
-  @media screen and (hover: hover) and (min-width: 1024px)
+  
+  @include desk(min-width)
     display: none
 
 </style>

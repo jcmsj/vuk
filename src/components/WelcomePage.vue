@@ -25,6 +25,8 @@
 
 </script>
 <style lang='sass' scoped>
+@import "src/sass/mixins"
+
 .welcome-page
     height: -webkit-fill-available
 
@@ -34,9 +36,8 @@ kbd
     border-radius: 10%
 
 .kb, .welcome-page
-    display: flex
+    @include lex
     justify-content: center
-    flex-direction: column
     row-gap: 2vh
 
 .kb

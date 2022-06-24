@@ -39,6 +39,7 @@ function toggleops() {
 
 </script>
 <style lang="sass">
+
 .s-read
     background-color: #53e7f5
 
@@ -47,6 +48,8 @@ span.current-word
 </style>
 
 <style lang="sass" scoped>
+@import "src/sass/media_queries"
+
 section
     display: flex
     justify-content: space-between
@@ -65,7 +68,7 @@ section
     color: var(--color-3)
     flex-direction: column
 
-    &[active="true"]
+    @include active
         display: flex
 
 .settings

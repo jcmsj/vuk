@@ -28,6 +28,9 @@ onMounted(() => {
 @use "./sass/colors"
 @use "./sass/scrollbar"
 
+@import "./sass/media_queries"
+@import "./sass/mixins"
+
 body
   margin: 0
   padding: 0
@@ -35,15 +38,14 @@ body
   overflow: hidden
 
 #app
-  display: flex
+  @include lex
   height: inherit
-  flex-direction: column
-  @media screen and (hover: hover) and (min-width: 1024px)
+
+  @include desk(min-width)
     flex-direction: row
 
 main
-  display: flex
-  flex-direction: column
+  @include lex
   flex: 1
   align-items: center
 
@@ -51,8 +53,8 @@ main
   overflow-y: auto
   overflow-x: hidden
 
-  @media screen and (hover: none) and (max-width: 1280px) 
-      font-size: smaller
+  @media screen and (hover: none) and (max-width: $lim) 
+    font-size: smaller
 
 button.btn
   background: var(--color-2-d)

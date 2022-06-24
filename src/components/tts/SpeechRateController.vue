@@ -26,9 +26,10 @@ import {speech_rate} from "./speech_rate";
 
 </script>
 <style lang='sass' scoped>
+@import "src/sass/mixins"
+
 div
-    display: flex
-    flex-direction: column
+    @include lex
     
 input[type="range"]
     padding: 3vh 1vw
