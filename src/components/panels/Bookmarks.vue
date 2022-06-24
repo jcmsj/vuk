@@ -1,6 +1,7 @@
 <template>
+<div>
+    <b class="tab-label">Bookmarks</b>
     <ol>
-        <b class="tab-label">Bookmarks</b>
         <li
             v-for="[key, bm] of Bookmarks.items"
             :key="key"
@@ -12,6 +13,7 @@
         {{bm.text}} - {{bm.percentage}}%
         </li>
     </ol>
+</div>
 </template>
 <script setup>
 import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
