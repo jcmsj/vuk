@@ -1,0 +1,13 @@
+$lim: 1024px
+    
+@mixin active
+    &[active="true"]
+        @content
+
+@mixin mobile($width: max-width)
+  @media screen and ($width: $lim)
+    @content
+
+@mixin desk($width: max-width)
+  @media screen and (hover: hover) and ($width: $lim)
+    @content
