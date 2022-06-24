@@ -18,7 +18,7 @@ import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
 function focus(selector) {
     const elem = document.querySelector(selector);
     if (elem instanceof HTMLElement)
-        elem.scrollIntoView()
+        elem && elem.scrollIntoView()
     else
         console.warn("Invalid selector:", selector);
 
