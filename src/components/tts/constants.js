@@ -6,6 +6,6 @@ export const className = {
 }
 
 export const validElems = {
-    selector : "h1, h2, h3, h4, h5, h6, a, p, div, span",
-    RE : /^(P|A|H[1-6]|SPAN|DIV)$/
+    selector : "h1, h2, h3, h4, h5, h6, a, p, div, span, em, strong",
+    RE : /^(P|A|H[1-6]|SPAN|DIV|EM|STRONG)$/
 }
