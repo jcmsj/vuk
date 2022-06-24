@@ -29,6 +29,8 @@
 
 .welcome-page
     height: -webkit-fill-available
+    width: 100%
+    align-items: center
 
 kbd
     border: 1px solid black
