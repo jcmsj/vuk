@@ -175,7 +175,7 @@ export class BookmarkController {
             }
         }
 
-        const refocus = lem => lem.scrollIntoView({ block: "start" })
+        const refocus = lem => lem && lem.scrollIntoView({ block: "start" })
 
         if (setSpeechTarget(readable)) {
             refocus(readable)
