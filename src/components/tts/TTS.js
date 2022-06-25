@@ -8,8 +8,8 @@ import { BookmarkController } from "../../modules/Bookmarks"
 import { getReadingProgress } from "../../modules/useMainElem";
 //Globals
 var gElement = null
-
 export const isReading = ref(false);
+
 export function identifySpeechTarget(e) {
     const elem = e.target;
 
@@ -41,6 +41,9 @@ export function isReadable(lem) {
 export function setSpeechTarget(elem) {
     if (!isReadable(elem)) {
         console.warn("Invalid speech target:", elem);
+        if (elem && elem.tagName == "FOOTER") {
+            onChapterEnd()
+        }
         return false
     }
 
@@ -62,6 +65,11 @@ export function onBookLoaded() {
     setSpeechTarget(
         findFirstReadable(ch)
     )
+}
+
+export function onChapterEnd() {
+    throw Error("End of Chapter|Book!")
+    //TODO: Load next chapter of do BookEndEvent
 }
 
 export function startReading() {
@@ -142,10 +150,6 @@ function nextReadable(elem, property = "nextElementSibling") {
         target = findFirstReadable(target);
     
     return target;
-}
-
-function endOfBookReached() {
-    console.warn("End of Book has been reached!")
 }
 
 /**
