@@ -1,17 +1,20 @@
-import Epub from "@jcsj/epub"
 import { onBookLoaded } from "../components/tts/TTS";
 import {Flow, TOC} from "./reactives";
-import simplifyHTMLTree from "./simplifyHTMLTree";
 import { Bookmarks, BookmarkController } from "./Bookmarks"
 import { useTitle } from "@vueuse/core";
+import { EnhancedMap } from "./Maps";
+import { EnhancedEpub } from "./EnhancedEpub";
+
 /**
  * @param {File} file
  */
 export async function loadBookFromFile(file, cached = false) {
-    const epub = new Epub(file, simplifyHTMLTree)
+    const epub = new EnhancedEpub(file)
+
     Bookmarks.items.clear()
     Flow.items.clear()
     TOC.items.clear()
+
     epub.open({
         "parsed-root": async function() {
             this.parseRootFile(this.rootXML)
@@ -22,24 +25,35 @@ export async function loadBookFromFile(file, cached = false) {
         "parsed-spine": function() {
             console.log("Spine: ", this.spine);
         },
-        "parsed-flow": async function() {
+        "parsed-flow": function() {
             console.log("Flow: ", this.flow);
-            for (const [key, item] of this.flow) {    
-                Flow.items.set(
-                    key, 
-                    await this.getContent(item.id)
-                )
-            }
-            this.emit("loaded-chapters")
+            this.flow = new EnhancedMap(this.flow)
         },
         "parsed-toc": function() {
             console.log("TOC: ", this.toc);
-            TOC.items = this.toc;
+            this.toc = new EnhancedMap(this.toc)
+            TOC.items = this.toc
         },
-        "parsed-metadata": function() {
+        "parsed-metadata": async function() {
             console.log("Meta:", this.metadata);
             useTitle(this.metadata.title)
-            BookmarkController.load()
+            await BookmarkController.load();
+
+            if (Bookmarks.isEmpty()) { // New book
+                this.displayAt(0);
+            } else {
+                const [, tail] = Bookmarks.at(Bookmarks.items.size - 1)
+                const id = BookmarkController.toManifestID(tail);
+
+                let [i,] = this.flow.pairOf(id)
+                if (i < 0) {
+                    this.displayAt(0)
+                } else {
+                    this.display(id)
+                }
+
+            }
+            this.emit("loaded-chapters")
         },
         "loaded-chapters": async function() {
             if (BookmarkController.reapply()) {

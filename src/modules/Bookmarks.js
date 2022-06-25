@@ -88,7 +88,7 @@ export class BookmarkController {
         if (!(items instanceof Object))
             return
 
-        Bookmarks.items = new Map()
+        Bookmarks.items.clear()
         for (const [key, bookmark] of Object.entries(items)) {
             Bookmarks.items.set(key, bookmark)
         }
@@ -184,5 +184,15 @@ export class BookmarkController {
         }
 
         return !latest;
+    }
+
+    /**
+     * 
+     * @param {Object} bm Bookmark-like
+     * @returns 
+     */
+    static toManifestID(bm) {
+        //TODO: Handle null
+        return bm.selector.split(" > ", 1)[0].substring(1);
     }
 }

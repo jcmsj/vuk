@@ -17,6 +17,7 @@
             v-else 
             class="item"
             :href="'#' + item.id"
+            @click.prevent=""
         >
         {{item.title}}
         </a>

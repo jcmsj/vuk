@@ -1,18 +1,18 @@
 import {reactive} from "vue"
-
+import {EnhancedMap} from "./Maps";
 export function reactiveMap(obj = {}) {
     return reactive(
         Object.assign({
-            items: new Map(),
+            items: new EnhancedMap(),
             at(n) {
-                let i = 0
-                for (const pair of this.items) {
-                    if (n == i++) {
-                        return pair
-                    }
-                }
-        
-                return null
+                return this.items.at(n)
+            },
+
+            pairOf(key) {
+                return this.items.pairOf(key)
+            },
+            isEmpty() {
+                return this.items.size <= 0
             }
         }, obj)
     )
@@ -20,5 +20,5 @@ export function reactiveMap(obj = {}) {
 
 export const 
     TOC = reactiveMap(),
-    Flow = reactiveMap()
+    Flow = reactiveMap({index: 0})
 ;

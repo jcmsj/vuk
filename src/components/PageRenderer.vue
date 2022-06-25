@@ -25,7 +25,8 @@ import {Flow} from "../modules/reactives";
 import { BookmarkController } from "../modules/Bookmarks";
 import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
 import {mainElem} from "../modules/useMainElem"
-
+import { onKeyUp, useScroll } from "@vueuse/core";
+import EnhancedEpub from "../modules/EnhancedEpub";
 const pageContextMenu = ref(null)
 var righted = null
 
@@ -69,6 +70,13 @@ function showContextMenu(e) {
     pageContextMenu.value.showMenu(e);
 }
 
+onKeyUp("ArrowRight", e => {
+    EnhancedEpub.instance.next()
+})
+
+onKeyUp("ArrowLeft", e => {
+    EnhancedEpub.instance.previous()
+})
 </script>
 
 <style lang='sass' scoped>
@@ -91,12 +99,16 @@ div.chapter
     :deep(h1, h2, h3, h4, h5, h6)
         align-self: center
 
-.pager
-    position: sticky
-    bottom: 0
-
 article
     @include lex
     overflow: inherit
     width: 100%
+    height: -webkit-fill-available
+
+.pager
+    position: sticky
+    bottom: 0
+
+.naver
+    padding: 15vh 0
 </style>

@@ -6,7 +6,7 @@
             v-for="[key, bm] of Bookmarks.items"
             :key="key"
             class="bookmark-link"
-            @click="focus(key)"
+            @click="focus(key, bm)"
             @dblclick="BookmarkController.unmark(key)"
             :title="key"
         >
@@ -17,14 +17,21 @@
 </template>
 <script setup>
 import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
-function focus(selector) {
-    const elem = document.querySelector(selector);
-    if (elem instanceof HTMLElement)
-        elem && elem.scrollIntoView()
-    else
-        console.warn("Invalid selector:", selector);
+import EnhandedEpub from "../../modules/EnhancedEpub";
+async function focus(selector, bm) {
+    const success = await 
+        EnhandedEpub.instance
+        .display(BookmarkController.toManifestID(bm))
 
-    console.log("Bookmark clicked:", selector, elem);
+    if (success) {
+        const elem = document.querySelector(selector);
+        if (elem instanceof HTMLElement)
+            elem && elem.scrollIntoView()
+        else
+            console.warn("Invalid selector:", selector);
+    }
+
+    console.log("Bookmark clicked:", selector);
     
 }
 </script>
