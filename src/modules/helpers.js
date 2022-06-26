@@ -28,3 +28,10 @@ export function isElementInViewport (el) {
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
 }
+
+/**
+ * @param {Element} lem 
+ */
+export function refocus(lem) {
+    lem && lem.scrollIntoView({ block: "start" })
+}
