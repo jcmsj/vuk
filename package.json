@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@jcsj/epub": "link:D:/code/epub",
-    "@vueuse/core": "^8.7.4",
+    "@vueuse/core": "^8.7.5",
     "browser-fs-access": "^0.29.6",
     "idb-keyval": "^6.2.0",
     "vite-plugin-pwa": "^0.12.0",
@@ -19,8 +19,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
-    "sass": "^1.52.3",
-    "typescript": "^4.7.4",
+    "sass": "^1.53.0",
     "vite": "^2.9.12",
     "vite-plugin-mkcert": "^1.7.2",
     "workbox-window": "^6.5.3"
