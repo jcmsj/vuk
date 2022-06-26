@@ -1,130 +1,159 @@
-import {ref} from "vue";
-import { className, validElems } from "./constants";
-import { getSelectionText, isElementInViewport } from "./helpers";
+import { ref } from "vue";
 import { Transformer } from "./Transformer";
 import { Word } from "./Word";
+import { getSelectionText, isElementInViewport } from "/src/modules/helpers";
 import { readAloud } from "./narrator";
-import { BookmarkController } from "../../modules/Bookmarks"
-import { getReadingProgress } from "../../modules/useMainElem";
-//Globals
-var gElement = null
-
-export const isReading = ref(false);
-export function identifySpeechTarget(e) {
-    const elem = e.target;
-
-    if (elem.isSameNode(gElement) || !validElems.RE.test(elem.tagName)) return;
-
-    //const wasReading = isReading.value;
-
-    stopReading()
-    setSpeechTarget(elem)
-
-    /**
-     * Todo: When another element is clicked while reading, move speechcursor to that.
-     * Disabled for now due to conflict with utterance.onend
-     */
-    /* if (wasReading)
-        startReading(); */
-}
+import { className, validElems } from "./constants";
+import {BookmarkController} from "../../modules/Bookmarks"
+import { refocus } from "../../modules/helpers";
+export const isReading = ref(false)    
+let gElem = null
 
 /**
- * 
  * @param {HTMLElement} lem 
  */
 export function isReadable(lem) {
     return (lem instanceof HTMLElement) && validElems.RE.test(lem.tagName)
 }
+
 /**
- * @param {HTMLElement} elem 
+ * @param {Event} e 
  */
-export function setSpeechTarget(elem) {
-    if (!isReadable(elem)) {
-        console.warn("Invalid speech target:", elem);
-        return false
-    }
+export function identifySpeechTarget(e) {
+    const elem = e.target;
 
-    Transformer.last = gElement;
+    if (elem.isSameNode(gElem) 
+    || !validElems.RE.test(elem.tagName)
+    ) 
+        return;
 
-    gElement = elem;
-    console.log("R", gElement);
-    return true;
+    //const wasReading = isReading.value;
+
+    stopReading()
+    setSpeechTarget(elem)
 }
 
-export function onBookLoaded() {
-    const ch = document.querySelector("." + className.chapter);
+/**
+ * @param {HTMLElement|null} chapterElem 
+ * @returns {HTMLElement}
+ */
+function find(chapterElem) {
+    if (chapterElem == null 
+    || !chapterElem.classList.contains(className.chapter)) {
+        
+        throw TypeError("Not a chapter element");
+    }
+    
+    if (chapterElem.innerText.length == 0)
+        return find(chapterElem.nextElementSibling);
 
-    if (ch == null)
-        return
+    let target = chapterElem.querySelector(validElems.selector);
+    //todo: Traverse tree since the target may contain childs.
+    
+    return target;
+}
 
-    console.log("First chapter:", ch);
-            
-    setSpeechTarget(
-        findFirstReadable(ch)
-    )
+/**
+ * @param {HTMLElement} elem 
+ * @returns success
+ */
+export function setSpeechTarget(elem) {
+    if (isReadable(elem)) {
+        Transformer.last = gElem;
+        gElem = elem;
+
+        console.log("R", gElem);
+        return true;
+    }
+
+    if (elem && elem.tagName == "FOOTER")
+        onBookEnd();
+
+    return false
 }
 
 export function startReading() {
-    //Start reading at the selected text
-    let txt = gElement.innerText || "";
+    let txt = (gElem && gElem.innerText) || "";
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
-    beforeSpeak(txt);
+    if (!beforeSpeak(txt))
+        console.warn("No text to speak.");
 }
 
-function moveSpeechCursor(target) {
+/**
+ * @param {string} txt 
+ * @returns Success
+ */
+function beforeSpeak(txt) {
+    if (txt.length == 0) {
+        //Todo: Add warning, since it may hint that there is an issue with 
+        upnext(gElem)
+        return false;
+    }
+
+    const {element , charIndex} = Transformer.transform(gElem, Word.index)
+    gElem = element;
+    txt = txt.slice(charIndex);
+    //If cI is zero, then the narrator is going to speak new text. 
+    if (charIndex == 0)
+        Word.reset();
+
+    if(!isElementInViewport(gElem))
+        refocus(gElem);
+
+    const utterance = readAloud(txt)
+
+    const nextWord = e => {
+        Word.highlight(e, gElem)
+    }
+    utterance.onstartReading = nextWord
+    utterance.onboundary = nextWord
+
+    utterance.onend = () => {
+        upnext(gElem)
+    };
+
+    isReading.value = true;
+    return true;
+}
+
+export function stopReading() {
+    if (!isReading.value)
+        return
+
+    speechSynthesis.cancel();
+    isReading.value = false;
+    BookmarkController.saveProgress(gElem)
+    Transformer.revert()
+}
+
+export function toggleReading() {
+    isReading.value ? stopReading():startReading()
+}
+
+/**
+ * @param {HTMLElement} target 
+ */
+function move(target) {
     if (!isReading.value) {
         return;
     }
 
     Word.reset();
     Transformer.revert();
-
-    setSpeechTarget(target);
-
-    if (!beforeSpeak(target.innerText)) {
-        moveSpeechCursor(nextReadable(target))
+    
+    if (setSpeechTarget(target)) {
+        beforeSpeak(target.innerText)
+    } else {
+        onBookEnd()
     }
 }
 
 /**
- * 
- * @param {String} txt 
+ * @param {HTMLElement} elem 
+ * @param {string} property 
  */
-function beforeSpeak(txt = "") {
-    if (txt.length == 0) {
-        //Todo: Add warning, since it may hint that there is an issue with IdentifySpeechTarget
-        return false;
-    }
-    
-    const {element , charIndex} = Transformer.transform(gElement, Word.index)
-    gElement = element;
-    txt = txt.slice(charIndex);
-    //If cI is zero, then the narrator is going to speak new text. 
-    if (charIndex == 0) {
-        Word.reset()
-    }
-
-    if(!isElementInViewport(gElement))
-        gElement.scrollIntoView({block:"start"});
-
-    const utterance = readAloud(txt)
-    utterance.onstart = e => {
-        Word.highlight(e, gElement)
-    }
-    utterance.onboundary = e => {
-        Word.highlight(e, gElement)
-    }
-    utterance.onend = (e) => {
-        moveSpeechCursor(nextReadable(gElement));
-    };
-
-    isReading.value = true;
-
-    return true;
-}
-
-function nextReadable(elem, property = "nextElementSibling") {
+function upnext(elem, property = "nextElementSibling") {
     let target = null
     while(target == null) {
         target = elem[property] 
@@ -134,59 +163,32 @@ function nextReadable(elem, property = "nextElementSibling") {
 
     //When the element is empty, find next
     if (target.innerText.length == 0) 
-        return nextReadable(target,property)
+        return upnext(target,property)
 
     if (target.classList instanceof DOMTokenList
-        && target.classList.contains(className.chapter)
+    && target.classList.contains(className.chapter)
     )
-        target = findFirstReadable(target);
+        target = find(target);
     
-    return target;
+    move(target);
 }
 
-function endOfBookReached() {
-    console.warn("End of Book has been reached!")
+function onBookEnd() {
+    readAloud("There is no more text to read.")
+    throw Error("End of Book!") //Force an error | Halting problem
+    //TODO: do BookEndEvent
 }
 
-/**
- * @param {HTMLElement} chapterElem 
- */
-function findFirstReadable(chapterElem) {
-    if (chapterElem == null 
-    || !chapterElem.classList.contains(className.chapter)) {
-        console.warn("Not a chapter element");
-        return
-    }
+export function onBookLoaded() {
+    const ch = document.querySelector("." + className.chapter);
 
-    if (chapterElem.innerText.length == 0)
-        return findFirstReadable(chapterElem.nextElementSibling)
+    if (ch == null)
+        return false;
 
-    let target = chapterElem.querySelector(validElems.selector);
-    //todo: Traverse tree since the target may contain childs.
-    
-    return target;
-}
+    console.log("First chapter:", ch);
+    setSpeechTarget(
+        find(ch)
+    )
 
-/**
- * An interface for Vue to toggle reading.
- */
-export function toggleReading() {
-    if (isReading.value) {
-        stopReading()
-        BookmarkController.saveProgress(
-            gElement, 
-            getReadingProgress()
-        ); 
-    } else {
-        startReading()
-    }
-}
-
-export function stopReading() {
-    if (!isReading.value)
-        return
-
-    speechSynthesis.cancel();
-    isReading.value = false;
-    Transformer.revert();
+    return true;
 }
