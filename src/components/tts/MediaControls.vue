@@ -2,24 +2,27 @@
 <div
     class="controls"
 >
-    <div>
-        ⏪
-    </div>
-    <div
-        @click="reader.toggle"
+    <i>⏪</i>
+    <i
+        @click="toggleReading"
     >
-    {{reader.isReading ? "&#x23f8;":"&#9654;&#65039;"}}
-    </div>
-    <div>
-        ⏩
-    </div>
+    {{isReading ? "&#x23f8;":"&#9654;&#65039;"}}
+    </i>
+    <i>⏩</i>
 </div>
 </template>
 <script setup>
-import { reader } from "./TTS.js";
+import {isReading, toggleReading} from "./TTS.js";
+import { onKeyUp } from "@vueuse/core";
+
+onKeyUp("r", toggleReading)
 
 </script>
 <style lang='sass'>
 .controls
     display: flex
+i
+    font-style: normal
+    cursor: pointer
+
 </style>

@@ -9,7 +9,7 @@
     <NodeStart
         :items="props.items" 
         :active="isChildActive"
-    ></NodeStart>
+    />
 </div>
 </template>
 <script setup>

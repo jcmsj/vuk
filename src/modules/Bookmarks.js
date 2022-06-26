@@ -4,7 +4,7 @@ import { idb_prefixes } from "../components/idb";
 import { reader, isReadable } from "../components/tts/TTS";
 import generateSelector from "./generateSelector"
 import { getReadingProgress } from "./useMainElem";
-import { refocus } from "./helpers";
+import {refocus} from "/src/modules/helpers"
 export const Bookmarks = reactiveMap()
 
 export class BookmarkController {
@@ -175,7 +175,7 @@ export class BookmarkController {
             }
         }
 
-        if (reader.set(readable)) {
+        if (setSpeechTarget(readable)) {
             refocus(readable)
         } else if (latest) {
             refocus(latest)

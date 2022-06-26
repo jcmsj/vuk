@@ -19,19 +19,13 @@
 </section>
 </template>
 <script setup>
-import {reader } from "./TTS.js";
 import { ref } from "vue";
-import { onKeyUp } from "@vueuse/core";
 import SpeechRateController from "./SpeechRateController.vue"
 import MediaControls from "./MediaControls.vue"
 import VoiceSelector from "./VoiceSelector.vue"
 const 
     showOps = ref(false)
 ;
-
-onKeyUp("r", () => {
-    reader.toggle()
-})
 
 function toggleops() {
     showOps.value = !showOps.value

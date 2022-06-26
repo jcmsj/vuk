@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <SpeechSynthesis></SpeechSynthesis>
+        <SpeechSynthesis />
     </footer>
 </template>
 

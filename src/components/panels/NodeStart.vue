@@ -10,9 +10,7 @@
             v-if="item.navPoint"
             :item="item"
             :items="item.navPoint"
-        >
-        </NodeEnd>
-
+        />
         <a 
             v-else 
             class="item"

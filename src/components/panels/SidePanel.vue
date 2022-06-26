@@ -33,16 +33,15 @@
       <vLibrary
         :active="tabIndex == 0"
         class="panel"
-      ></vLibrary>
+      />
       <vTOC
         :active="tabIndex == 1"
         class="panel"
-        >
-      </vTOC>
+      />
       <vBookmarks
         :active="tabIndex == 2"
         class="panel"
-      ></vBookmarks>
+      />
     </section>
   </aside>
 </template>
