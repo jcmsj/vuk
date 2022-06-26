@@ -5,8 +5,7 @@
         :active="true"
         :items="TOC.items"
         :level="0"
-    >
-    </NodeStart>
+    />
 </div>
 </template>
 

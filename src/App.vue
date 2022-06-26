@@ -16,17 +16,16 @@ onMounted(() => {
 })
 </script>
 <template>
-  <SidePanel 
-  ></SidePanel>
+  <SidePanel />
   <main>
     <!-- vHeader here -->
     <PageRenderer
       v-if="Flow.items.size"
-    ></PageRenderer>
-    <WelcomePage v-else/>
+    />
+    <WelcomePage v-else />
     <vFooter
       v-if="Flow.items.size"
-    ></vFooter>
+    />
   </main>
 
 </template>
