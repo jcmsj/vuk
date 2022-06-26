@@ -1,9 +1,8 @@
-import { onBookLoaded } from "../components/tts/TTS";
 import {Flow, TOC} from "./reactives";
 import { Bookmarks, BookmarkController } from "./Bookmarks"
 import { useTitle } from "@vueuse/core";
-import { EnhancedMap } from "./Maps";
-import { EnhancedEpub } from "./EnhancedEpub";
+import { EnhancedMap, pairOf } from "./Maps";
+import EnhancedEpub from "./EnhancedEpub";
 
 /**
  * @param {File} file
@@ -40,25 +39,18 @@ export async function loadBookFromFile(file, cached = false) {
             await BookmarkController.load();
 
             if (Bookmarks.isEmpty()) { // New book
-                this.displayAt(0);
+                this.between(0)
             } else {
                 const [, tail] = Bookmarks.at(Bookmarks.items.size - 1)
                 const id = BookmarkController.toManifestID(tail);
 
                 let [i,] = this.flow.pairOf(id)
-                if (i < 0) {
-                    this.displayAt(0)
-                } else {
-                    this.display(id)
-                }
-
+                this.between(i < 0 ? 0:i);
             }
             this.emit("loaded-chapters")
         },
         "loaded-chapters": async function() {
-            if (BookmarkController.reapply()) {
-                onBookLoaded();
-            }
+        
         }
     })
 }

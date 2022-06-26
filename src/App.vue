@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
 import SidePanel from "./components/panels/SidePanel.vue"
-import PageRenderer from "./components/PageRenderer.vue"
+import vLive from "./components/Live.vue"
 import {loadBookFromLauncher} from "./modules/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
 import {Flow} from "./modules/reactives";
@@ -25,28 +25,30 @@ function anchorClicked(e) {
   if (lem.tagName != "A")
     return;
   const id = lem.href.split("#",2)[1]
+  const self = EnhancedEpub.instance;
   try {
-    EnhancedEpub.instance.display(id)
-    BookmarkController.reapply()
+    const [i, item] = self.flow.pairOf(id);
+    EnhancedEpub.instance.between(i); 
   } catch (e) {
     console.log(e);
   }
 }
+
 </script>
 <template>
   <SidePanel 
     @click="anchorClicked"
-  ></SidePanel>
+  />
   <main>
     <!-- vHeader here -->
-    <PageRenderer
+    <vLive
       v-if="Flow.items.size"
       @click="anchorClicked"
-    ></PageRenderer>
+    />
     <WelcomePage v-else/>
     <vFooter
       v-if="Flow.items.size"
-    ></vFooter>
+    />
   </main>
 
 </template>

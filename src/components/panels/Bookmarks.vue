@@ -19,14 +19,13 @@
 import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
 import EnhandedEpub from "../../modules/EnhancedEpub";
 async function focus(selector, bm) {
-    const success = await 
-        EnhandedEpub.instance
-        .display(BookmarkController.toManifestID(bm))
+    success = await EnhandedEpub.instance.between(BookmarkController.toManifestID(bm))
 
     if (success) {
         const elem = document.querySelector(selector);
-        if (elem instanceof HTMLElement)
-            elem && elem.scrollIntoView()
+        if (elem instanceof HTMLElement) {
+            BookmarkController.reapply()
+        }
         else
             console.warn("Invalid selector:", selector);
     }

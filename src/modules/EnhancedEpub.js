@@ -2,7 +2,7 @@ import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
 import { Flow } from "./reactives";
 import { at } from "./Maps";
-export class EnhancedEpub extends Epub {
+class EnhancedEpub extends Epub {
     index = 0;
     static instance = null
     /**
@@ -50,12 +50,21 @@ export class EnhancedEpub extends Epub {
         }
 
         console.log("Loaded:", toBeLoaded);
-
-        return (toBeLoaded.length - skipped) > 0;
     }
 
-    async between(manifest_id) {
+
+    async between(IDorIndex) {
+        let index = IDorIndex
+        if (IDorIndex instanceof String) {
+            [index, _] = this.flow.pairOf(IDorIndex)
+        }
+
+        if (index < 0 || index >= this.flow.size)
+            return false;
+
         let prev;
+        const [id, view] = at(index, this.flow);
+
         const toBeLoaded = []
         for (const [key, item] of this.flow) {
 
@@ -64,7 +73,7 @@ export class EnhancedEpub extends Epub {
                 break;
             }
 
-            if (key == manifest_id) {
+            if (key == id) {
                 if (prev)
                     toBeLoaded.push(prev)
                 toBeLoaded.push(item)
@@ -72,16 +81,18 @@ export class EnhancedEpub extends Epub {
 
             prev = item
         }
-
-        return this.displayMutiple(toBeLoaded);
+        
+        this.index = index;
+        this.displayMutiple(toBeLoaded);
+        return true;
     }
 
     next() {
-        this.displayAt(this.index+1)
+        this.between(this.index+1)
     }
 
     previous() {
-        this.displayAt(this.index-1)
+        this.between(this.index-1)
     }
 }
 

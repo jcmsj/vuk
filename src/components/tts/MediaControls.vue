@@ -6,9 +6,9 @@
         ⏪
     </div>
     <div
-        @click="toggleReading"
+        @click="reader.toggle"
     >
-    {{isReading ? "&#x23f8;":"&#9654;&#65039;"}}
+    {{reader.isReading ? "&#x23f8;":"&#9654;&#65039;"}}
     </div>
     <div>
         ⏩
@@ -16,7 +16,7 @@
 </div>
 </template>
 <script setup>
-import {isReading, toggleReading} from "./TTS.js";
+import { reader } from "./TTS.js";
 
 </script>
 <style lang='sass'>

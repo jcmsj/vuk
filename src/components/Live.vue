@@ -1,15 +1,18 @@
 <template>
 <article ref="mainElem">
+    <button class="naver" ref="prev" @click="EnhancedEpub.instance.previous">^</button>
     <div
-        @mouseup="identifySpeechTarget"
+        @mouseup="reader.identify"
         @contextmenu.prevent.stop="showContextMenu($event)"
         class="chapter"
-        v-for="[key, part] of Flow.items" 
+        v-for="[key, html] of Flow.items" 
         :key="key"
         :id="key"
-        v-html="part"
+        v-html="html"
         >
     </div>
+    <button class="naver" ref="next" @click="EnhancedEpub.instance.next">V</button>
+
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
@@ -20,14 +23,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import nef from "../modules/nef"
 import {Flow} from "../modules/reactives";
 import { BookmarkController } from "../modules/Bookmarks";
-import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
 import {mainElem} from "../modules/useMainElem"
 import { onKeyUp, useScroll } from "@vueuse/core";
 import EnhancedEpub from "../modules/EnhancedEpub";
-const pageContextMenu = ref(null)
+import {next, prev, mayAdd, mayDrop} from "/src/modules/controlFlow"
+import {nextTick, onMounted, watch} from "vue";
+import { refocus } from "../modules/helpers";
+import {reader} from "./tts/TTS"
+import {at} from "/src/modules/Maps"
+const pageContextMenu = nef()
 var righted = null
 
 const menuItems = [
@@ -35,8 +42,8 @@ const menuItems = [
         name: "&#x1F50A;",
         type:"read",
         cb() {
-            stopReading();
-            startReading();  
+            reader.start()
+            reader.stop()
         }
     },
     {
@@ -61,7 +68,6 @@ function optionClicked({item, option}) {
 }
 
 /**
- * 
  * @param {Event} e 
  * @param {string} key 
  */
@@ -70,12 +76,27 @@ function showContextMenu(e) {
     pageContextMenu.value.showMenu(e);
 }
 
-onKeyUp("ArrowRight", e => {
-    EnhancedEpub.instance.next()
+watch(Flow.items, async () => {
+    let id;
+    switch(Flow.items.size) {
+        case 2:
+            [id] = at(0, Flow.items)
+        break;
+        case 3:
+            [id] = at(1, Flow.items)
+        break;
+        default:
+            return;
+    }
+
+    await nextTick()
+    refocus(document.getElementById(id))
+    //BookmarkController.reapply()
 })
 
-onKeyUp("ArrowLeft", e => {
-    EnhancedEpub.instance.previous()
+onMounted(() => {
+  mayAdd()
+  mayDrop()
 })
 </script>
 
@@ -110,5 +131,7 @@ article
     bottom: 0
 
 .naver
-    padding: 15vh 0
+    padding: 1vh 0
+    background: none
+    border: none
 </style>

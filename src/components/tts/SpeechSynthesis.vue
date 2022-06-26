@@ -19,7 +19,7 @@
 </section>
 </template>
 <script setup>
-import {toggleReading } from "./TTS.js";
+import {reader } from "./TTS.js";
 import { ref } from "vue";
 import { onKeyUp } from "@vueuse/core";
 import SpeechRateController from "./SpeechRateController.vue"
@@ -30,7 +30,7 @@ const
 ;
 
 onKeyUp("r", () => {
-    toggleReading()
+    reader.toggle()
 })
 
 function toggleops() {

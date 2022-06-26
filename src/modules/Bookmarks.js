@@ -1,10 +1,10 @@
 import { reactiveMap } from "./reactives";
 import { get, set } from "idb-keyval"
 import { idb_prefixes } from "../components/idb";
-import { setSpeechTarget, isReadable } from "../components/tts/TTS";
+import { reader, isReadable } from "../components/tts/TTS";
 import generateSelector from "./generateSelector"
 import { getReadingProgress } from "./useMainElem";
-
+import { refocus } from "./helpers";
 export const Bookmarks = reactiveMap()
 
 export class BookmarkController {
@@ -175,9 +175,7 @@ export class BookmarkController {
             }
         }
 
-        const refocus = lem => lem && lem.scrollIntoView({ block: "start" })
-
-        if (setSpeechTarget(readable)) {
+        if (reader.set(readable)) {
             refocus(readable)
         } else if (latest) {
             refocus(latest)
