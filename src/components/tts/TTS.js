@@ -6,6 +6,7 @@ import { readAloud } from "./narrator";
 import { className, validElems } from "./constants";
 import {BookmarkController} from "../../modules/Bookmarks"
 import { refocus } from "../../modules/helpers";
+import {dummyAudio} from "../../modules/useMediaSession"
 export const isReading = ref(false)    
 let gElem = null
 
@@ -72,12 +73,16 @@ export function setSpeechTarget(elem) {
     return false
 }
 
-export function startReading() {
+export async function startReading() {
     let txt = (gElem && gElem.innerText) || "";
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
-    if (!beforeSpeak(txt))
+    if (beforeSpeak(txt)) {
+        await dummyAudio.play()
+        navigator.mediaSession.playbackState = "playing"
+    } else {
         console.warn("No text to speak.");
+    }
 }
 
 /**
@@ -117,14 +122,17 @@ function beforeSpeak(txt) {
     return true;
 }
 
-export function stopReading() {
+export async function stopReading() {
     if (!isReading.value)
         return
 
     speechSynthesis.cancel();
     isReading.value = false;
+    dummyAudio.pause()
+    navigator.mediaSession.playbackState = "paused"
     BookmarkController.saveProgress(gElem)
     Transformer.revert()
+
 }
 
 export function toggleReading() {

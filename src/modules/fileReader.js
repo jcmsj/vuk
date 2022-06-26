@@ -4,6 +4,7 @@ import {Flow, TOC} from "./reactives";
 import simplifyHTMLTree from "./simplifyHTMLTree";
 import { Bookmarks, BookmarkController } from "./Bookmarks"
 import { useTitle } from "@vueuse/core";
+import {setMediaData} from "./useMediaSession"
 /**
  * @param {File} file
  */
@@ -39,6 +40,7 @@ export async function loadBookFromFile(file, cached = false) {
         "parsed-metadata": function() {
             console.log("Meta:", this.metadata);
             useTitle(this.metadata.title)
+            setMediaData(this.metadata)
             BookmarkController.load()
         },
         "loaded-chapters": async function() {
