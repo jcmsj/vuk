@@ -6,7 +6,7 @@ import SidePanel from "./components/panels/SidePanel.vue"
 import vLive from "./components/Live.vue"
 import {loadBookFromLauncher} from "./modules/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
-import {Flow} from "./modules/reactives";
+import {TOC} from "./modules/reactives";
 import vFooter from "./components/Footer.vue"
 import EnhancedEpub from "./modules/EnhancedEpub"
 import {BookmarkController} from "./modules/Bookmarks"
@@ -19,7 +19,7 @@ onMounted(() => {
 /**
  * @param {Event} e
  */
-function anchorClicked(e) {
+/* function anchorClicked(e) {
   const lem = e.target;
   
   if (lem.tagName != "A")
@@ -27,12 +27,12 @@ function anchorClicked(e) {
   const id = lem.href.split("#",2)[1]
   const self = EnhancedEpub.instance;
   try {
-    const [i, item] = self.flow.pairOf(id);
+    const [i, item] = self.TOC.pairOf(id);
     EnhancedEpub.instance.between(i); 
   } catch (e) {
     console.log(e);
   }
-}
+} */
 
 </script>
 <template>
@@ -42,12 +42,12 @@ function anchorClicked(e) {
   <main>
     <!-- vHeader here -->
     <vLive
-      v-if="Flow.items.size"
+      v-if="TOC.items.size"
       @click="anchorClicked"
     />
     <WelcomePage v-else/>
     <vFooter
-      v-if="Flow.items.size"
+      v-if="TOC.items.size"
     />
   </main>
 
