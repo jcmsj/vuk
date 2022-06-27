@@ -70,11 +70,10 @@ onMounted(() => {
 <style lang="sass">
 
 div.chapter
-    margin: 30vh auto
-
-    &:nth-of-type(1)
-        margin-top: 3vh
-
+    min-height: 120vh
+    display: flex
+    justify-content: center
+    flex-direction: column
     img /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
