@@ -1,18 +1,11 @@
 <template>
 <article ref="mainElem">
-    <button class="naver" ref="prev" @click="EnhancedEpub.instance.previous">^</button>
     <div
         @mouseup="identifySpeechTarget"
         @contextmenu.prevent.stop="showContextMenu($event)"
-        class="chapter"
-        v-for="[key, html] of Flow.items" 
-        :key="key"
-        :id="key"
-        v-html="html"
+        id=__view
     >
     </div>
-    <button class="naver" ref="next" @click="EnhancedEpub.instance.next">V</button>
-
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
@@ -27,11 +20,11 @@ import {Flow} from "../modules/reactives";
 import { BookmarkController } from "../modules/Bookmarks";
 import {mainElem} from "../modules/useMainElem"
 import EnhancedEpub from "../modules/EnhancedEpub";
-import {next, prev, mayAdd, mayDrop} from "/src/modules/controlFlow"
 import { ref, nextTick, onMounted, watch} from "vue";
 import { refocus } from "../modules/helpers";
 import {identifySpeechTarget} from "./tts/TTS"
 import {at} from "/src/modules/Maps"
+import { setView} from "./View";
 const pageContextMenu = ref()
 var righted = null
 
@@ -74,38 +67,14 @@ function showContextMenu(e) {
     pageContextMenu.value.showMenu(e);
 }
 
-watch(Flow.items, async() => {
-    let pos;
-    switch(Flow.items.size) {
-        case 2:
-            pos = 0
-        break;
-        case 3:
-            pos = 1
-        break;
-        default:
-            return;
-    }
-    const id = at(pos, Flow.items)
-    await nextTick()
-    refocus(document.getElementById(id))
-    //BookmarkController.reapply()
-})
-
 onMounted(() => {
-  mayAdd()
-  mayDrop()
+    setView("__view")
 })
 </script>
-
-<style lang='sass' scoped>
-@import "src/sass/media_queries"
-@import "src/sass/mixins"
-    
+<style lang="sass">
 div.chapter
-    flex: 1
-    margin: 1vh 1vw
-    :deep(img) /* Uses deep cause of v-html */
+    min-height: 100vh
+    img /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
         max-width: 80%
@@ -115,8 +84,16 @@ div.chapter
         margin-inline: auto
         display: block
 
-    :deep(h1, h2, h3, h4, h5, h6)
+    h1, h2, h3, h4, h5, h6
         align-self: center
+</style>
+<style lang='sass' scoped>
+@import "src/sass/media_queries"
+@import "src/sass/mixins"
+    
+#__view
+    flex: 1
+    margin: 1vh 1vw
 
 article
     @include lex

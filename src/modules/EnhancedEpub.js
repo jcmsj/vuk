@@ -2,6 +2,7 @@ import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
 import { Flow } from "./reactives";
 import { at } from "./Maps";
+import { drop, repaint } from "../components/View";
 class EnhancedEpub extends Epub {
     index = 0;
     static instance = null
@@ -14,85 +15,65 @@ class EnhancedEpub extends Epub {
         EnhancedEpub.instance = this;
     }
 
-    async display(id) {
-        return await this.displayMutiple([this.flow.get(id)])
-    }
-
-    async displayAt(index) {
-        if (index < 0)
-            index = 0;
-
-        index = Math.min(Math.max(index, 0), this.flow.size)
-
-        const [_, v] = at(index, this.flow)
-
-        if (v) {
-            this.index = index
-            return this.displayMutiple([v]);
-        }
-
-        throw new ReferenceError(`Flow item at index ${index} is undefined. This should never happen.`)
-    }
-
-    /**
-     * 
-     * @param {Array<object>} toBeLoaded
-     */
-    async displayMutiple(toBeLoaded) {
-        Flow.items.clear()
-        let skipped = 0;
-        for (const item of toBeLoaded) {
-            if (item) {
-                Flow.items
-                    .set(item.id, await this.getContent(item.id))
-            } else
-                skipped++
-        }
-
-        console.log("Loaded:", toBeLoaded);
-    }
-
-
     async between(IDorIndex) {
         let index = IDorIndex
-        if (IDorIndex instanceof String) {
-            [index, _] = this.flow.pairOf(IDorIndex)
-        }
+        if (IDorIndex instanceof String)
+            [index, _] = this.flow.pairOf(IDorIndex);
 
         if (index < 0 || index >= this.flow.size)
             return false;
 
         let prev;
-        const [id, view] = at(index, this.flow);
-
+        const [key, _] = at(index, this.flow);
         const toBeLoaded = []
-        for (const [key, item] of this.flow) {
+        for (const [id, item] of this.flow) {
 
             if (toBeLoaded.length > 0) {
-                toBeLoaded.push(item)
+                toBeLoaded.push({
+                    id,
+                    html: await this.getContent(id),
+                })
                 break;
             }
 
             if (key == id) {
                 if (prev)
-                    toBeLoaded.push(prev)
-                toBeLoaded.push(item)
+                    toBeLoaded.push({
+                        id:prev.id,
+                        html: await this.getContent(prev.id),
+                    })
+
+                toBeLoaded.push({
+                    id,
+                    html: await this.getContent(id),
+                })
             }
 
             prev = item
         }
         
         this.index = index;
-        this.displayMutiple(toBeLoaded);
+        repaint(toBeLoaded)
         return true;
     }
 
-    next() {
-        this.between(this.index+1)
+    async next() {
+        this.drop(2)
     }
 
+    async drop(offset) {
+        offset = Math.min(Math.max(0, offset), this.flow.size - 1)
+        const o = offset / 2
+        this.index += o
+        const [id, _] = this.flow.at(this.index + offset);
+        drop({
+            pos:o,
+            id,
+            html: await this.getContent(id)
+        })
+    }
     previous() {
-        this.between(this.index-1)
+        this.drop(-2)
     }
 }
 
