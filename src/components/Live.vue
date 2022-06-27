@@ -2,14 +2,14 @@
 <article ref="mainElem">
     <button class="naver" ref="prev" @click="EnhancedEpub.instance.previous">^</button>
     <div
-        @mouseup="reader.identify"
+        @mouseup="identifySpeechTarget"
         @contextmenu.prevent.stop="showContextMenu($event)"
         class="chapter"
         v-for="[key, html] of Flow.items" 
         :key="key"
         :id="key"
         v-html="html"
-        >
+    >
     </div>
     <button class="naver" ref="next" @click="EnhancedEpub.instance.next">V</button>
 
@@ -23,18 +23,16 @@
 </template>
 
 <script setup>
-import nef from "../modules/nef"
 import {Flow} from "../modules/reactives";
 import { BookmarkController } from "../modules/Bookmarks";
 import {mainElem} from "../modules/useMainElem"
-import { onKeyUp, useScroll } from "@vueuse/core";
 import EnhancedEpub from "../modules/EnhancedEpub";
 import {next, prev, mayAdd, mayDrop} from "/src/modules/controlFlow"
-import {nextTick, onMounted, watch} from "vue";
+import { ref, nextTick, onMounted, watch} from "vue";
 import { refocus } from "../modules/helpers";
-import {reader} from "./tts/TTS"
+import {identifySpeechTarget} from "./tts/TTS"
 import {at} from "/src/modules/Maps"
-const pageContextMenu = nef()
+const pageContextMenu = ref()
 var righted = null
 
 const menuItems = [
@@ -76,19 +74,19 @@ function showContextMenu(e) {
     pageContextMenu.value.showMenu(e);
 }
 
-watch(Flow.items, async () => {
-    let id;
+watch(Flow.items, async() => {
+    let pos;
     switch(Flow.items.size) {
         case 2:
-            [id] = at(0, Flow.items)
+            pos = 0
         break;
         case 3:
-            [id] = at(1, Flow.items)
+            pos = 1
         break;
         default:
             return;
     }
-
+    const id = at(pos, Flow.items)
     await nextTick()
     refocus(document.getElementById(id))
     //BookmarkController.reapply()

@@ -1,7 +1,7 @@
 import { reactiveMap } from "./reactives";
 import { get, set } from "idb-keyval"
 import { idb_prefixes } from "../components/idb";
-import { reader, isReadable } from "../components/tts/TTS";
+import { setSpeechTarget, isReadable } from "../components/tts/TTS";
 import generateSelector from "./generateSelector"
 import { getReadingProgress } from "./useMainElem";
 import {refocus} from "/src/modules/helpers"

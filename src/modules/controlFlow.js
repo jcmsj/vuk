@@ -1,4 +1,4 @@
-import nef from "./nef"
+import {ref} from "vue"
 import { useIntersectionObserver } from "@vueuse/core";
 import EnhancedEpub from "./EnhancedEpub"
 export const ev = {
@@ -6,8 +6,8 @@ export const ev = {
     tail:1
 }
 
-export const next = nef()
-export const prev = nef()
+export const next = ref()
+export const prev = ref()
 
 /**
  * @param {Number} maybeEV 

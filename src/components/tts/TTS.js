@@ -32,7 +32,6 @@ export function identifySpeechTarget(e) {
     stopReading()
     setSpeechTarget(elem)
 }
-export const reader = new Reader();
 
 /**
  * @param {HTMLElement|null} chapterElem 
