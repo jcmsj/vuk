@@ -19,6 +19,5 @@ export function reactiveMap(obj = {}) {
 }
 
 export const 
-    TOC = reactiveMap(),
-    Flow = reactiveMap({index: 0})
+    TOC = reactiveMap()
 ;

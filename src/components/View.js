@@ -8,10 +8,39 @@ import { className } from "./tts/constants";
 var elem = null;
 export const prev = ref();
 export const next = ref();
+    var hasLeft = false;
+
+let addObserver, dropObserver;
+
 export function setView(id) {
     elem = document.getElementById(id)
+    addObserver = new IntersectionObserver(([entry], obs) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.remove("add")
+            addObserver.unobserve(entry.target)
+            add()
+        }
+    }, options)
+    
+    dropObserver = new IntersectionObserver(([entry], obs) => {
+    
+        if (hasLeft == false && entry.isIntersecting == false) {
+                hasLeft = true;
+                entry.target.classList.add("hasleft")
+        } else if (hasLeft && entry.isIntersecting) {
+            dropObserver.unobserve(entry.target)
+            entry.target.classList.remove("rem", "hasleft")
+            prior()
+            hasLeft = false;
+        }
+    }, options)
 }
 
+const options = {
+    root: null,
+    rootMargin: "10% 0%",
+    threshold : 0
+}
 function chap(id, html) {
     const d = document.createElement("div")
     d.id = id
@@ -39,15 +68,24 @@ export function repaint(paintables = []) {
     }
 
     addObserve(elem.lastElementChild)
+    if (elem.childElementCount >=3) {
+        dropObserve(elem.firstElementChild)
+    }
 }
 
 function add() {
-    console.log(">");
-    EnhancedEpub.instance.next();
+    try {
+        EnhancedEpub.instance.next();
+    } catch(e) {
+        console.log("Possibly end of book", [e]);
+    }
 }
 function prior() {
-    console.log("<");
-    EnhancedEpub.instance.previous();
+    try {
+        EnhancedEpub.instance.previous();
+    } catch(e) {
+        console.log("Possibly start of book", [e]);
+    }
 }
 
 /**
@@ -63,48 +101,35 @@ function addObserve(lem) {
  * @param {HTMLElement} lem 
  */
 function dropObserve(lem) {
+    hasLeft = false
     lem.classList.add("rem")
     console.log(lem);
     dropObserver.observe(lem)
 }
 
-const addObserver = new IntersectionObserver(([entry], obs) => {
-    if (entry.isIntersecting) {
-        entry.target.classList.remove("add")
-        addObserver.unobserve(entry.target)
-        add()
-    }
-})
 
-var hasLeft = false;
-const dropObserver = new IntersectionObserver(([entry], obs) => {
-
-    if (hasLeft == false && entry.isIntersecting == false) {
-            hasLeft = true;
-            entry.target.classList.add("hasleft")
-    } else if (hasLeft && entry.isIntersecting) {
-        dropObserver.unobserve(entry.target)
-        entry.target.classList.remove("rem")
-        prior()
-        hasLeft = false;
-    }
-})
 export async function drop({pos, id, html}) {
     const d = chap(id, html)
     switch (pos) {
-        case 0: case-1:
+        case -1:
             if (elem.childElementCount > 2) {
+                addObserver.unobserve(elem.lastElementChild)
                 elem.removeChild(elem.lastElementChild);
             }
+            refocus(elem.firstElementChild)
             elem.prepend(d);
             dropObserve(d)
+            addObserve(elem.lastElementChild)
         break;
         case 1:
             if (elem.childElementCount > 2) {
+                dropObserver.unobserve(elem.firstElementChild)
                 elem.removeChild(elem.firstElementChild);
             }
+            refocus(elem.lastElementChild)
             elem.appendChild(d);
             addObserve(d)
+            dropObserve(elem.firstElementChild)
         break;
         default:
             console.log("Invalid pos:", pos);

@@ -16,15 +16,11 @@
 </template>
 
 <script setup>
-import {Flow} from "../modules/reactives";
 import { BookmarkController } from "../modules/Bookmarks";
 import {mainElem} from "../modules/useMainElem"
-import EnhancedEpub from "../modules/EnhancedEpub";
 import { ref, nextTick, onMounted, watch} from "vue";
-import { refocus } from "../modules/helpers";
 import {identifySpeechTarget} from "./tts/TTS"
-import {at} from "/src/modules/Maps"
-import { setView} from "./View";
+import { setView } from "./View";
 const pageContextMenu = ref()
 var righted = null
 
@@ -72,8 +68,13 @@ onMounted(() => {
 })
 </script>
 <style lang="sass">
+
 div.chapter
-    min-height: 100vh
+    margin: 30vh auto
+
+    &:nth-of-type(1)
+        margin-top: 3vh
+
     img /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain

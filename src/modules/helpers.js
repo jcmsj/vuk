@@ -33,5 +33,5 @@ export function isElementInViewport (el) {
  * @param {Element} lem 
  */
 export function refocus(lem) {
-    lem && lem.scrollIntoView({ block: "start" })
+    lem && lem.scrollIntoView({ block: "start", behavior: "smooth" })
 }

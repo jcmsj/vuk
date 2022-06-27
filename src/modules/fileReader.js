@@ -1,4 +1,4 @@
-import {Flow, TOC} from "./reactives";
+import {TOC} from "./reactives";
 import { Bookmarks, BookmarkController } from "./Bookmarks"
 import { useTitle } from "@vueuse/core";
 import { EnhancedMap, pairOf } from "./Maps";
@@ -11,7 +11,6 @@ export async function loadBookFromFile(file, cached = false) {
     const epub = new EnhancedEpub(file)
 
     Bookmarks.items.clear()
-    Flow.items.clear()
     TOC.items.clear()
 
     epub.open({

@@ -1,6 +1,5 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { Flow } from "./reactives";
 import { at } from "./Maps";
 import { drop, repaint } from "../components/View";
 class EnhancedEpub extends Epub {
@@ -62,10 +61,15 @@ class EnhancedEpub extends Epub {
     }
 
     async drop(offset) {
-        offset = Math.min(Math.max(0, offset), this.flow.size - 1)
+        
         const o = offset / 2
+        //offset = Math.min(Math.max(0, offset), this.flow.size - 1)
+        const pair = this.flow.at(this.index + offset);
+        if (pair == null)
+            throw RangeError("Trying to load beyond the start or end of book");
+
+        const [id, _] = pair;
         this.index += o
-        const [id, _] = this.flow.at(this.index + offset);
         drop({
             pos:o,
             id,
