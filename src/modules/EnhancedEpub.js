@@ -76,7 +76,7 @@ class EnhancedEpub extends Epub {
             html: await this.getContent(id)
         })
     }
-    previous() {
+    async previous() {
         this.drop(-2)
     }
 }
