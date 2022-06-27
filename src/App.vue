@@ -19,8 +19,8 @@ onMounted(() => {
 /**
  * @param {Event} e
  */
-/* function anchorClicked(e) {
-  const lem = e.target;
+function anchorClicked(e) {
+ /*  const lem = e.target;
   
   if (lem.tagName != "A")
     return;
@@ -31,8 +31,8 @@ onMounted(() => {
     EnhancedEpub.instance.between(i); 
   } catch (e) {
     console.log(e);
-  }
-} */
+  } */
+}
 
 </script>
 <template>
