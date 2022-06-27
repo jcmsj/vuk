@@ -1,14 +1,12 @@
 
 import EnhancedEpub from "../modules/EnhancedEpub";
-import { useIntersectionObserver } from "@vueuse/core";
 import {ref} from "vue"
 import {refocus} from "../modules/helpers"
-import {nextTick} from "vue"
 import { className } from "./tts/constants";
-var elem = null;
 export const prev = ref();
 export const next = ref();
-    var hasLeft = false;
+var hasLeft = false;
+var elem = null;
 
 let addObserver, dropObserver;
 
@@ -38,8 +36,8 @@ export function setView(id) {
 
 const options = {
     root: null,
-    rootMargin: "10% 0%",
-    threshold : 0
+    rootMargin: "0px",
+    threshold : 0.1
 }
 function chap(id, html) {
     const d = document.createElement("div")
@@ -70,6 +68,7 @@ export function repaint(paintables = []) {
     addObserve(elem.lastElementChild)
     if (elem.childElementCount >=3) {
         dropObserve(elem.firstElementChild)
+        refocus(elem.firstElementChild.nextElementSibling)
     }
 }
 
@@ -107,7 +106,6 @@ function dropObserve(lem) {
     dropObserver.observe(lem)
 }
 
-
 export async function drop({pos, id, html}) {
     const d = chap(id, html)
     switch (pos) {
@@ -116,7 +114,7 @@ export async function drop({pos, id, html}) {
                 addObserver.unobserve(elem.lastElementChild)
                 elem.removeChild(elem.lastElementChild);
             }
-            refocus(elem.firstElementChild)
+            elem.firstElementChild.scrollIntoView({block:"end"})
             elem.prepend(d);
             dropObserve(d)
             addObserve(elem.lastElementChild)
