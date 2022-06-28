@@ -3,42 +3,40 @@ import EnhancedEpub from "../modules/EnhancedEpub";
 import {ref} from "vue"
 import {refocus} from "../modules/helpers"
 import { className } from "./tts/constants";
+
 export const prev = ref();
 export const next = ref();
 var hasLeft = false;
 var elem = null;
-
-let addObserver, dropObserver;
-
-export function setView(id) {
-    elem = document.getElementById(id)
-    addObserver = new IntersectionObserver(([entry], obs) => {
-        if (entry.isIntersecting) {
-            entry.target.classList.remove("add")
-            addObserver.unobserve(entry.target)
-            add()
-        }
-    }, options)
-    
-    dropObserver = new IntersectionObserver(([entry], obs) => {
-    
-        if (hasLeft == false && entry.isIntersecting == false) {
-                hasLeft = true;
-                entry.target.classList.add("hasleft")
-        } else if (hasLeft && entry.isIntersecting) {
-            dropObserver.unobserve(entry.target)
-            entry.target.classList.remove("rem", "hasleft")
-            prior()
-            hasLeft = false;
-        }
-    }, options)
-}
-
 const options = {
     root: null,
     rootMargin: "0px",
-    threshold : 0.1
+    threshold : 1
 }
+
+let addObserver = new IntersectionObserver(([entry], obs) => {
+    if (entry.isIntersecting) {
+        entry.target.classList.remove("add")
+        add()
+    }
+}, options)
+
+let dropObserver = new IntersectionObserver(([entry], obs) => {
+    if (hasLeft == false && entry.isIntersecting == false) {
+            hasLeft = true;
+            entry.target.classList.add("hasleft")
+    } else if (hasLeft && entry.isIntersecting) {
+        entry.target.classList.remove("rem", "hasleft")
+        prior()
+        hasLeft = false;
+    }
+}, options)
+
+export function setView(id) {
+    elem = document.getElementById(id)
+
+}
+
 function chap(id, html) {
     const d = document.createElement("div")
     d.id = id
@@ -47,7 +45,6 @@ function chap(id, html) {
     return d;
 }
 /**
- * 
  * @param {HTMLElement} elem 
  */
 export function clearChilds(elem) {
@@ -65,11 +62,8 @@ export function repaint(paintables = []) {
         elem.appendChild(chap(p.id, p.html))
     }
 
-    addObserve(elem.lastElementChild)
-    if (elem.childElementCount >=3) {
-        dropObserve(elem.firstElementChild)
-        refocus(elem.firstElementChild.nextElementSibling)
-    }
+    addObserver.observe(next.value)
+    dropObserver.observe(prev.value)
 }
 
 function add() {
@@ -111,23 +105,16 @@ export async function drop({pos, id, html}) {
     switch (pos) {
         case -1:
             if (elem.childElementCount > 2) {
-                addObserver.unobserve(elem.lastElementChild)
                 elem.removeChild(elem.lastElementChild);
             }
             elem.firstElementChild.scrollIntoView({block:"end"})
             elem.prepend(d);
-            dropObserve(d)
-            addObserve(elem.lastElementChild)
         break;
         case 1:
             if (elem.childElementCount > 2) {
-                dropObserver.unobserve(elem.firstElementChild)
                 elem.removeChild(elem.firstElementChild);
             }
-            refocus(elem.lastElementChild)
             elem.appendChild(d);
-            addObserve(d)
-            dropObserve(elem.firstElementChild)
         break;
         default:
             console.log("Invalid pos:", pos);
