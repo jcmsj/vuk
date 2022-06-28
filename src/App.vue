@@ -3,11 +3,11 @@ import {onMounted, ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
 import SidePanel from "./components/panels/SidePanel.vue"
-import vLive from "./components/Live.vue"
+import VLive from "./components/Live.vue"
 import {loadBookFromLauncher} from "./modules/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
 import {TOC} from "./modules/reactives";
-import vFooter from "./components/Footer.vue"
+import VFooter from "./components/Footer.vue"
 import EnhancedEpub from "./modules/EnhancedEpub"
 import {BookmarkController} from "./modules/Bookmarks"
 useTitle("Vuk | An EPUB reader for the web.")
@@ -38,12 +38,12 @@ function anchorClicked(e) {
   />
   <main>
     <!-- vHeader here -->
-    <vLive
+    <VLive
       v-if="TOC.items.size"
       @click="anchorClicked"
     />
     <WelcomePage v-else/>
-    <vFooter
+    <VFooter
       v-if="TOC.items.size"
     />
   </main>
