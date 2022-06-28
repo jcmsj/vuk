@@ -3,6 +3,7 @@ import EnhancedEpub from "../modules/EnhancedEpub";
 import {ref} from "vue"
 import {refocus} from "../modules/helpers"
 import { className } from "./tts/constants";
+import {BookmarkController} from "../modules/Bookmarks"
 
 export const prev = ref();
 export const next = ref();
@@ -65,6 +66,7 @@ export function repaint(paintables = []) {
     if (elem.childElementCount == 3)
         refocus(elem.firstElementChild.nextElementSibling);
 
+    BookmarkController.reapply()
 }
 
 function add() {
