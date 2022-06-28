@@ -48,8 +48,7 @@ export function clearChilds(elem) {
 export function repaint(paintables = []) {
 
     if (elem == null) {
-        setTimeout(() => repaint(paintables), 1000)
-        return;
+        throw TypeError("No 'view' element")
     }
 
     //Temporarily disable navigation when loading.
@@ -65,6 +64,7 @@ export function repaint(paintables = []) {
     dropObserver.observe(prev.value)
     if (elem.childElementCount == 3)
         refocus(elem.firstElementChild.nextElementSibling);
+
 }
 
 function add() {
@@ -87,14 +87,15 @@ export async function drop({pos, id, html}) {
     switch (pos) {
         case -1:
             if (elem.childElementCount > 2) {
-                elem.removeChild(elem.lastElementChild);
+                elem.lastElementChild.remove()
             }
+            elem.firstElementChild
+            .scrollIntoView({ block: "nearest", behavior: "smooth" })
             elem.prepend(d);
-            d.scrollIntoView({block:"end", behavior:"smooth"})
         break;
         case 1:
             if (elem.childElementCount > 2) {
-                elem.removeChild(elem.firstElementChild);
+                elem.firstElementChild.remove()
             }
             elem.appendChild(d);
             refocus(d)
@@ -103,7 +104,6 @@ export async function drop({pos, id, html}) {
             console.log("Invalid pos:", pos);
     }
 }
-
 
 /**
  * fn observe
