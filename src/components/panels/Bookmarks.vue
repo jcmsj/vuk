@@ -18,20 +18,20 @@
 <script setup>
 import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
 import EnhandedEpub from "../../modules/EnhancedEpub";
+import {refocus} from "../../modules/helpers"
 async function focus(selector, bm) {
-    success = await EnhandedEpub.instance.between(BookmarkController.toManifestID(bm))
+    let maybeElem =  document.querySelector(selector);
 
-    if (success) {
-        const elem = document.querySelector(selector);
-        if (elem instanceof HTMLElement) {
-            BookmarkController.reapply()
-        }
-        else
-            console.warn("Invalid selector:", selector);
+    if (maybeElem) {
+        refocus(maybeElem)
+        return;
+    } else {
+        const success = await EnhandedEpub.instance.between(BookmarkController.toManifestID(bm))
+
+        console.log(success ? "Bookmark clicked:":"Invalid", selector);
     }
 
-    console.log("Bookmark clicked:", selector);
-    
+    BookmarkController.reapply()
 }
 </script>
 <style lang='sass'>
