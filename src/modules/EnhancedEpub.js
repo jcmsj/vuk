@@ -16,8 +16,8 @@ class EnhancedEpub extends Epub {
 
     async between(IDorIndex) {
         let index = IDorIndex
-        if (IDorIndex instanceof String)
-            [index, _] = this.flow.pairOf(IDorIndex);
+        if (typeof IDorIndex == "string")
+            [index] = this.flow.pairOf(IDorIndex);
 
         if (index < 0 || index >= this.flow.size)
             return false;
