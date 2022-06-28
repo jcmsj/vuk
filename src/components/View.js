@@ -85,14 +85,14 @@ export async function drop({pos, id, html}) {
                 elem.removeChild(elem.lastElementChild);
             }
             elem.prepend(d);
-            refocus(next.value.previousElementSibling)
+            d.scrollIntoView({block:"end", behavior:"smooth"})
         break;
         case 1:
             if (elem.childElementCount > 2) {
                 elem.removeChild(elem.firstElementChild);
             }
             elem.appendChild(d);
-            refocus(prev.value.nextElementSibling)
+            refocus(d)
         break;
         default:
             console.log("Invalid pos:", pos);
