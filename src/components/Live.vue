@@ -73,6 +73,9 @@ onMounted(() => {
 
 div.chapter
     min-height: 100vh
+    display: flex
+    flex-direction: column
+
     img /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
@@ -105,6 +108,5 @@ article
     bottom: 0
 
 .naver
-    min-height: 4vh
-    display: block
+    min-height: 8vh
 </style>

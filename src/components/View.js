@@ -6,12 +6,11 @@ import { className } from "./tts/constants";
 
 export const prev = ref();
 export const next = ref();
-var hasLeft = false;
 var elem = null;
 const options = {
     root: null,
     rootMargin: "0px",
-    threshold : 1
+    threshold : 0.9
 }
 
 let addObserver = new IntersectionObserver(([entry], obs) => {
@@ -22,19 +21,14 @@ let addObserver = new IntersectionObserver(([entry], obs) => {
 }, options)
 
 let dropObserver = new IntersectionObserver(([entry], obs) => {
-    if (hasLeft == false && entry.isIntersecting == false) {
-            hasLeft = true;
-            entry.target.classList.add("hasleft")
-    } else if (hasLeft && entry.isIntersecting) {
+    if (entry.isIntersecting) {
         entry.target.classList.remove("rem", "hasleft")
         prior()
-        hasLeft = false;
     }
 }, options)
 
 export function setView(id) {
     elem = document.getElementById(id)
-
 }
 
 function chap(id, html) {
@@ -64,6 +58,8 @@ export function repaint(paintables = []) {
 
     addObserver.observe(next.value)
     dropObserver.observe(prev.value)
+    if (elem.childElementCount == 3)
+        refocus(elem.firstElementChild.nextElementSibling);
 }
 
 function add() {
@@ -81,25 +77,6 @@ function prior() {
     }
 }
 
-/**
- * @param {HTMLElement} lem 
- */
-function addObserve(lem) {
-    lem.classList.add("add")
-    console.log(lem);
-    addObserver.observe(lem)
-}
-
-/**
- * @param {HTMLElement} lem 
- */
-function dropObserve(lem) {
-    hasLeft = false
-    lem.classList.add("rem")
-    console.log(lem);
-    dropObserver.observe(lem)
-}
-
 export async function drop({pos, id, html}) {
     const d = chap(id, html)
     switch (pos) {
@@ -107,14 +84,15 @@ export async function drop({pos, id, html}) {
             if (elem.childElementCount > 2) {
                 elem.removeChild(elem.lastElementChild);
             }
-            elem.firstElementChild.scrollIntoView({block:"end"})
             elem.prepend(d);
+            refocus(next.value.previousElementSibling)
         break;
         case 1:
             if (elem.childElementCount > 2) {
                 elem.removeChild(elem.firstElementChild);
             }
             elem.appendChild(d);
+            refocus(prev.value.nextElementSibling)
         break;
         default:
             console.log("Invalid pos:", pos);
