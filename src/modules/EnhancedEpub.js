@@ -1,6 +1,5 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { at } from "./Maps";
 import { drop, repaint } from "../components/View";
 class EnhancedEpub extends Epub {
     index = 0;
@@ -23,7 +22,7 @@ class EnhancedEpub extends Epub {
             return false;
 
         let prev;
-        const [key] = at(index, this.flow);
+        const [key] = this.flow.at(index)
         const toBeLoaded = []
         for (const [id, item] of this.flow) {
 
