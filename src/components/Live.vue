@@ -1,13 +1,13 @@
 <template>
 <article ref="mainElem">
-    <div class="naver" ref=prev>&nbsp;</div>
+    <div class="naver" ref=prev />
     <div
         @mouseup="identifySpeechTarget"
         @contextmenu.prevent.stop="showContextMenu($event)"
         id=__view
     >
     </div>
-    <div class="naver" ref=next>&nbsp;</div>
+    <div class="naver" ref=next />
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
@@ -20,7 +20,7 @@
 <script setup>
 import { BookmarkController } from "../modules/Bookmarks";
 import {mainElem} from "../modules/useMainElem"
-import { ref, nextTick, onMounted, watch} from "vue";
+import { ref, onMounted } from "vue";
 import {identifySpeechTarget} from "./tts/TTS"
 import { setView, next, prev } from "./View";
 const pageContextMenu = ref()
@@ -72,7 +72,7 @@ onMounted(() => {
 <style lang="sass">
 
 div.chapter
-    min-height: 100vh
+    min-height: 110vh
     display: flex
     flex-direction: column
 
