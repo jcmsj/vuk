@@ -42,14 +42,19 @@ function chap(id, html) {
  * @param {HTMLElement} elem 
  */
 export function clearChilds(elem) {
-    if (elem.childElementCount)
-        while(elem.removeChild(elem.firstElementChild));
+    while(elem.firstElementChild)
+        elem.removeChild(elem.firstElementChild);
 }
 export function repaint(paintables = []) {
+
     if (elem == null) {
         setTimeout(() => repaint(paintables), 1000)
         return;
     }
+
+    //Temporarily disable navigation when loading.
+    addObserver.unobserve(next.value)
+    dropObserver.unobserve(prev.value)
 
     clearChilds(elem);
     for(const p of paintables) {
