@@ -23,7 +23,7 @@ class EnhancedEpub extends Epub {
             return false;
 
         let prev;
-        const [key, _] = at(index, this.flow);
+        const [key] = at(index, this.flow);
         const toBeLoaded = []
         for (const [id, item] of this.flow) {
 
@@ -63,12 +63,11 @@ class EnhancedEpub extends Epub {
     async drop(offset) {
         
         const o = offset / 2
-        //offset = Math.min(Math.max(0, offset), this.flow.size - 1)
         const pair = this.flow.at(this.index + offset);
         if (pair == null)
             throw RangeError("Trying to load beyond the start or end of book");
 
-        const [id, _] = pair;
+        const [id] = pair;
         this.index += o
         drop({
             pos:o,
