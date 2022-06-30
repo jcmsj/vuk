@@ -84,19 +84,20 @@ export function startReading() {
  * @param {string} txt 
  * @returns Success
  */
-function beforeSpeak(txt) {
+function beforeSpeak(txt=gElem.innerText) {
     if (txt.length == 0) {
         //Todo: Add warning, since it may hint that there is an issue with 
         upnext(gElem)
         return false;
     }
 
-    const {element , charIndex} = Transformer.transform(gElem, Word.index)
-    gElem = element;
-    txt = txt.slice(charIndex);
-    //If cI is zero, then the narrator is going to speak new text. 
-    if (charIndex == 0)
+    const {charIndex} = Transformer.transform(gElem, Word.index)
+    if (charIndex) {
+        txt = txt.slice(charIndex);
+    } else {
+        //The narrator is going to speak new text. 
         Word.reset();
+    }
 
     if(!isElementInViewport(gElem))
         refocus(gElem);
