@@ -12,7 +12,7 @@ let gElem = null
 /**
  * @param {HTMLElement} lem 
  */
-export function isReadable(lem) {
+ export function isReadable(lem) {
     return (lem instanceof HTMLElement) && validElems.RE.test(lem.tagName)
 }
 
@@ -106,7 +106,7 @@ function beforeSpeak(txt) {
     const nextWord = e => {
         Word.highlight(e, gElem)
     }
-    utterance.onstartReading = nextWord
+    utterance.onstart = nextWord
     utterance.onboundary = nextWord
 
     utterance.onend = () => {
