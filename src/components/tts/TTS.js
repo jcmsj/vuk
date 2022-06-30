@@ -41,7 +41,7 @@ function find(chapterElem) {
     if (chapterElem == null 
     || !chapterElem.classList.contains(className.chapter)) {
         
-        throw TypeError("Not a chapter element");
+        throw TypeError("Not a chapter element:", chapterElem);
     }
     
     if (chapterElem.innerText.length == 0)
