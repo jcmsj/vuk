@@ -106,7 +106,7 @@ function beforeSpeak(txt) {
     const nextWord = e => {
         Word.highlight(e, gElem)
     }
-    utterance.onstartReading = nextWord
+    utterance.onstart = nextWord
     utterance.onboundary = nextWord
 
     utterance.onend = () => {
