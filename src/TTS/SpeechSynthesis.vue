@@ -23,6 +23,7 @@ import { ref } from "vue";
 import SpeechRateController from "./SpeechRateController.vue"
 import MediaControls from "./MediaControls.vue"
 import VoiceSelector from "./VoiceSelector.vue"
+
 const 
     showOps = ref(false)
 ;

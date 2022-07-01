@@ -4,8 +4,9 @@ import { Word } from "./Word";
 import { getSelectionText, isElementInViewport } from "/src/modules/helpers";
 import { readAloud } from "./narrator";
 import { className, validElems } from "./constants";
-import {BookmarkController} from "../../modules/Bookmarks"
-import { refocus } from "../../modules/helpers";
+import BookmarkController from "../Bookmarks/BookmarkController";
+import EnhancedEpub from "../modules/EnhancedEpub"
+import { refocus } from "../modules/helpers";
 export const isReading = ref(false)    
 let gElem = null
 

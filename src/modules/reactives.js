@@ -17,7 +17,3 @@ export function reactiveMap(obj = {}) {
         }, obj)
     )
 }
-
-export const 
-    TOC = reactiveMap()
-;

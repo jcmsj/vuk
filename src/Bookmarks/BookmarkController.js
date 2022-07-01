@@ -1,13 +1,12 @@
-import { reactiveMap } from "./reactives";
 import { get, set } from "idb-keyval"
-import { idb_prefixes } from "../components/idb";
-import { setSpeechTarget, isReadable } from "../components/tts/TTS";
-import generateSelector from "./generateSelector"
-import { getReadingProgress } from "./useMainElem";
-import {refocus} from "/src/modules/helpers"
-export const Bookmarks = reactiveMap()
+import { idb_prefixes } from "../modules/idb";
+import { setSpeechTarget, isReadable } from "../TTS/TTS";
+import generateSelector from "../modules/generateSelector"
+import { getReadingProgress } from "../modules/useMainElem";
+import {refocus} from "../modules/helpers"
+import Bookmarks from "./Bookmarks";
 
-export class BookmarkController {
+class BookmarkController {
     static className = "bookmark"
     static auto = {
         read: null,
@@ -194,3 +193,5 @@ export class BookmarkController {
         return bm.selector.split(" > ", 1)[0].substring(1);
     }
 }
+
+export default BookmarkController

@@ -1,5 +1,5 @@
 import {get, set} from "idb-keyval";
-import { idb } from "../idb";
+import { idb } from "../modules/idb";
 import {reactive} from "vue";
 
 export const speech_rate = reactive({

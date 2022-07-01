@@ -1,10 +1,9 @@
 
-import EnhancedEpub from "../modules/EnhancedEpub";
 import {ref} from "vue"
+import EnhancedEpub from "../modules/EnhancedEpub";
 import {refocus} from "../modules/helpers"
-import { className } from "./tts/constants";
-import {BookmarkController} from "../modules/Bookmarks"
-
+import { className } from "../TTS/constants";
+import BookmarkController from "../Bookmarks/BookmarkController"
 export const prev = ref();
 export const next = ref();
 var elem = null;

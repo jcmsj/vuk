@@ -1,6 +1,6 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { drop, repaint } from "../components/View";
+import { drop, repaint } from "../components/Live";
 class EnhancedEpub extends Epub {
     index = 0;
     static instance = null

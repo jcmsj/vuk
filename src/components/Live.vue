@@ -18,11 +18,11 @@
 </template>
 
 <script setup>
-import { BookmarkController } from "../modules/Bookmarks";
+import BookmarkController from "../Bookmarks/BookmarkController";
 import {mainElem} from "../modules/useMainElem"
 import { ref, onMounted } from "vue";
-import {identifySpeechTarget} from "./tts/TTS"
-import { setView, next, prev } from "./View";
+import {identifySpeechTarget} from "../TTS/TTS"
+import { setView, next, prev } from "./Live";
 const pageContextMenu = ref()
 var righted = null
 

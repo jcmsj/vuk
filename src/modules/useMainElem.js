@@ -1,6 +1,6 @@
 import {ref} from "vue"
 import getScrollPercentage from "./getScrollPercentage";
-export const mainElem = ref(null)
+export const mainElem = ref()
 
 export function getReadingProgress() {
     return getScrollPercentage(mainElem.value)

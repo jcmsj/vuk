@@ -1,13 +1,14 @@
-import {TOC} from "./reactives";
-import { Bookmarks, BookmarkController } from "./Bookmarks"
+import TOC from "../TOC/TOC";
+import Bookmarks from "../Bookmarks/Bookmarks"
+import BookmarkController from '../Bookmarks/BookmarkController';
 import { useTitle } from "@vueuse/core";
-import { EnhancedMap, pairOf } from "./Maps";
+import { EnhancedMap} from "./Maps";
 import EnhancedEpub from "./EnhancedEpub";
 
 /**
  * @param {File} file
  */
-export async function loadBookFromFile(file, cached = false) {
+export async function loadBookFromFile(file) {
     const epub = new EnhancedEpub(file)
 
     Bookmarks.items.clear()

@@ -16,9 +16,10 @@
 </div>
 </template>
 <script setup>
-import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
-import EnhandedEpub from "../../modules/EnhancedEpub";
-import {refocus} from "../../modules/helpers"
+import Bookmarks from "./Bookmarks"
+import BookmarkController from './BookmarkController';
+import EnhandedEpub from "../modules/EnhancedEpub";
+import {refocus} from "../modules/helpers"
 async function focus(selector, bm) {
     let maybeElem =  document.querySelector(selector);
 

@@ -5,7 +5,8 @@
 </template>
 
 <script setup>
-import SpeechSynthesis from './tts/SpeechSynthesis.vue';
+import SpeechSynthesis from "../TTS/SpeechSynthesis.vue";
+
 </script>
 <style lang="sass">
 footer
