@@ -64,6 +64,9 @@ export async function loadBookFromHandle(handle) {
     )
 }
 
+/**
+ * @PWA
+ */
 export async function loadBookFromLauncher() {
     if (!('launchQueue' in window && 'files' in LaunchParams.prototype))  {
         console.log("File Handling API is unsupported")
