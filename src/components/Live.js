@@ -27,11 +27,11 @@ let dropObserver = new IntersectionObserver(([entry], obs) => {
     }
 }, options)
 
-export function setView(id) {
+export function setLive(id) {
     elem = document.getElementById(id)
 }
 
-function chap(id, html) {
+function chap({id, html}) {
     const d = document.createElement("div")
     d.id = id
     d.innerHTML = html
@@ -39,11 +39,11 @@ function chap(id, html) {
     return d;
 }
 /**
- * @param {HTMLElement} elem 
+ * @param {HTMLElement} lem 
  */
-export function clearChilds(elem) {
-    while(elem.firstElementChild)
-        elem.removeChild(elem.firstElementChild);
+export function clearChilds(lem) {
+    while(lem.firstElementChild)
+        lem.firstElementChild.remove();
 }
 export function repaint(paintables = []) {
 
@@ -56,9 +56,8 @@ export function repaint(paintables = []) {
     dropObserver.unobserve(prev.value)
 
     clearChilds(elem);
-    for(const p of paintables) {
-        elem.appendChild(chap(p.id, p.html))
-    }
+    
+    elem.append(...paintables.map(chap))
 
     addObserver.observe(next.value)
     dropObserver.observe(prev.value)
@@ -83,9 +82,9 @@ function prior() {
     }
 }
 
-export async function drop({pos, id, html}) {
-    const d = chap(id, html)
-    switch (pos) {
+export async function drop(p) {
+    const d = chap(p)
+    switch (p.pos) {
         case -1:
             if (elem.childElementCount > 2) {
                 elem.lastElementChild.remove()

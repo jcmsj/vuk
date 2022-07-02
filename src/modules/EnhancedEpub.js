@@ -1,8 +1,9 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
 import { drop, repaint } from "../components/Live";
-class EnhancedEpub extends Epub {
+export default class EnhancedEpub extends Epub {
     index = 0;
+    id = ""; //The currently shown flow item called from between
     static instance = null
     /**
      * 
@@ -24,59 +25,65 @@ class EnhancedEpub extends Epub {
         let prev;
         const [key] = this.flow.at(index)
         const toBeLoaded = []
+
+        const append = async(id) =>
+            toBeLoaded.push(
+                await this.getWrapped(id)
+            );
+        
         for (const [id, item] of this.flow) {
 
             if (toBeLoaded.length > 0) {
-                toBeLoaded.push({
-                    id,
-                    html: await this.getContent(id),
-                })
+                await append(id)
                 break;
             }
 
             if (key == id) {
                 if (prev)
-                    toBeLoaded.push({
-                        id:prev.id,
-                        html: await this.getContent(prev.id),
-                    })
+                    await append(prev.id);
 
-                toBeLoaded.push({
-                    id,
-                    html: await this.getContent(id),
-                })
+                await append(id)
             }
 
             prev = item
         }
         
         this.index = index;
+        this.id = key;
         repaint(toBeLoaded)
         return true;
     }
-
+    async getWrapped(id) {
+        return {
+            id,
+            html: await this.getContent(id)
+        }
+    }
+    /**
+     * Advancing by two since 3 chapters are loaded  at a time.
+     */
     async next() {
-        this.drop(2)
+        await this.drop(2)
     }
 
     async drop(offset) {
         
         const o = offset / 2
-        const pair = this.flow.at(this.index + offset);
+        const pair = this.flow.at(this.index + offset)
         if (pair == null)
             throw RangeError("Trying to load beyond the start or end of book");
-
-        const [id] = pair;
         this.index += o
         drop({
-            pos:o,
-            id,
-            html: await this.getContent(id)
+            pos: o,
+            ... await this.getWrapped(pair[0])
         })
     }
+
+    /**
+     * Read comment in next()
+     */
     async previous() {
-        this.drop(-2)
+        await this.drop(-2)
     }
 }
 
-export default EnhancedEpub

@@ -1,17 +1,17 @@
 <template>
-<article ref="mainElem">
-    <div class="naver" ref=prev />
+<article ref=mainElem>
+    <div class=naver ref=prev />
     <div
         @mouseup="identifySpeechTarget"
         @contextmenu.prevent.stop="showContextMenu($event)"
-        id=__view
+        id="__live"
     >
     </div>
-    <div class="naver" ref=next />
+    <div class=naver ref=next />
     <vue-simple-context-menu
-        element-id="page-context"
+        element-id=page-context
         :options="menuItems"
-        ref="pageContextMenu"
+        ref=pageContextMenu
         @option-clicked="optionClicked"
     />
 </article>
@@ -22,7 +22,7 @@ import BookmarkController from "../Bookmarks/BookmarkController";
 import {mainElem} from "../modules/useMainElem"
 import { ref, onMounted } from "vue";
 import {identifySpeechTarget} from "../TTS/TTS"
-import { setView, next, prev } from "./Live";
+import { setLive, next, prev } from "./Live";
 const pageContextMenu = ref()
 var righted = null
 
@@ -66,7 +66,7 @@ function showContextMenu(e) {
 }
 
 onMounted(() => {
-    setView("__view")
+    setLive("__live")
 })
 </script>
 <style lang="sass">
@@ -93,7 +93,7 @@ div.chapter
 @import "src/sass/media_queries"
 @import "src/sass/mixins"
     
-#__view
+#__live 
     flex: 1
     margin: 1vh 1vw
 
