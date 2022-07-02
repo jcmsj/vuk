@@ -37,16 +37,15 @@ export async function loadBookFromFile(file) {
             console.log("Meta:", this.metadata);
             useTitle(this.metadata.title)
             await BookmarkController.load();
-
-            if (Bookmarks.isEmpty()) { // New book
-                this.between(0)
-            } else {
+            let index = 0;
+            if (!Bookmarks.isEmpty()) { // New book
                 const [, tail] = Bookmarks.at(Bookmarks.items.size - 1)
                 const id = BookmarkController.toManifestID(tail);
 
-                let [i,] = this.flow.pairOf(id)
-                this.between(i < 0 ? 0:i);
+                let [i] = this.flow.pairOf(id)
+                index = i < 0 ? 0:i;
             }
+            this.between(index)
             this.emit("loaded-chapters")
         },
         "loaded-chapters": async function() {

@@ -20,12 +20,10 @@ onMounted(() => {
  * @param {Event} e
  */
 function anchorClicked(e) {
-  const lem = e.target;
-  
-  if (lem.tagName != "A")
+  if (e.target.tagName != "A")
     return;
   try {
-    EnhancedEpub.instance.between(lem.href.split("#",2)[1]); 
+    EnhancedEpub.instance.between(e.target.href.split("#",2)[1]); 
   } catch (e) {
     console.log(e);
   }
