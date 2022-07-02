@@ -3,13 +3,12 @@ import { className } from "./constants";
 /**
  * A singleton that tracks the current spoken and highlighted word by the narrator.
  */
-export class Word {
+export default class Word {
     static elem = null;
     static index = 0;
 
     /**
      * @param {SpeechSynthesisEvent} e
-     * Note: 
      */
     static highlight(e, parentElem) {
         if (e.name != "word") return;
@@ -23,6 +22,9 @@ export class Word {
         }
     }
 
+    /**
+     * @param {Number} n 
+     */
     static setIndex(n) {
         if (typeof n != "number")
             return

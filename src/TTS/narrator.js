@@ -6,7 +6,7 @@ import { speech_rate } from "./speech_rate";
  * @param {Function} cb 
  * @returns SpeechSynthesisUtterance
  */
-export function readAloud(txt) {
+export default function readAloud (txt) {
     const utterance = new SpeechSynthesisUtterance(txt)
     utterance.rate = speech_rate.value
 
