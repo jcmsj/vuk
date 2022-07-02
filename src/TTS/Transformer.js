@@ -3,7 +3,7 @@ import {className} from "./constants"
 /**
  * A singleton that transforms the words in a readable element into span tags that can be indexed.
  */
-export class Transformer {
+export default class Transformer {
     static clone = null;
     static last = null;
 
