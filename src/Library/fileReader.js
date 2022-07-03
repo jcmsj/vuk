@@ -8,7 +8,7 @@ import { useTitle } from "@vueuse/core";
 /**
  * @param {File} file
  */
-export async function loadBookFromFile(file, cached = false) {
+export async function loadBookFromFile(file) {
     const epub = new Epub(file, simplifyHTMLTree)
     Bookmarks.items.clear()
     Flow.items.clear()
