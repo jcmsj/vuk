@@ -1,11 +1,12 @@
 import { ref } from "vue";
-import { Transformer } from "./Transformer";
-import { Word } from "./Word";
+import Transformer from "./Transformer";
+import Word from "./Word";
 import { getSelectionText, isElementInViewport } from "/src/modules/helpers";
-import { readAloud } from "./narrator";
 import { className, validElems } from "./constants";
-import {BookmarkController} from "../../modules/Bookmarks"
-import { refocus } from "../../modules/helpers";
+import {BookmarkController} from "../Bookmarks";
+import { refocus } from "../modules/helpers";
+import voice from "./voice";
+import speech_rate from "./speech_rate";
 export const isReading = ref(false)    
 let gElem = null
 
@@ -41,7 +42,7 @@ function find(chapterElem) {
     if (chapterElem == null 
     || !chapterElem.classList.contains(className.chapter)) {
         
-        throw TypeError("Not a chapter element");
+        throw TypeError("Not a chapter element:", chapterElem);
     }
     
     if (chapterElem.innerText.length == 0)
@@ -72,49 +73,69 @@ export function setSpeechTarget(elem) {
     return false
 }
 
-export function startReading() {
+/**
+ * @param {HTMLElement} elem 
+ */
+function spotTarget(elem) {
+    return setSpeechTarget(
+        find(
+            elem
+        )
+    )
+}
+export async function startReading() {
     let txt = (gElem && gElem.innerText) || "";
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
-    if (!beforeSpeak(txt))
-        console.warn("No text to speak.");
+    try {
+        beforeSpeak(txt)
+    } catch(e) {
+        console.log(e);
+    }
 }
 
 /**
  * @param {string} txt 
  * @returns Success
  */
-function beforeSpeak(txt) {
+function beforeSpeak(txt=gElem.innerText) {
     if (txt.length == 0) {
         //Todo: Add warning, since it may hint that there is an issue with 
         upnext(gElem)
         return false;
     }
 
-    const {element , charIndex} = Transformer.transform(gElem, Word.index)
-    gElem = element;
-    txt = txt.slice(charIndex);
-    //If cI is zero, then the narrator is going to speak new text. 
-    if (charIndex == 0)
-        Word.reset();
+    const charIndex = Transformer.transform(gElem, Word.index)
+    if (charIndex) {
+        txt = txt.slice(charIndex);
+    } else {
+        //The narrator is going to speak new text. 
+        Word.reset(gElem);
+    }
 
     if(!isElementInViewport(gElem))
         refocus(gElem);
 
-    const utterance = readAloud(txt)
-
-    const nextWord = e => {
-        Word.highlight(e, gElem)
-    }
-    utterance.onstart = nextWord
-    utterance.onboundary = nextWord
-
-    utterance.onend = () => {
-        upnext(gElem)
-    };
-
-    isReading.value = true;
+    readAloud(txt)
     return true;
+}
+
+/**
+ * @param {string} txt 
+ */
+function readAloud(txt) {
+    const utt = new SpeechSynthesisUtterance(txt)
+    utt.onboundary 
+    = utt.onstart 
+    = Word.highlight.bind(Word);
+    utt.onend = () => upnext(gElem);
+    utt.rate = speech_rate.value
+
+    if (voice.value!= null)
+        utt.voice = voice.value;
+
+    speechSynthesis.speak(utt);
+    isReading.value = true;
 }
 
 export function stopReading() {
@@ -129,24 +150,6 @@ export function stopReading() {
 
 export function toggleReading() {
     isReading.value ? stopReading():startReading()
-}
-
-/**
- * @param {HTMLElement} target 
- */
-function move(target) {
-    if (!isReading.value) {
-        return;
-    }
-
-    Word.reset();
-    Transformer.revert();
-    
-    if (setSpeechTarget(target)) {
-        beforeSpeak(target.innerText)
-    } else {
-        onBookEnd()
-    }
 }
 
 /**
@@ -173,22 +176,35 @@ function upnext(elem, property = "nextElementSibling") {
     move(target);
 }
 
-function onBookEnd() {
+/**
+ * @param {HTMLElement} target 
+ * Moves the visual indicator of the text being spoken.
+ */
+ function move(target) {
+    if (!isReading.value) {
+        return;
+    }
+
+    Word.reset();
+    Transformer.revert();
+    
+    if (setSpeechTarget(target)) {
+        beforeSpeak()
+    } else {
+        onBookEnd()
+    }
+}
+
+async function onBookEnd() {
     readAloud("There is no more text to read.")
-    throw Error("End of Book!") //Force an error | Halting problem
-    //TODO: do BookEndEvent
 }
 
 export function onBookLoaded() {
-    const ch = document.querySelector("." + className.chapter);
+    const maybeChapter = document.querySelector("." + className.chapter)
+    if (spotTarget(maybeChapter)) {
+        console.log("First chapter:", maybeChapter);
+        return true
+    }
 
-    if (ch == null)
-        return false;
-
-    console.log("First chapter:", ch);
-    setSpeechTarget(
-        find(ch)
-    )
-
-    return true;
+    return false
 }

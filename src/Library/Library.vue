@@ -41,8 +41,8 @@ import { ref } from "vue"
 import {onKeyUp} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import {get, set, clear} from "idb-keyval"
-import {loadBookFromFile, loadBookFromHandle} from "../../modules/fileReader"
-import { idb } from "../idb.js"
+import {loadBookFromFile, loadBookFromHandle} from "./fileReader"
+import { idb } from "../modules/idb.js"
 
 //Refs
 const 

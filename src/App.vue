@@ -2,11 +2,11 @@
 import {onMounted, ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
-import SidePanel from "./components/panels/SidePanel.vue"
-import PageRenderer from "./components/PageRenderer.vue"
-import {loadBookFromLauncher} from "./modules/fileReader"
+import SidePanel from "./components/SidePanel.vue"
+import VLive from "./components/Live.vue"
+import {loadBookFromLauncher} from "./Library/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
-import {Flow} from "./modules/reactives";
+import Flow from "./Flow/Flow";
 import vFooter from "./components/Footer.vue"
 
 useTitle("Vuk | An EPUB reader for the web.")
@@ -19,7 +19,7 @@ onMounted(() => {
   <SidePanel />
   <main>
     <!-- vHeader here -->
-    <PageRenderer
+    <VLive
       v-if="Flow.items.size"
     />
     <WelcomePage v-else />

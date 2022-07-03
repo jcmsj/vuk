@@ -21,9 +21,9 @@
 
 <script setup>
 import { ref } from "vue";
-import {Flow} from "../modules/reactives";
-import { BookmarkController } from "../modules/Bookmarks";
-import {startReading, identifySpeechTarget, stopReading} from "./tts/TTS.js";
+import Flow from "../Flow/Flow"
+import { BookmarkController } from "../Bookmarks";
+import {startReading, identifySpeechTarget, stopReading} from "../TTS";
 import {mainElem} from "../modules/useMainElem"
 
 const pageContextMenu = ref(null)

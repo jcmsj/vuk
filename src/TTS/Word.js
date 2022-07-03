@@ -3,34 +3,35 @@ import { className } from "./constants";
 /**
  * A singleton that tracks the current spoken and highlighted word by the narrator.
  */
-export class Word {
+export default class Word {
     static elem = null;
+    static parent = null;
     static index = 0;
 
     /**
      * @param {SpeechSynthesisEvent} e
-     * Note: 
      */
-    static highlight(e, parentElem) {
-        if (e.name != "word") return;
+    static highlight(e) {
+        if (this.parent && e.name != "word") return;
 
         if (this.elem instanceof HTMLElement)
             this.elem.classList.remove(className.word)
 
-        if (this.index < parentElem.children.length) {
-            this.elem = parentElem.children.item(this.index++)
+        if (this.index < this.parent.children.length) {
+            this.elem = this.parent.children.item(this.index++)
             this.elem.classList.add(className.word);
         }
     }
 
+    /**
+     * @param {Number} n 
+     */
     static setIndex(n) {
-        if (typeof n != "number")
-            return
-
-        this.index = n;
+        this.index = n || 0
     }
 
-    static reset() {
+    static reset(p = null) {
         this.index = 0;
+        this.parent = p;
     }
 }

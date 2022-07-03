@@ -1,8 +1,9 @@
 import Epub from "@jcsj/epub"
-import { onBookLoaded } from "../components/tts/TTS";
-import {Flow, TOC} from "./reactives";
-import simplifyHTMLTree from "./simplifyHTMLTree";
-import { Bookmarks, BookmarkController } from "./Bookmarks"
+import { onBookLoaded } from "../TTS/";
+import Flow from "../Flow/Flow"
+import TOC from "../TOC/TOC"
+import simplifyHTMLTree from "../modules/simplifyHTMLTree";
+import { Bookmarks, BookmarkController } from "../Bookmarks"
 import { useTitle } from "@vueuse/core";
 /**
  * @param {File} file

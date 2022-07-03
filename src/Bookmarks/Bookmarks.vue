@@ -16,7 +16,7 @@
 </div>
 </template>
 <script setup>
-import { Bookmarks, BookmarkController } from '../../modules/Bookmarks';
+import { Bookmarks, BookmarkController } from '.';
 function focus(selector) {
     const elem = document.querySelector(selector);
     if (elem instanceof HTMLElement)

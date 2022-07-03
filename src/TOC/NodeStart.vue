@@ -1,6 +1,6 @@
 <template>
  <div :active="props.active" class="node">
-    <div v-if="props.level > maxLevel"></div>
+    <div v-if="props.level > maxLevel" />
     <div
         v-else 
         v-for="[key, item] of props.items"

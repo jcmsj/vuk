@@ -1,6 +1,6 @@
 import {reactive} from "vue"
 
-export function reactiveMap(obj = {}) {
+export default function reactiveMap(obj = {}) {
     return reactive(
         Object.assign({
             items: new Map(),
@@ -17,8 +17,3 @@ export function reactiveMap(obj = {}) {
         }, obj)
     )
 }
-
-export const 
-    TOC = reactiveMap(),
-    Flow = reactiveMap()
-;

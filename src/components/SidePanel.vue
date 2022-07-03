@@ -30,15 +30,15 @@
     <section
     :active="isDisplayed"
     >
-      <vLibrary
+      <VLibrary
         :active="tabIndex == 0"
         class="panel"
       />
-      <vTOC
+      <VTOC
         :active="tabIndex == 1"
         class="panel"
       />
-      <vBookmarks
+      <VBookmarks
         :active="tabIndex == 2"
         class="panel"
       />
@@ -48,9 +48,9 @@
 <script setup>
 import { ref } from "vue"
 import {onKeyUp} from "@vueuse/core"
-import vTOC from "./TOC.vue"
-import vLibrary from "./Library.vue";
-import vBookmarks from "./Bookmarks.vue"
+import VTOC from "../TOC/TOC.vue"
+import VLibrary from "../Library/Library.vue";
+import VBookmarks from "../Bookmarks/Bookmarks.vue"
 const tabIndex = ref(0);
 const isDisplayed = ref(false);
 function toggleAside() {

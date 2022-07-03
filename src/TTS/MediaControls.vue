@@ -12,7 +12,7 @@
 </div>
 </template>
 <script setup>
-import {isReading, toggleReading} from "./TTS.js";
+import {isReading, toggleReading} from ".";
 import { onKeyUp } from "@vueuse/core";
 
 onKeyUp("r", toggleReading)

@@ -3,14 +3,14 @@ import {className} from "./constants"
 /**
  * A singleton that transforms the words in a readable element into span tags that can be indexed.
  */
-export class Transformer {
+export default class Transformer {
     static clone = null;
     static last = null;
 
     /**
      * @param {HTMLElement} elem a readable element
-     * @param {Number} wordIndex last word read by TTS 
-     * @returns Object containing the char index to resume speaking and the new value of the global elem.
+     * @param {Number} wordIndex last word read by TTS. It is >= 0 
+     * @returns char index to resume speaking.
      */
     static transform(elem, wordIndex) {
         const resumed = elem.isSameNode(this.last)
@@ -32,7 +32,7 @@ export class Transformer {
             .map(w =>`<span>${w}</span>`)
             .join(' ');
         
-        return {element:elem, charIndex};
+        return charIndex;
     }
 
     static revert() {

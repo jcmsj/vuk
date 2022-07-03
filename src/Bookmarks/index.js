@@ -1,9 +1,9 @@
-import { reactiveMap } from "./reactives";
+import reactiveMap from "../modules/reactiveMap";
 import { get, set } from "idb-keyval"
-import { idb_prefixes } from "../components/idb";
-import { setSpeechTarget, isReadable } from "../components/tts/TTS";
-import generateSelector from "./generateSelector"
-import { getReadingProgress } from "./useMainElem";
+import { idb_prefixes } from "../modules/idb";
+import { setSpeechTarget, isReadable } from "../TTS";
+import generateSelector from "../modules/generateSelector"
+import { getReadingProgress } from "../modules/useMainElem";
 import {refocus} from "/src/modules/helpers"
 export const Bookmarks = reactiveMap()
 

@@ -30,3 +30,5 @@ in-dev*
 certs/
 old*
 dev-*
+* copy*
+*.rs
