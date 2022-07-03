@@ -2,7 +2,7 @@ import {get, set} from "idb-keyval";
 import { idb } from "../modules/idb";
 import {reactive} from "vue";
 
-export const speech_rate = reactive({
+const speech_rate = reactive({
     value : 1,
     min : 0.25,
     max : 3,
@@ -23,3 +23,5 @@ export const speech_rate = reactive({
 get(idb.speech_rate).then(n => {
     speech_rate.set(n || 1);
 })
+
+export default speech_rate;

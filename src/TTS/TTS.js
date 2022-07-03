@@ -2,11 +2,12 @@ import { ref } from "vue";
 import Transformer from "./Transformer";
 import Word from "./Word";
 import { getSelectionText, isElementInViewport } from "/src/modules/helpers";
-import readAloud from "./narrator";
 import { className, validElems } from "./constants";
 import BookmarkController from "../Bookmarks/BookmarkController";
 import EnhancedEpub from "../modules/EnhancedEpub"
 import { refocus } from "../modules/helpers";
+import voice from "./voice";
+import speech_rate from "./speech_rate";
 export const isReading = ref(false)    
 let gElem = null
 
@@ -93,7 +94,7 @@ export async function startReading() {
         if (e instanceof TypeError) {
             await EnhancedEpub.instance.next();
             spotTarget(document.getElementById(EnhancedEpub.instance.id))
-            startReading();
+            return startReading();
         }
 
         throw e;
@@ -122,17 +123,26 @@ function beforeSpeak(txt=gElem.innerText) {
     if(!isElementInViewport(gElem))
         refocus(gElem);
 
-    const utterance = readAloud(txt)
-
-    utterance.onstart = Word.highlight.bind(Word)
-    utterance.onboundary = Word.highlight.bind(Word)
-
-    utterance.onend = () => {
-        upnext(gElem)
-    };
-
-    isReading.value = true;
+    readAloud(txt)
     return true;
+}
+
+/**
+ * @param {string} txt 
+ */
+function readAloud(txt) {
+    const utt = new SpeechSynthesisUtterance(txt)
+    utt.onboundary 
+    = utt.onstart 
+    = Word.highlight.bind(Word);
+    utt.onend = () => upnext(gElem);
+    utt.rate = speech_rate.value
+
+    if (voice.value!= null)
+        utt.voice = voice.value;
+
+    speechSynthesis.speak(utt);
+    isReading.value = true;
 }
 
 export function stopReading() {

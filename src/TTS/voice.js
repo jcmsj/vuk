@@ -9,3 +9,5 @@ export const voice = reactive({
             || null
     }
 });
+
+export default voice;
