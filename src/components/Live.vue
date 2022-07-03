@@ -21,7 +21,7 @@
 import BookmarkController from "../Bookmarks/BookmarkController";
 import {mainElem} from "../modules/useMainElem"
 import { ref, onMounted } from "vue";
-import {identifySpeechTarget} from "../TTS/TTS"
+import {identifySpeechTarget, startReading, stopReading} from "../TTS/TTS"
 import { setLive, next, prev } from "./Live";
 const pageContextMenu = ref()
 var righted = null
@@ -31,8 +31,8 @@ const menuItems = [
         name: "&#x1F50A;",
         type:"read",
         cb() {
-            reader.start()
-            reader.stop()
+            stopReading()
+            startReading()
         }
     },
     {
