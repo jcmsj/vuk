@@ -1,8 +1,8 @@
 import { ref } from "vue";
-import { Transformer } from "./Transformer";
-import { Word } from "./Word";
+import Transformer from "./Transformer";
+import Word from "./Word";
 import { getSelectionText, isElementInViewport } from "/src/modules/helpers";
-import { readAloud } from "./narrator";
+import readAloud from "./narrator";
 import { className, validElems } from "./constants";
 import BookmarkController from "../Bookmarks/BookmarkController";
 import EnhancedEpub from "../modules/EnhancedEpub"
@@ -73,12 +73,31 @@ export function setSpeechTarget(elem) {
     return false
 }
 
-export function startReading() {
+/**
+ * @param {HTMLElement} elem 
+ */
+function spotTarget(elem) {
+    return setSpeechTarget(
+        find(
+            elem
+        )
+    )
+}
+export async function startReading() {
     let txt = (gElem && gElem.innerText) || "";
     txt = txt.slice(txt.indexOf(getSelectionText()))
 
-    if (!beforeSpeak(txt))
-        console.warn("No text to speak.");
+    try {
+        beforeSpeak(txt)
+    } catch(e) {
+        if (e instanceof TypeError) {
+            await EnhancedEpub.instance.next();
+            spotTarget(document.getElementById(EnhancedEpub.instance.id))
+            startReading();
+        }
+
+        throw e;
+    }
 }
 
 /**
@@ -97,7 +116,7 @@ function beforeSpeak(txt=gElem.innerText) {
         txt = txt.slice(charIndex);
     } else {
         //The narrator is going to speak new text. 
-        Word.reset();
+        Word.reset(gElem);
     }
 
     if(!isElementInViewport(gElem))
@@ -105,11 +124,8 @@ function beforeSpeak(txt=gElem.innerText) {
 
     const utterance = readAloud(txt)
 
-    const nextWord = e => {
-        Word.highlight(e, gElem)
-    }
-    utterance.onstart = nextWord
-    utterance.onboundary = nextWord
+    utterance.onstart = Word.highlight.bind(Word)
+    utterance.onboundary = Word.highlight.bind(Word)
 
     utterance.onend = () => {
         upnext(gElem)
@@ -131,24 +147,6 @@ export function stopReading() {
 
 export function toggleReading() {
     isReading.value ? stopReading():startReading()
-}
-
-/**
- * @param {HTMLElement} target 
- */
-function move(target) {
-    if (!isReading.value) {
-        return;
-    }
-
-    Word.reset();
-    Transformer.revert();
-    
-    if (setSpeechTarget(target)) {
-        beforeSpeak(target.innerText)
-    } else {
-        onBookEnd()
-    }
 }
 
 /**
@@ -175,22 +173,41 @@ function upnext(elem, property = "nextElementSibling") {
     move(target);
 }
 
-function onBookEnd() {
-    readAloud("There is no more text to read.")
-    throw Error("End of Book!") //Force an error | Halting problem
+/**
+ * @param {HTMLElement} target 
+ * Moves the visual indicator of the text being spoken.
+ */
+ function move(target) {
+    if (!isReading.value) {
+        return;
+    }
+
+    Word.reset();
+    Transformer.revert();
+    
+    if (setSpeechTarget(target)) {
+        beforeSpeak()
+    } else {
+        onBookEnd()
+    }
+}
+
+async function onBookEnd() {
+    try {
+        await EnhancedEpub.instance.next()
+    } catch(e) {
+        readAloud("There is no more text to read.")
+        throw Error("End of Book!") //Force an error | Halting problem
+    }
     //TODO: do BookEndEvent
 }
 
 export function onBookLoaded() {
-    const ch = document.querySelector("." + className.chapter);
+    const maybeChapter = document.querySelector("." + className.chapter)
+    if (spotTarget(maybeChapter)) {
+        console.log("First chapter:", maybeChapter);
+        return true
+    }
 
-    if (ch == null)
-        return false;
-
-    console.log("First chapter:", ch);
-    setSpeechTarget(
-        find(ch)
-    )
-
-    return true;
+    return false
 }
