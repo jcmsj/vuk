@@ -112,7 +112,7 @@ function beforeSpeak(txt=gElem.innerText) {
         return false;
     }
 
-    const {charIndex} = Transformer.transform(gElem, Word.index)
+    const charIndex = Transformer.transform(gElem, Word.index)
     if (charIndex) {
         txt = txt.slice(charIndex);
     } else {

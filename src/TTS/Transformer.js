@@ -10,7 +10,7 @@ export default class Transformer {
     /**
      * @param {HTMLElement} elem a readable element
      * @param {Number} wordIndex last word read by TTS. It is >= 0 
-     * @returns Object containing the char index to resume speaking and the new value of the global elem.
+     * @returns char index to resume speaking.
      */
     static transform(elem, wordIndex) {
         const resumed = elem.isSameNode(this.last)
@@ -32,7 +32,7 @@ export default class Transformer {
             .map(w =>`<span>${w}</span>`)
             .join(' ');
         
-        return {element:elem, charIndex};
+        return charIndex;
     }
 
     static revert() {
