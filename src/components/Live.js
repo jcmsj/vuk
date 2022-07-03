@@ -52,15 +52,21 @@ export function repaint(paintables = []) {
     }
 
     //Temporarily disable navigation when loading.
-    addObserver.unobserve(next.value)
-    dropObserver.unobserve(prev.value)
+    const isLazyLoaded = paintables.length <= 3;
+    if (isLazyLoaded) {
+        addObserver.unobserve(next.value)
+        dropObserver.unobserve(prev.value)
+    }
 
     clearChilds(elem);
     
     elem.append(...paintables.map(chap))
 
-    addObserver.observe(next.value)
-    dropObserver.observe(prev.value)
+    if (isLazyLoaded) {
+        addObserver.observe(next.value)
+        dropObserver.observe(prev.value)
+    }
+
     if (elem.childElementCount == 3)
         refocus(elem.firstElementChild.nextElementSibling);
 
@@ -71,14 +77,14 @@ function add() {
     try {
         EnhancedEpub.instance.next();
     } catch(e) {
-        console.log("Possibly end of book", [e]);
+        console.log("Possibly end of book", e);
     }
 }
 function prior() {
     try {
         EnhancedEpub.instance.previous();
     } catch(e) {
-        console.log("Possibly start of book", [e]);
+        console.log("Possibly start of book", e);
     }
 }
 
@@ -104,20 +110,3 @@ export async function drop(p) {
             console.log("Invalid pos:", pos);
     }
 }
-
-/**
- * fn observe
- *  if last:
- *      ratio > lim
- *      do add
- * 
- * fn: add
- *  remove first child
- *  append child
- *  ev obseve
- * 
- * if rem
- *  remove last child
- *  prepend child
- *  
- */

@@ -53,6 +53,15 @@ export default class EnhancedEpub extends Epub {
         repaint(toBeLoaded)
         return true;
     }
+
+    async loadAll() {
+        const toBeLoaded = []
+        for (const [k] of this.flow) {
+            toBeLoaded.push(await this.getWrapped(k))
+        }
+
+        repaint(toBeLoaded);
+    }
     async getWrapped(id) {
         return {
             id,
