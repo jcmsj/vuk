@@ -116,7 +116,7 @@ function beforeSpeak(txt=gElem.innerText) {
         txt = txt.slice(charIndex);
     } else {
         //The narrator is going to speak new text. 
-        Word.reset();
+        Word.reset(gElem);
     }
 
     if(!isElementInViewport(gElem))
@@ -124,11 +124,8 @@ function beforeSpeak(txt=gElem.innerText) {
 
     const utterance = readAloud(txt)
 
-    const nextWord = e => {
-        Word.highlight(e, gElem)
-    }
-    utterance.onstart = nextWord
-    utterance.onboundary = nextWord
+    utterance.onstart = Word.highlight.bind(Word)
+    utterance.onboundary = Word.highlight.bind(Word)
 
     utterance.onend = () => {
         upnext(gElem)
