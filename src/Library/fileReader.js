@@ -1,9 +1,9 @@
-import TOC from "../TOC/TOC";
-import Bookmarks from "../Bookmarks/Bookmarks"
+import {TOC} from "../TOC";
+import {Bookmarks} from "../Bookmarks"
 import BookmarkController from '../Bookmarks/BookmarkController';
 import { useTitle } from "@vueuse/core";
-import { EnhancedMap} from "./Maps";
-import EnhancedEpub from "./EnhancedEpub";
+import { EnhancedMap} from "../modules/Maps";
+import EnhancedEpub from "../modules/EnhancedEpub";
 
 const lazy = true
 /**

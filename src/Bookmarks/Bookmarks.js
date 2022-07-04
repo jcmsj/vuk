@@ -1,3 +1,3 @@
-import { reactiveMap } from "../modules/reactives";
-const Bookmarks = reactiveMap()
+import reactiveMap from "../modules/reactiveMap";
+export const Bookmarks = reactiveMap()
 export default Bookmarks

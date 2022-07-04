@@ -1,6 +1,6 @@
 import {reactive} from "vue"
 import {EnhancedMap} from "./Maps";
-export function reactiveMap(obj = {}) {
+export default function reactiveMap(obj = {}) {
     return reactive(
         Object.assign({
             items: new EnhancedMap(),

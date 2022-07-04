@@ -1,10 +1,6 @@
 <template>
   <aside>
-    <nav
-    >
-      <!-- <button class="mobile-nav">
-      &#9776;
-      </button> -->
+    <nav>
       <button
         @click="changeTab(0)"
         title="File explorer"
@@ -49,7 +45,7 @@
 import { ref } from "vue"
 import {onKeyUp} from "@vueuse/core"
 import VTOC from "../TOC/TOC.vue"
-import VLibrary from "./Library.vue";
+import VLibrary from "../Library/Library.vue";
 import VBookmarks from "../Bookmarks/Bookmarks.vue"
 const tabIndex = ref(0);
 const isDisplayed = ref(false);
@@ -69,14 +65,13 @@ function showAside() {
       .addEventListener("scroll", hideAside, {once:true});
 }
 
-
 ["f", "c", "b"].map((key, i) => {
-  onKeyUp(key, e => {
+  onKeyUp(key, () => {
     changeTab(i)
   }, {target:document})
 })
 
-onKeyUp("Escape", e => {
+onKeyUp("Escape", () => {
       hideAside()
 }, {target:document})
 

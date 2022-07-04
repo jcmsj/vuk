@@ -11,7 +11,7 @@
 
 <script setup>
 import NodeStart from "./NodeStart.vue"
-import TOC from "./TOC"
+import {TOC} from "."
 </script>
 <style lang="sass" scoped>
 </style>

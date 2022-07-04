@@ -3,18 +3,21 @@
     <nav>
         <button 
             @click="selectFile"
+            title="Open an EPUB"
             class="btn"
         >
         Open 📖
         </button>
         <button
             @click="setLibrary"
+            title="Set library"
             class="btn"
         >
         Set 📂
         </button>
         <button
             @click="restoreLibrary"
+            title="Restore library"
             class="btn"
         >
         ↻ 📂
@@ -41,7 +44,7 @@ import { ref } from "vue"
 import {onKeyUp} from "@vueuse/core"
 import {directoryOpen, fileOpen} from "browser-fs-access"
 import {get, set, clear} from "idb-keyval"
-import {loadBookFromFile, loadBookFromHandle} from "../modules/fileReader"
+import {loadBookFromFile, loadBookFromHandle} from "./fileReader"
 import { idb } from "../modules/idb"
 
 //Refs
@@ -116,9 +119,11 @@ async function restoreLibrary() {
     setCurrentDir(hRoot.value)
 }
 
-onKeyUp("f", e=> {
-    restoreLibrary();
-}, {target:document})
+onKeyUp(
+    "f", 
+    restoreLibrary, 
+    {target:document}
+)
 /**
  * @param {FileSystemDirectoryHandle} handle
  */

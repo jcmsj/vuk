@@ -1,6 +1,6 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { drop, repaint } from "../components/Live";
+import { drop, repaint } from "../Live/";
 export default class EnhancedEpub extends Epub {
     index = 0;
     id = ""; //The currently shown flow item called from between

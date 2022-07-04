@@ -1,12 +1,12 @@
 import { get, set } from "idb-keyval"
 import { idb_prefixes } from "../modules/idb";
-import { setSpeechTarget, isReadable } from "../TTS/TTS";
+import { setSpeechTarget, isReadable } from "../TTS";
 import generateSelector from "../modules/generateSelector"
 import { getReadingProgress } from "../modules/useMainElem";
 import {refocus} from "../modules/helpers"
 import Bookmarks from "./Bookmarks";
 
-class BookmarkController {
+export class BookmarkController {
     static className = "bookmark"
     static auto = {
         read: null,

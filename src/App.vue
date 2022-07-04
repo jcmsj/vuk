@@ -3,13 +3,12 @@ import {onMounted, ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
 import SidePanel from "./components/SidePanel.vue"
-import VLive from "./components/Live.vue"
-import {loadBookFromLauncher} from "./modules/fileReader"
+import VLive from "./Live/Live.vue"
+import {loadBookFromLauncher} from "./Library/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
-import TOC from "./TOC/TOC";
+import {TOC} from "./TOC";
 import VFooter from "./components/Footer.vue"
 import EnhancedEpub from "./modules/EnhancedEpub"
-import BookmarkController from "./Bookmarks/BookmarkController"
 useTitle("Vuk | An EPUB reader for the web.")
 
 onMounted(() => {
