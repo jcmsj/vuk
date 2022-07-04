@@ -3,13 +3,9 @@
     <div
         @mouseup="identifySpeechTarget"
         @contextmenu.prevent.stop="showContextMenu($event)"
-        class="chapter"
-        v-for="[key, part] of Flow.items" 
-        :key="key"
-        :id="key"
-        v-html="part"
-        >
-    </div>
+        ref=live
+        class=view
+    />
     <vue-simple-context-menu
         element-id="page-context"
         :options="menuItems"
@@ -21,7 +17,7 @@
 
 <script setup>
 import { ref } from "vue";
-import Flow from "../Flow/Flow"
+import {live} from "./Live"
 import { BookmarkController } from "../Bookmarks";
 import {startReading, identifySpeechTarget, stopReading} from "../TTS";
 import {mainElem} from "../modules/useMainElem"
@@ -60,9 +56,7 @@ function optionClicked({item, option}) {
 }
 
 /**
- * 
  * @param {Event} e 
- * @param {string} key 
  */
 function showContextMenu(e) {
     righted = e.target
@@ -70,12 +64,15 @@ function showContextMenu(e) {
 }
 
 </script>
-
-<style lang='sass' scoped>
+<style lang="sass">
+div.chapter
+    min-height: 100vh
+</style>
+<style lang="sass" scoped>
 @import "src/sass/media_queries"
 @import "src/sass/mixins"
     
-div.chapter
+div.view
     flex: 1
     margin: 1vh 1vw
     :deep(img) /* Uses deep cause of v-html */

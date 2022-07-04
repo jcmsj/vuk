@@ -6,8 +6,8 @@ import SidePanel from "./components/SidePanel.vue"
 import VLive from "./components/Live.vue"
 import {loadBookFromLauncher} from "./Library/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
-import Flow from "./Flow/Flow";
-import vFooter from "./components/Footer.vue"
+import TOC from "./TOC/TOC";
+import VFooter from "./components/Footer.vue"
 
 useTitle("Vuk | An EPUB reader for the web.")
 
@@ -16,18 +16,12 @@ onMounted(() => {
 })
 </script>
 <template>
-  <SidePanel />
+ <SidePanel />
   <main>
     <!-- vHeader here -->
-    <VLive
-      v-if="Flow.items.size"
-    />
-    <WelcomePage v-else />
-    <vFooter
-      v-if="Flow.items.size"
-    />
+    <VLive />
+    <VFooter />
   </main>
-
 </template>
 
 <!-- Note the FF styles will be applied for the entire APP -->
