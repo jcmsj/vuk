@@ -37,13 +37,17 @@ export function identifySpeechTarget(e) {
 }
 
 /**
+ * @param {HTMLElement} elem 
+ */
+function isChapter(elem) {
+    return elem && elem.className.includes(className.chapter)
+}
+/**
  * @param {HTMLElement|null} chapterElem 
  * @returns {HTMLElement}
  */
 function find(chapterElem) {
-    if (chapterElem == null 
-    || !chapterElem.classList.contains(className.chapter)) {
-        
+    if (!isChapter(chapterElem)) {
         throw TypeError("Not a chapter element:", chapterElem);
     }
     
@@ -169,6 +173,7 @@ export function toggleReading() {
 /**
  * @param {HTMLElement} elem 
  * @param {string} property 
+ * Traverses the DOM sidewards or upwards to find the next element.
  */
 function upnext(elem, property = "nextElementSibling") {
     let target = null
@@ -178,23 +183,22 @@ function upnext(elem, property = "nextElementSibling") {
         elem = elem.parentElement
     }
 
-    //When the element is empty, find next
+    //When there's no text, find next
     if (target.innerText.length == 0) 
         return upnext(target,property)
 
-    if (target.classList instanceof DOMTokenList
-    && target.classList.contains(className.chapter)
-    )
+    if (isChapter(target))
         target = find(target);
     
-    move(target);
+    continueReading(target);
 }
 
 /**
  * @param {HTMLElement} target 
- * Moves the visual indicator of the text being spoken.
+ * Resets the VFX of the text just spoken then continues speaking from the target element
+ * To be called only by 'upnext'
  */
- function move(target) {
+ function continueReading(target) {
     if (!isReading.value) {
         return;
     }
