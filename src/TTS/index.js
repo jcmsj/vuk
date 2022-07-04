@@ -8,6 +8,7 @@ import EnhancedEpub from "../modules/EnhancedEpub"
 import { refocus } from "../modules/helpers";
 import voice from "./voice";
 import speech_rate from "./speech_rate";
+import { next } from "../Live";
 export const isReading = ref(false)    
 let gElem = null
 
@@ -93,7 +94,11 @@ export async function startReading() {
     } catch(e) {
         if (e instanceof TypeError) {
             await EnhancedEpub.instance.next();
-            spotTarget(document.getElementById(EnhancedEpub.instance.id))
+                try {
+                    spotTarget(next.value.previousElementSibling.lastElementChild)
+                } catch(e) {
+                    
+                }
             return startReading();
         }
 
