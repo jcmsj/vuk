@@ -94,11 +94,13 @@ export async function startReading() {
     } catch(e) {
         if (e instanceof TypeError) {
             await EnhancedEpub.instance.next();
-                try {
-                    spotTarget(next.value.previousElementSibling.lastElementChild)
-                } catch(e) {
-                    
-                }
+
+            //May fix #5
+            try {
+                spotTarget(next.value.previousElementSibling.lastElementChild)
+            } catch(e) {
+                
+            }
             return startReading();
         }
 
