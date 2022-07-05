@@ -9,7 +9,7 @@ import WelcomePage from "./components/WelcomePage.vue"
 import {TOC} from "./TOC";
 import VFooter from "./components/Footer.vue"
 import EnhancedEpub from "./modules/EnhancedEpub"
-useTitle("Vuk | An EPUB reader for the web.")
+useTitle("Vuk | An EPUB reader for the web")
 
 onMounted(() => {
   loadBookFromLauncher();
