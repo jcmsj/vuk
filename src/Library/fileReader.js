@@ -1,8 +1,8 @@
 import Epub from "@jcsj/epub"
-import TOC from "../TOC/TOC"
+import {TOC} from "../TOC"
 import simplifyHTMLTree from "../modules/simplifyHTMLTree";
 import { Bookmarks, BookmarkController } from "../Bookmarks"
-import { reset, onEnd, paint } from "../components/Live";
+import { reset, onEnd, paint } from "../Live";
 import { useTitle } from "@vueuse/core";
 
 export const book = {

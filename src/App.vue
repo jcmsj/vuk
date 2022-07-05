@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue"
 import { useTitle } from "@vueuse/core"
 //Components
 import SidePanel from "./components/SidePanel.vue"
-import VLive from "./components/Live.vue"
+import VLive from "./Live/Live.vue"
 import {loadBookFromLauncher} from "./Library/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
 import TOC from "./TOC/TOC";

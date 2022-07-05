@@ -17,7 +17,7 @@
 
 <script setup>
 import { ref } from "vue";
-import {live} from "./Live"
+import {live} from "."
 import { BookmarkController } from "../Bookmarks";
 import {startReading, identifySpeechTarget, stopReading} from "../TTS";
 import {mainElem} from "../modules/useMainElem"

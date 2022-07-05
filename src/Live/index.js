@@ -1,4 +1,4 @@
-import {ref, watch} from "vue"
+import {ref} from "vue"
 import {className} from "../TTS/constants"
 import { BookmarkController } from "../Bookmarks"
 import { onBookLoaded } from "../TTS"
