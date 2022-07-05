@@ -1,7 +1,7 @@
 import {ref} from "vue"
 import {className} from "../TTS/constants"
 import { BookmarkController } from "../Bookmarks"
-import { onBookLoaded } from "../TTS"
+import { onBookLoaded, reset as resetTTS } from "../TTS"
 export const live = ref()
 
 /**
@@ -21,6 +21,7 @@ function chap({id, html}) {
 }
 
 export function reset() {
+    resetTTS()
     clearChilds(live.value)
 }
 

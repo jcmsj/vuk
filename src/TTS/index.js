@@ -208,3 +208,10 @@ export function onBookLoaded() {
 
     return false
 }
+
+export function reset() {
+    stopReading()
+    Word.reset()
+    Transformer.last = null
+    gElem = null
+}
