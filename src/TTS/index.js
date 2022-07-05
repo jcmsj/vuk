@@ -119,6 +119,7 @@ export async function startReading() {
 function beforeSpeak(txt=gElem.innerText) {
     if (txt.length == 0) {
         //Todo: Add warning, since it may hint that there is an issue with 
+        refocus(gElem)
         upnext(gElem)
         return false;
     }
@@ -221,4 +222,11 @@ async function onBookEnd() {
         throw Error("End of Book!") //Force an error | Halting problem
     }
     //TODO: do BookEndEvent
+}
+
+export function reset() {
+    stopReading()
+    Word.reset()
+    Transformer.last = null
+    gElem = null
 }
