@@ -23,7 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-test*
 in-dev*
 \#*
 .\#*
@@ -32,3 +31,4 @@ old*
 dev-*
 * copy*
 *.rs
+*.epub
