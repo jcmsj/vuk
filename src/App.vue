@@ -55,15 +55,13 @@ function anchorClicked(e) {
 @import "./sass/media_queries"
 @import "./sass/mixins"
 
-body
+body#app
   margin: 0
   padding: 0
   height: 100vh
   overflow: hidden
 
-#app
   @include lex
-  height: inherit
 
   @include desk(min-width)
     flex-direction: row
@@ -78,7 +76,7 @@ main
   overflow-x: hidden
   height: 100%
   @media screen and (hover: none) and (max-width: $lim) 
-    font-size: smaller
+    font-size: 1.7rem
 
 button.btn
   background: var(--color-2-d)
