@@ -222,13 +222,3 @@ async function onBookEnd() {
     }
     //TODO: do BookEndEvent
 }
-
-export function onBookLoaded() {
-    const maybeChapter = document.querySelector("." + className.chapter)
-    if (spotTarget(maybeChapter)) {
-        console.log("First chapter:", maybeChapter);
-        return true
-    }
-
-    return false
-}
