@@ -3,7 +3,7 @@ import Transformer from "./Transformer";
 import Word from "./Word";
 import { getSelectionText, isElementInViewport } from "/src/modules/helpers";
 import { className, validElems } from "./constants";
-import BookmarkController from "../Bookmarks/BookmarkController";
+import {BookmarkController} from "../Bookmarks";
 import EnhancedEpub from "../modules/EnhancedEpub"
 import { refocus } from "../modules/helpers";
 import voice from "./voice";
