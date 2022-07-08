@@ -186,11 +186,13 @@ function upnext(elem, property = "nextElementSibling") {
         target = elem[property] 
             || null;
         elem = elem.parentElement
-    }
 
-    //When there's no text, find next
-    if (target.innerText.length == 0) 
-        return upnext(target,property)
+        //When there's no text, find next
+        if (target.innerText.length == 0) {
+            elem = target
+            target = null;
+        }
+    }
 
     if (isChapter(target))
         target = find(target);
