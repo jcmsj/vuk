@@ -32,9 +32,8 @@ onMounted(() => {
     if (maybeMode == null)
         return
         
-    change(<any>LoadMethod[maybeMode])
+    change(maybeMode as unknown as LoadMethod)
 
-    //TODO Option is not being selected
     elem.value.value = loadMethod.value
 })
 </script>
