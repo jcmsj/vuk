@@ -4,7 +4,7 @@
 <select 
     name="load-method" 
     ref=elem
-    @change="change"
+    @change="change(elem.value)"
 >
     <option 
     v-for="(key, v) in LoadMethod"
@@ -17,14 +17,26 @@
 </span>
 </template>
 <script setup lang=ts>
-import {ref} from "vue"
+import {onMounted, ref} from "vue"
 import {loadMethod, LoadMethod} from "../Library/Load"
 
 const elem = ref()
-
-function change() {
-    loadMethod.value =  elem.value.value
+const key = "load-method"
+function change(v:LoadMethod) {
+    loadMethod.value = v
+    localStorage.setItem(key, v)
 }
+
+onMounted(() => {
+    const maybeMode = localStorage.getItem(key)
+    if (maybeMode == null)
+        return
+        
+    change(<any>LoadMethod[maybeMode])
+
+    //TODO Option is not being selected
+    elem.value.value = loadMethod.value
+})
 </script>
 <style scoped lang=sass>
 span
