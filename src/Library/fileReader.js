@@ -4,8 +4,7 @@ import {Bookmarks, BookmarkController} from "../Bookmarks"
 import { useTitle } from "@vueuse/core";
 import { EnhancedMap} from "../modules/Maps";
 import EnhancedEpub from "../modules/EnhancedEpub";
-
-const lazy = true
+import { loadMethod, LoadMethod } from "./Load";
 /**
  * @param {File} file
  */
@@ -38,19 +37,22 @@ export async function loadBookFromFile(file) {
             console.log("Meta:", this.metadata);
             useTitle(this.metadata.title)
             await BookmarkController.load();
+            switch(loadMethod.value) {
+                case LoadMethod.lazy:
+                    let index = 0;
+                    if (!Bookmarks.isEmpty()) { // New book
+                        const [, tail] = Bookmarks.at(Bookmarks.items.size - 1)
+                        const id = BookmarkController.toManifestID(tail);
+        
+                        let [i] = this.flow.pairOf(id)
+                        index = i < 0 ? 0:i;
+                    }
+                    this.between(index)
+                break;
+                case LoadMethod.all:
+                    this.loadAll()
 
-            if (lazy) {
-                let index = 0;
-                if (!Bookmarks.isEmpty()) { // New book
-                    const [, tail] = Bookmarks.at(Bookmarks.items.size - 1)
-                    const id = BookmarkController.toManifestID(tail);
-    
-                    let [i] = this.flow.pairOf(id)
-                    index = i < 0 ? 0:i;
-                }
-                this.between(index)
-            } else {
-                this.loadAll()
+                break;
             }
             
             this.emit("loaded-chapters")

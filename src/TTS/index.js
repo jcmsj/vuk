@@ -92,20 +92,24 @@ function spotTarget(elem) {
 export async function startReading() {
     let txt = (gElem && gElem.innerText) || "";
     txt = txt.slice(txt.indexOf(getSelectionText()))
-
     try {
         beforeSpeak(txt)
     } catch(e) {
         if (e instanceof TypeError) {
-            await EnhancedEpub.instance.next();
-
-            //May fix #5
+            await EnhancedEpub.instance.next()
+            /* let t = document.getElementById(EnhancedEpub.instance.id)
+            t= find(t)
+            setSpeechTarget(t)
+            return startReading() */
+            /* //May fix #5
             try {
-                spotTarget(next.value.previousElementSibling.lastElementChild)
+                let t = next.value.previousElementSibling.firstElementChild
+                setSpeechTarget(t)
+                refocus(t)
+                stopReading()
             } catch(e) {
                 
-            }
-            return startReading();
+            } */
         }
 
         throw e;

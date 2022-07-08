@@ -2,25 +2,13 @@
   <aside>
     <nav>
       <button
-        @click="changeTab(0)"
-        title="File explorer"
-        class="btn"
+        v-for="(v, k, i) of titles"
+        :key=k
+        class=btn
+        :title=k
+        @click="changeTab(i)"
       >
-      📂
-      </button>
-      <button
-        @click="changeTab(1)"
-        title="Table of contents"
-        class="btn"
-      >
-      📋
-      </button>
-      <button
-        @click="changeTab(2)"
-        title="Bookmarks"
-        class="btn"
-      >
-      &#x1F516;
+      {{v}}
       </button>
     </nav>
     <section
@@ -38,6 +26,10 @@
         :active="tabIndex == 2"
         class="panel"
       />
+      <Settings
+        :active="tabIndex == 3"
+        class="panel"
+      />
     </section>
   </aside>
 </template>
@@ -47,7 +39,14 @@ import {onKeyUp} from "@vueuse/core"
 import VTOC from "../TOC/TOC.vue"
 import VLibrary from "../Library/Library.vue";
 import VBookmarks from "../Bookmarks/Bookmarks.vue"
+import Settings from "../settings/settings.vue"
 const tabIndex = ref(0);
+const titles = {
+  "File Explorer":"📂", 
+  "Table of Contents":"📋", 
+  "Bookmarks": "🔖", 
+  "Settings": "⚙"
+}
 const isDisplayed = ref(false);
 function toggleAside() {
   isDisplayed.value = !isDisplayed.value

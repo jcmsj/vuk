@@ -1,8 +1,15 @@
 <template>
 <div class="r"> 
     <nav>
+        <input 
+            type=file 
+            hidden 
+            ref=chooser
+            @change=selectFile
+            :accept="epubMime"
+        >
         <button 
-            @click="selectFile"
+            @click="chooser.click()"
             title="Open an EPUB"
             class="btn"
         >
@@ -42,7 +49,7 @@
 <script setup>
 import { ref } from "vue"
 import {onKeyUp} from "@vueuse/core"
-import {directoryOpen, fileOpen} from "browser-fs-access"
+import {directoryOpen} from "browser-fs-access"
 import {get, set, clear} from "idb-keyval"
 import {loadBookFromFile, loadBookFromHandle} from "./fileReader"
 import { idb } from "../modules/idb"
@@ -51,9 +58,10 @@ import { idb } from "../modules/idb"
 const 
     books = ref({}),
     dirs = ref({}),
-    hCurrent = ref(null),
-    hRoot = ref(null),
-    levels = ref([])
+    hCurrent = ref(),
+    hRoot = ref(),
+    levels = ref([]),
+    chooser = ref()
 ;
 
 const epubMime = "application/epub+zip";
@@ -66,12 +74,8 @@ function notADirectoryHandle(h) {
     return !(h instanceof FileSystemDirectoryHandle)
 }
 
-async function selectFile() {
-    loadBookFromFile(
-        await fileOpen({
-            mimeTypes: [epubMime],
-        })
-    );
+async function selectFile(e) {
+    loadBookFromFile(chooser.value.files[0])
 }
 
 async function setLibrary() {
