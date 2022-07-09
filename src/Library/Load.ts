@@ -2,7 +2,7 @@ import {ref} from "vue"
 
 export enum LoadMethod {
     all = "all",
-    lazy = "lazy (experimental)"
+    lazy = "lazy"
 }
 
 export const loadMethod = ref(LoadMethod.all);

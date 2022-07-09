@@ -49,16 +49,9 @@ export async function loadBookFromFile(file) {
                     }
                     this.between(index)
                 break;
-                case LoadMethod.all:
+                default:
                     this.loadAll()
-
-                break;
             }
-            
-            this.emit("loaded-chapters")
-        },
-        "loaded-chapters": async function() {
-        
         }
     })
 }
