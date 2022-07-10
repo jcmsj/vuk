@@ -40,6 +40,8 @@ import VTOC from "../TOC/TOC.vue"
 import VLibrary from "../Library/Library.vue";
 import VBookmarks from "../Bookmarks/Bookmarks.vue"
 import Settings from "../settings/settings.vue"
+import mainElem from "../modules/useMainElem"
+import useBool from "../panel/useBool"
 const tabIndex = ref(0);
 const titles = {
   "File Explorer":"📂", 
@@ -47,41 +49,35 @@ const titles = {
   "Bookmarks": "🔖", 
   "Settings": "⚙"
 }
-const isDisplayed = ref(false);
-function toggleAside() {
-  isDisplayed.value = !isDisplayed.value
-}
+const {
+    bool:isDisplayed, 
+    toggle, 
+    on:show, 
+    off:hide
+} = useBool();
 
-function hideAside() {
-    isDisplayed.value = false
-}
-
-function showAside() {
-    isDisplayed.value = true
-
-    document
-      .querySelector("main")
-      .addEventListener("scroll", hideAside, {once:true});
-}
-
+/*   mainElem.value
+      .addEventListener("scroll", hide, {once:true}); */
 ["f", "c", "b"].map((key, i) => {
   onKeyUp(key, () => {
     changeTab(i)
   }, {target:document})
 })
 
-onKeyUp("Escape", () => {
-      hideAside()
-}, {target:document})
+onKeyUp(
+    "Escape", 
+    hide, 
+    {target:document}
+)
 
 function changeTab(i) {
     if (i == tabIndex.value) {
-        toggleAside()
+        toggle()
         return
     } 
     
     tabIndex.value = i;
-    showAside()
+    show()
 }
 
 </script>
