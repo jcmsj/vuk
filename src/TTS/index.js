@@ -8,7 +8,6 @@ import EnhancedEpub from "../modules/EnhancedEpub"
 import { refocus } from "../modules/helpers";
 import voice from "./voice";
 import speech_rate from "./speech_rate";
-import { next } from "../Live";
 export const isReading = ref(false)    
 let gElem = null
 
@@ -66,7 +65,7 @@ function find(chapterElem) {
  */
 export function setSpeechTarget(elem) {
     if (isReadable(elem)) {
-        Transformer.last = gElem;
+        Transformer.last.set(gElem)
         gElem = elem;
 
         console.log("R", gElem);
@@ -79,21 +78,20 @@ export function setSpeechTarget(elem) {
     return false
 }
 
-/**
- * @param {HTMLElement} elem 
- */
-function spotTarget(elem) {
-    return setSpeechTarget(
-        find(
-            elem
-        )
-    )
-}
 export async function startReading() {
-    let txt = (gElem && gElem.innerText) || "";
-    txt = txt.slice(txt.indexOf(getSelectionText()))
+    let txt = (gElem?.innerText) || "";
+    let index = txt.indexOf(getSelectionText())
+    let offset = 0;
+    if (index) {
+        for (let i = index; i > 0; i--) {
+            if (txt.charAt(i) == ' ') 
+                offset++;
+        }
+    }
+    txt = txt.slice(index)
+
     try {
-        beforeSpeak(txt)
+        beforeSpeak(txt, offset)
     } catch(e) {
         if (e instanceof TypeError) {
             await EnhancedEpub.instance.next()
@@ -124,7 +122,7 @@ function scrollIfUnseen(gElem) {
  * @param {string} txt 
  * @returns Success
  */
-function beforeSpeak(txt=gElem.innerText) {
+function beforeSpeak(txt=gElem.innerText, startAT=0) {
     if (txt.length == 0) {
         //Todo: Add warning, since it may hint that there is an issue with 
         refocus(gElem)
@@ -139,6 +137,7 @@ function beforeSpeak(txt=gElem.innerText) {
         //The narrator is going to speak new text. 
         Word.reset(gElem);
     }
+    Word.setIndex(startAT)
 
     scrollIfUnseen(gElem)
     readAloud(txt)
@@ -184,18 +183,15 @@ export function toggleReading() {
  */
 function upnext(elem, property = "nextElementSibling") {
     let target = null
-    while(target == null) {
+    do {
         target = elem[property] 
             || null;
         elem = elem.parentElement
+    } while(target == null);
 
-        //When there's no text, find next
-        if (target.innerText.length == 0) {
-            elem = target
-            target = null;
-        }
-    }
-
+    //When there's no text, find next
+    if (target.innerText.length == 0) 
+        return upnext(target,property)
     if (isChapter(target))
         target = find(target);
     
@@ -235,6 +231,6 @@ async function onBookEnd() {
 export function reset() {
     stopReading()
     Word.reset()
-    Transformer.last = null
+    Transformer.last.set(null)
     gElem = null
 }

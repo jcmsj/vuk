@@ -1,21 +1,22 @@
 import {className} from "./constants"
+import Aspect from "./Aspect";
 
 /**
  * A singleton that transforms the words in a readable element into span tags that can be indexed.
  */
 export default class Transformer {
-    static clone = null;
-    static last = null;
+    static clone = "";
+    public static last = new Aspect();
 
     /**
      * @param {HTMLElement} elem a readable element
      * @param {Number} wordIndex last word read by TTS. It is >= 0 
      * @returns char index to resume speaking.
      */
-    static transform(elem, wordIndex) {
-        const resumed = elem.isSameNode(this.last)
+    static transform(elem:HTMLElement, wordIndex:Number) {
+        const resumed = this.last.map<boolean>((l:Element)=>l.isSameNode(elem)).unwrapOr(false)
 
-        this.last = elem;
+        this.last.set(elem);
         this.clone = elem.innerHTML;
         elem.classList.add(className.para)
         
@@ -29,15 +30,16 @@ export default class Transformer {
 
         //Actual transformation
         elem.innerHTML = words
-            .map(w =>`<span>${w}</span>`)
+            .map((w:string) =>`<span>${w}</span>`)
             .join(' ');
         
         return charIndex;
     }
 
     static revert() {
-        if (!(this.last instanceof HTMLElement)) return;
-        this.last.innerHTML = this.clone
-        this.last.classList.remove(className.para)
+        this.last.map((l:HTMLElement) => {
+            l.innerHTML = this.clone
+            l.classList.remove(className.para)
+        })
     }
 }
