@@ -116,6 +116,10 @@ export async function startReading() {
     }
 }
 
+function scrollIfUnseen(gElem) {
+    if (!isElementInViewport(gElem))
+        refocus(gElem);
+}
 /**
  * @param {string} txt 
  * @returns Success
@@ -136,9 +140,7 @@ function beforeSpeak(txt=gElem.innerText) {
         Word.reset(gElem);
     }
 
-    if(!isElementInViewport(gElem))
-        refocus(gElem);
-
+    scrollIfUnseen(gElem)
     readAloud(txt)
     return true;
 }
