@@ -1,5 +1,5 @@
 import {className} from "./constants"
-import Aspect from "./Aspect";
+import Aspect from "../types/Aspect";
 
 /**
  * A singleton that transforms the words in a readable element into span tags that can be indexed.
