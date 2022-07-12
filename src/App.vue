@@ -8,36 +8,19 @@ import {loadBookFromLauncher} from "./Library/fileReader"
 import WelcomePage from "./components/WelcomePage.vue"
 import {TOC} from "./TOC";
 import VFooter from "./components/Footer.vue"
-import EnhancedEpub from "./modules/EnhancedEpub"
 useTitle("Vuk | An EPUB reader for the web")
 
 onMounted(() => {
   loadBookFromLauncher();
 })
 
-/**
- * @param {Event} e
- */
-function anchorClicked(e) {
-  if (e.target.tagName != "A")
-    return;
-  try {
-    EnhancedEpub.instance.between(e.target.href.split("#",2)[1]); 
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 </script>
 <template>
-  <SidePanel 
-    @click="anchorClicked"
-  />
+  <SidePanel />
   <main>
     <!-- vHeader here -->
     <VLive
       v-if="TOC.items.size"
-      @click="anchorClicked"
     />
     <WelcomePage v-else/>
     <VFooter

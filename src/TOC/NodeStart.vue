@@ -15,7 +15,7 @@
             v-else 
             class="item"
             :href="'#' + item.id"
-            @click.prevent=""
+            @click="anchorClicked"
         >
         {{item.title}}
         </a>
@@ -24,6 +24,8 @@
 </template>
 <script setup>
 import NodeEnd from "./NodeEnd.vue";
+import {anchorClicked} from "../Library/anchorClicked"
+
 const maxLevel = 7;
 const props = defineProps({
     "items": {

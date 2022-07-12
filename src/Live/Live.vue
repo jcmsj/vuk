@@ -5,6 +5,7 @@
         @mouseup="identifySpeechTarget"
         @contextmenu.prevent.stop="showContextMenu($event)"
         id="__live"
+        @click="anchorClicked"
     >
     </div>
     <div class=naver ref=next />
@@ -23,6 +24,7 @@ import {mainElem} from "../modules/useMainElem"
 import { ref, onMounted } from "vue";
 import {identifySpeechTarget, startReading, stopReading} from "../TTS"
 import { setLive, next, prev } from ".";
+import {anchorClicked} from "../Library/anchorClicked"
 const pageContextMenu = ref()
 var righted = null
 
@@ -53,7 +55,6 @@ const menuItems = [
 
 function optionClicked({item, option}) {
     option.cb()
-    console.log(item, option);
 }
 
 /**
