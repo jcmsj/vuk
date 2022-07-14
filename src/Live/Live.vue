@@ -3,7 +3,7 @@
     <div class=naver ref=prev />
     <div
         @mouseup="identifySpeechTarget"
-        @contextmenu.prevent.stop="showContextMenu($event)"
+        @dblclick="showContextMenu($event)"
         id="__live"
         @click="anchorClicked"
     >
