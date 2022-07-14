@@ -4,7 +4,7 @@ import Word from "./Word";
 import { getSelectionText, isElementInViewport } from "/src/modules/helpers";
 import { className, validElems } from "./constants";
 import {BookmarkController} from "../Bookmarks";
-import EnhancedEpub from "../modules/EnhancedEpub"
+import {EnhancedEpub} from "../modules/EnhancedEpub"
 import { refocus } from "../modules/helpers";
 import voice from "./voice";
 import speech_rate from "./speech_rate";
@@ -93,23 +93,7 @@ export async function startReading() {
     try {
         beforeSpeak(txt, offset)
     } catch(e) {
-        if (e instanceof TypeError) {
-            await EnhancedEpub.instance.next()
-            /* let t = document.getElementById(EnhancedEpub.instance.id)
-            t= find(t)
-            setSpeechTarget(t)
-            return startReading() */
-            /* //May fix #5
-            try {
-                let t = next.value.previousElementSibling.firstElementChild
-                setSpeechTarget(t)
-                refocus(t)
-                stopReading()
-            } catch(e) {
-                
-            } */
-        }
-
+        onBookEnd()
         throw e;
     }
 }
@@ -220,7 +204,16 @@ function upnext(elem, property = "nextElementSibling") {
 
 async function onBookEnd() {
     try {
-        await EnhancedEpub.instance.next()
+        //Commented lines should work but no for some reason
+        //Attempt 1: Force isReading to true then let upnext handle it
+        isReading.value = true
+        upnext(gElem) 
+        
+        
+        /* let t = document.getElementById(EnhancedEpub.instance.id)
+        t= find(t)
+        setSpeechTarget(t)
+        startReading() */
     } catch(e) {
         readAloud("There is no more text to read.")
         throw Error("End of Book!") //Force an error | Halting problem

@@ -1,5 +1,5 @@
 import {loadMethod, LoadMethod} from "./Load"
-import EnhancedEpub from "../modules/EnhancedEpub"
+import {EnhancedEpub} from "../modules/EnhancedEpub"
 
 export async function anchorClicked(e:MouseEvent) {
     if (loadMethod.value == LoadMethod.all)
@@ -9,7 +9,7 @@ export async function anchorClicked(e:MouseEvent) {
     if (!(l instanceof HTMLAnchorElement))
       return;
     try {
-      EnhancedEpub.instance.between(l.href.split("#",2)[1]); 
+      EnhancedEpub.instance?.between(l.href.split("#",2)[1]); 
     } catch (e) {
       console.log(e);
     }

@@ -1,32 +1,46 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { drop, repaint } from "../Live/";
-export default class EnhancedEpub extends Epub {
+import { drop, repaint } from "../Live";
+import { Item } from "@jcsj/epub/traits";
+
+class BoundaryError extends RangeError {
+    name = "BoundaryError"
+    constructor(where:string) {
+        super(`Unable to load book element beyond the ${where}.`)
+    }
+}
+export class EnhancedEpub extends Epub {
     index = 0;
     id = ""; //The currently shown flow item called from between
-    static instance = null
-    /**
-     * 
-     * @param {File} file 
-     */
-    constructor(file) {
+    static instance:EnhancedEpub|null = null
+
+    constructor(file:File) {
         super(file, simplifyHTMLTree)
         EnhancedEpub.instance = this;
     }
 
-    async between(IDorIndex) {
-        let index = IDorIndex
-        if (typeof IDorIndex == "string")
-            [index] = this.flow.pairOf(IDorIndex);
-
+    async between(IDorIndex:string|number) {
+        let index:number;
+        if (typeof IDorIndex == "string") {
+            
+            let [i] = this.flow.pairOf(IDorIndex);
+            if (i == undefined) {
+                return false;
+            }
+            index = i;
+        }
+        else {
+            index = IDorIndex
+        }
+        
         if (index < 0 || index >= this.flow.size)
             return false;
 
-        let prev;
+        let prev:Item;
         const [key] = this.flow.at(index)
         const toBeLoaded = []
 
-        const append = async(id) =>
+        const append = async(id:string) =>
             toBeLoaded.push(
                 await this.getWrapped(id)
             );
@@ -62,7 +76,7 @@ export default class EnhancedEpub extends Epub {
 
         repaint(toBeLoaded);
     }
-    async getWrapped(id) {
+    async getWrapped(id:string) {
         return {
             id,
             html: await this.getContent(id)
@@ -76,11 +90,10 @@ export default class EnhancedEpub extends Epub {
     }
 
     async drop(offset) {
-        
         const o = offset / 2
         const pair = this.flow.at(this.index + offset)
         if (pair == null)
-            throw RangeError("Trying to load beyond the start or end of book");
+            throw new BoundaryError("start or end")
         this.index += o
         drop({
             pos: o,
@@ -95,4 +108,3 @@ export default class EnhancedEpub extends Epub {
         await this.drop(-2)
     }
 }
-

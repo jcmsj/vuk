@@ -18,7 +18,7 @@
 <script setup>
 import Bookmarks from "./Bookmarks"
 import BookmarkController from './BookmarkController';
-import EnhandedEpub from "../modules/EnhancedEpub";
+import {EnhancedEpub} from "../modules/EnhancedEpub";
 import {refocus} from "../modules/helpers"
 async function focus(selector, bm) {
     let maybeElem =  document.querySelector(selector);

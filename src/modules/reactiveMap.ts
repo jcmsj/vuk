@@ -1,14 +1,14 @@
 import {reactive} from "vue"
-import {EnhancedMap} from "./Maps";
-export default function reactiveMap(obj = {}) {
+import {EnhancedMap} from "@jcsj/arraymap";
+export default function reactiveMap<K, V>(obj = {}) {
     return reactive(
         Object.assign({
-            items: new EnhancedMap(),
-            at(n) {
+            items: new EnhancedMap<K, V>(),
+            at(n:number):[K?, V?] {
                 return this.items.at(n)
             },
 
-            pairOf(key) {
+            pairOf(key:K) {
                 return this.items.pairOf(key)
             },
             isEmpty() {

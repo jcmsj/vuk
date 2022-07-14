@@ -1,9 +1,10 @@
 
 import {ref} from "vue"
-import EnhancedEpub from "../modules/EnhancedEpub";
+import {EnhancedEpub} from "../modules/EnhancedEpub";
 import {refocus} from "../modules/helpers"
 import { className } from "../TTS/constants";
 import BookmarkController from "../Bookmarks/BookmarkController"
+import ExpandableError from "../types/ExpandableError";
 export const prev = ref();
 export const next = ref();
 var elem = null;
@@ -80,6 +81,7 @@ function add() {
         console.log("Possibly end of book", e);
     }
 }
+
 function prior() {
     try {
         EnhancedEpub.instance.previous();
@@ -107,6 +109,6 @@ export async function drop(p) {
             refocus(d)
         break;
         default:
-            console.log("Invalid pos:", pos);
+            console.log("Invalid pos:", p.pos);
     }
 }
