@@ -5,4 +5,4 @@ export enum LoadMethod {
     lazy = "lazy"
 }
 
-export const loadMethod = ref(LoadMethod.all);
+export const loadMethod = ref(LoadMethod.lazy);
