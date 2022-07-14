@@ -24,7 +24,8 @@ export async function loadBookFromFile(anEpub:File) {
                         const id = BookmarkController.toManifestID(tail);
         
                         let [i] = epub.flow.pairOf(id)
-                        index = i < 0 ? 0:i;
+                        if (i) 
+                            index = i < 0 ? 0:i;
                     }
                     epub.between(index)
                 break;
