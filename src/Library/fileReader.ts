@@ -27,7 +27,7 @@ export async function loadBookFromFile(anEpub:File) {
                         if (i) 
                             index = i < 0 ? 0:i;
                     }
-                    epub.between(index)
+                    epub.between({index})
                 break;
                 default:
                     epub.loadAll()

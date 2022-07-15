@@ -1,7 +1,7 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
 import { drop, repaint } from "../Live";
-import { Item } from "@jcsj/epub/traits";
+import {range} from "./range"
 
 class BoundaryError extends RangeError {
     name = "BoundaryError"
@@ -9,74 +9,70 @@ class BoundaryError extends RangeError {
         super(`Unable to load book element beyond the ${where}.`)
     }
 }
+
+interface LoadedChapter {
+    id:string,
+    html:string
+}
 export class EnhancedEpub extends Epub {
     index = 0;
     id = ""; //The currently shown flow item called from between
     static instance:EnhancedEpub|null = null
-
+    range = 1;
     constructor(file:File) {
         super(file, simplifyHTMLTree)
         EnhancedEpub.instance = this;
     }
 
-    async between(IDorIndex:string|number) {
-        let index:number;
-        if (typeof IDorIndex == "string") {
-            
-            let [i] = this.flow.pairOf(IDorIndex);
-            if (i == undefined) {
-                return false;
-            }
-            index = i;
+    private slice(start:number, exclusiveEnd:number) {
+        return range(start, exclusiveEnd)
+        .map(i =>this.flow.at(i)[0])
+        .filter((v): v is string => typeof v == "string");
+    }
+    async between({id, index}: {id?:string,index?:number}) {
+        if (id == undefined && index == undefined) {
+            throw new TypeError("Must provide either 'id' or 'index'.");
+        } else if (index == undefined && id != undefined) {
+            index = this.flow.pairOf(id)[0] ?? -1;
+        } else if (id == undefined && index!= undefined) {
+            [id] = this.flow.at(index);
         }
-        else {
-            index = IDorIndex
-        }
-        
-        if (index < 0 || index >= this.flow.size)
+
+        if (
+        id == undefined 
+        || index == undefined
+        || index < 0 
+        || index >= this.flow.size
+        )
             return false;
-
-        let prev:Item;
-        const [key] = this.flow.at(index)
-        const toBeLoaded = []
-
-        const append = async(id:string) =>
-            toBeLoaded.push(
-                await this.getWrapped(id)
-            );
         
-        for (const [id, item] of this.flow) {
+        const leftMost = index-this.range
+        const rightMost = index+this.range
+        let before:string[] = this.slice(Math.max(0,leftMost), index-1);
+        //center == id
+        let after:string[] = this.slice(index+1, Math.min(rightMost, this.flow.size))
 
-            if (toBeLoaded.length > 0) {
-                await append(id)
-                break;
-            }
-
-            if (key == id) {
-                if (prev)
-                    await append(prev.id);
-
-                await append(id)
-            }
-
-            prev = item
-        }
+        const toBeLoaded = await Promise.all([
+            ...before, 
+            id, 
+            ...after
+        ].map(this.retrieve, this));
         
+        //Reassign if toBeloaded resolves
         this.index = index;
-        this.id = key;
+        this.id = id;
+
         repaint(toBeLoaded)
         return true;
     }
 
     async loadAll() {
-        const toBeLoaded = []
-        for (const [k] of this.flow) {
-            toBeLoaded.push(await this.getWrapped(k))
-        }
-
-        repaint(toBeLoaded);
+        repaint(
+            await Promise.all([...this.flow.keys()]
+            .map(this.retrieve, this)
+        ));
     }
-    async getWrapped(id:string) {
+    private async retrieve(id:string): Promise<LoadedChapter> {
         return {
             id,
             html: await this.getContent(id)
@@ -89,15 +85,15 @@ export class EnhancedEpub extends Epub {
         await this.drop(2)
     }
 
-    async drop(offset) {
+    private async drop(offset:number) {
         const o = offset / 2
         const pair = this.flow.at(this.index + offset)
-        if (pair == null)
+        if (pair[0] == null)
             throw new BoundaryError("start or end")
         this.index += o
         drop({
             pos: o,
-            ... await this.getWrapped(pair[0])
+            ... await this.retrieve(pair[0])
         })
     }
 

@@ -9,7 +9,7 @@ export async function anchorClicked(e:MouseEvent) {
     if (!(l instanceof HTMLAnchorElement))
       return;
     try {
-      EnhancedEpub.instance?.between(l.href.split("#",2)[1]); 
+      EnhancedEpub.instance?.between({id:l.href.split("#",2)[1]}); 
     } catch (e) {
       console.log(e);
     }
