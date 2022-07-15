@@ -56,8 +56,7 @@ const {
     off:hide
 } = useBool();
 
-/*   mainElem.value
-      .addEventListener("scroll", hide, {once:true}); */
+
 ["f", "c", "b"].map((key, i) => {
   onKeyUp(key, () => {
     changeTab(i)

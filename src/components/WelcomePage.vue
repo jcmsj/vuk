@@ -18,6 +18,14 @@
         <span>
         <kbd>F</kbd> - Show File explorer
         </span>
+
+    </div>
+    <div>
+        Gestures:
+        <span>
+            After loading a book, 
+            double tap text to open a special menu.
+        </span>
     </div>
 </article>
 </template>
@@ -37,13 +45,16 @@ kbd
     padding: 1px 1vw
     border-radius: 10%
 
-.kb, .welcome-page
+.welcome-page, .welcome-page>div
     @include lex
     justify-content: center
     row-gap: 2vh
 
 .kb
     display:  none
+
+.no-kb
+    margin: 1vh 1vw
 
 @media screen and (hover: hover)
     .no-kb
