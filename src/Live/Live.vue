@@ -1,5 +1,6 @@
 <template>
 <article ref=mainElem>
+    <SpeechSynthesis />
     <div class=naver ref=prev />
     <div
         @mouseup="identifySpeechTarget"
@@ -25,6 +26,7 @@ import { ref, onMounted } from "vue";
 import {identifySpeechTarget, startReading, stopReading} from "../TTS"
 import { setLive, next, prev } from ".";
 import {anchorClicked} from "../Library/anchorClicked"
+import SpeechSynthesis from "../TTS/SpeechSynthesis.vue"
 const pageContextMenu = ref()
 var righted = null
 
