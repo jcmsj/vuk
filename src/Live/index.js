@@ -5,6 +5,7 @@ import {refocus} from "../modules/helpers"
 import { className } from "../TTS/constants";
 import BookmarkController from "../Bookmarks/BookmarkController"
 import ExpandableError from "../types/ExpandableError";
+import { LoadMethod, loadMethod } from "../Library/Load";
 export const prev = ref();
 export const next = ref();
 var elem = null;
@@ -52,8 +53,11 @@ export function repaint(paintables = []) {
         throw TypeError("No 'view' element")
     }
 
+    if (!(next.value ?? prev.value)) {
+        throw TypeError("One or more observer elements ('next' or 'prev') are absent");
+    }
     //Temporarily disable navigation when loading.
-    const isLazyLoaded = paintables.length <= 3;
+    const isLazyLoaded = loadMethod.value == LoadMethod.lazy
     if (isLazyLoaded) {
         addObserver.unobserve(next.value)
         dropObserver.unobserve(prev.value)
