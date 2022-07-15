@@ -1,7 +1,8 @@
 <script setup>
 </script>
 <template>
-    <header />
+    <header>
+    </header>
 </template>
 
 <style lang="sass">
@@ -9,6 +10,7 @@ header
     position: sticky
     top: 0
     background-color: white
-    padding: 1vh 1vw
     align-self: flex-start
+    width: 100%
+
 </style>
