@@ -27,7 +27,7 @@ async function focus(selector, bm) {
         refocus(maybeElem)
         return;
     } else {
-        const success = await EnhandedEpub.instance.between(BookmarkController.toManifestID(bm))
+        const success = await EnhancedEpub.instance.between({id:BookmarkController.toManifestID(bm)})
 
         console.log(success ? "Bookmark clicked:":"Invalid", selector);
     }
