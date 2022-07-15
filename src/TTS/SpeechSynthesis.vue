@@ -9,20 +9,15 @@
     >
         &#9881;
     </div>
-    <div class="pop-up"
+    <Settings class="pop-up"
         :active="showOps"
-    >
-        <SpeechRateController />   
-        <VoiceSelector />     
-    </div>
-
+    />
 </section>
 </template>
 <script setup>
 import { ref } from "vue";
-import SpeechRateController from "./SpeechRateController.vue"
 import MediaControls from "./MediaControls.vue"
-import VoiceSelector from "./VoiceSelector.vue"
+import Settings from "./Settings.vue"
 
 const 
     showOps = ref(false)
@@ -46,6 +41,8 @@ span.current-word
 @import "src/sass/media_queries"
 
 section
+    position: sticky
+    top: 0
     display: flex
     justify-content: space-between
     background-color: var(--color-1)
@@ -59,7 +56,7 @@ section
     display: none
     position: absolute
     right: 0
-    bottom: 7vh
+    top: 7vh
     color: var(--color-3)
     flex-direction: column
 
