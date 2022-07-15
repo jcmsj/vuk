@@ -4,7 +4,6 @@ import {EnhancedEpub} from "../modules/EnhancedEpub";
 import {refocus} from "../modules/helpers"
 import { className } from "../TTS/constants";
 import BookmarkController from "../Bookmarks/BookmarkController"
-import ExpandableError from "../types/ExpandableError";
 import { LoadMethod, loadMethod } from "../Library/Load";
 export const prev = ref();
 export const next = ref();
