@@ -1,6 +1,10 @@
 <template>
+    <label for="voice-pack">
+        Narrator:
+    </label>
     <select
         ref="select"
+        name="voice-pack"
         @change="e => voice.set(e.target.value)"
     >
         <option

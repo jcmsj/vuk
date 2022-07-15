@@ -1,11 +1,11 @@
 <template>
 <div>
-    <span>
-    Speed: 
+    <label for="speech-rate">
+            Speech rate: 
     {{speech_rate.value}}
-    </span>
-    
+    </label>
     <input type="range"
+        name="speech-rate"
         list="ticks"
         :min="speech_rate.min"
         :max="speech_rate.max"
@@ -32,5 +32,5 @@ div
     @include lex
     
 input[type="range"]
-    padding: 3vh 1vw
+    padding: 2vh 1vw
 </style>
