@@ -1,12 +1,11 @@
 import {className} from "./constants"
-import Aspect from "../types/Aspect";
 
 /**
  * A singleton that transforms the words in a readable element into span tags that can be indexed.
  */
 export default class Transformer {
     static clone = "";
-    public static last = new Aspect();
+    public static last:HTMLElement|null;
 
     /**
      * @param {HTMLElement} elem a readable element
@@ -14,12 +13,11 @@ export default class Transformer {
      * @returns char index to resume speaking.
      */
     static transform(elem:HTMLElement, wordIndex:Number) {
-        const resumed = this.last.map<boolean>((l:Element)=>l.isSameNode(elem)).unwrapOr(false)
+        const resumed = elem.isSameNode(this.last)
 
-        this.last.set(elem);
+        this.last=elem;
         this.clone = elem.innerHTML;
         elem.classList.add(className.para)
-        
         let charIndex = 0;
         const words = elem.innerText.split(' ');
         if (resumed) { //Find the absolute position
@@ -37,9 +35,9 @@ export default class Transformer {
     }
 
     static revert() {
-        this.last.map((l:HTMLElement) => {
-            l.innerHTML = this.clone
-            l.classList.remove(className.para)
-        })
+        if (this.last instanceof HTMLElement) {
+            this.last.innerHTML = this.clone
+            this.last.classList.remove(className.para)
+        }
     }
 }
