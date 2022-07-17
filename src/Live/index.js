@@ -5,6 +5,7 @@ import {refocus} from "../modules/helpers"
 import { className } from "../TTS/constants";
 import BookmarkController from "../Bookmarks/BookmarkController"
 import { LoadMethod, loadMethod } from "../Library/Load";
+import { ChapterWalker } from "../TTS/walker";
 export const prev = ref();
 export const next = ref();
 var elem = null;
@@ -29,7 +30,7 @@ let dropObserver = new IntersectionObserver(([entry], obs) => {
 }, options)
 
 export function setLive(id) {
-    elem = document.getElementById(id)
+    elem = document.getElementById(id);
 }
 
 function chap({id, html}) {
@@ -73,7 +74,8 @@ export function repaint(paintables = []) {
 
     if (elem.childElementCount == 3)
         refocus(elem.firstElementChild.nextElementSibling);
-
+    
+    const _ = new ChapterWalker(elem);
     BookmarkController.reapply()
 }
 

@@ -1,6 +1,5 @@
 import { get, set } from "idb-keyval"
 import { idb_prefixes } from "../modules/idb";
-import { setSpeechTarget, isReadable } from "../TTS";
 import generateSelector from "../modules/generateSelector"
 import { getReadingProgress } from "../modules/useMainElem";
 import {refocus} from "../modules/helpers"
@@ -169,16 +168,12 @@ export class BookmarkController {
 
             if (!latest || bm.percentage > latest.percentage) {
                 latest = bm;
-                if (isReadable(elem))
+                if (elem.tagNeme != "IMG")
                     readable = elem;
             }
         }
 
-        if (setSpeechTarget(readable)) {
-            refocus(readable)
-        } else if (latest) {
-            refocus(latest)
-        }
+        refocus(readable ? readable: latest);
 
         return !latest;
     }

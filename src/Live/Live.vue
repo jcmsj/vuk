@@ -27,6 +27,7 @@ import {identifySpeechTarget, startReading, stopReading} from "../TTS"
 import { setLive, next, prev } from ".";
 import {anchorClicked} from "../Library/anchorClicked"
 import SpeechSynthesis from "../TTS/SpeechSynthesis.vue"
+import { ChapterWalker } from "../TTS/walker";
 const pageContextMenu = ref()
 var righted = null
 
@@ -70,6 +71,7 @@ function showContextMenu(e) {
 
 onMounted(() => {
     setLive("__live")
+    console.log(ChapterWalker.instance);
 })
 </script>
 <style lang="sass">

@@ -1,5 +1,4 @@
 import {TOC} from "../TOC";
-import { reset } from "../TTS";
 import {Bookmarks, BookmarkController} from "../Bookmarks"
 import { useTitle } from "@vueuse/core";
 import {EnhancedEpub} from "../modules/EnhancedEpub";
@@ -9,7 +8,7 @@ export async function loadBookFromFile(anEpub:File) {
 
     Bookmarks.items.clear()
     TOC.items.clear()
-    reset()
+    //reset()
     epub.open({
         root: async() => epub.parseRootFile(epub.rootXML),
         metadata: async() => {
