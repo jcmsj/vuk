@@ -4,8 +4,9 @@ specifiers:
   '@jcsj/arraymap': link:E:/Code/ts/arraymap
   '@jcsj/epub': link:D:/code/epub
   '@playwright/test': ^1.23.4
+  '@types/events': ^3.0.0
   '@vitejs/plugin-vue': ^2.3.3
-  '@vueuse/core': ^8.9.3
+  '@vueuse/core': ^8.9.4
   browser-fs-access: ^0.29.6
   events: ^3.3.0
   idb-keyval: ^6.2.0
@@ -20,7 +21,7 @@ specifiers:
 dependencies:
   '@jcsj/arraymap': link:E:/Code/ts/arraymap
   '@jcsj/epub': link:../epub
-  '@vueuse/core': 8.9.3_vue@3.2.37
+  '@vueuse/core': 8.9.4_vue@3.2.37
   browser-fs-access: 0.29.6
   events: 3.3.0
   idb-keyval: 6.2.0
@@ -30,6 +31,7 @@ dependencies:
 
 devDependencies:
   '@playwright/test': 1.23.4
+  '@types/events': 3.0.0
   '@vitejs/plugin-vue': 2.3.3_vite@2.9.14+vue@3.2.37
   sass: 1.53.0
   vite: 2.9.14_sass@1.53.0
@@ -1130,7 +1132,7 @@ packages:
       babel-plugin-polyfill-corejs2: 0.3.1_@babel+core@7.18.6
       babel-plugin-polyfill-corejs3: 0.5.2_@babel+core@7.18.6
       babel-plugin-polyfill-regenerator: 0.3.1_@babel+core@7.18.6
-      core-js-compat: 3.23.4
+      core-js-compat: 3.23.5
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -1377,7 +1379,7 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@types/node': 18.0.5
+      '@types/node': 18.0.6
       playwright-core: 1.23.4
     dev: true
 
@@ -1448,13 +1450,17 @@ packages:
     resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
     dev: false
 
-  /@types/node/18.0.5:
-    resolution: {integrity: sha512-En7tneq+j0qAiVwysBD79y86MT3ModuoIJbe7JXp+sb5UAjInSShmK3nXXMioBzfF7rXC12hv12d4IyCVwN4dA==}
+  /@types/events/3.0.0:
+    resolution: {integrity: sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==}
+    dev: true
+
+  /@types/node/18.0.6:
+    resolution: {integrity: sha512-/xUq6H2aQm261exT6iZTMifUySEt4GR5KX8eYyY+C4MSNPqSh9oNIP7tz2GLKTlFaiBbgZNxffoR3CVRG+cljw==}
 
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.0.5
+      '@types/node': 18.0.6
     dev: false
 
   /@types/trusted-types/2.0.2:
@@ -1548,8 +1554,8 @@ packages:
   /@vue/shared/3.2.37:
     resolution: {integrity: sha512-4rSJemR2NQIo9Klm1vabqWjD8rs/ZaJSzMxkMNeJS6lHiUjjUeYFbooN19NgFjztubEKh3WlZUeOLVdbbUWHsw==}
 
-  /@vueuse/core/8.9.3_vue@3.2.37:
-    resolution: {integrity: sha512-q2pr3N7FPG7IBBhEXTYOJU+38VwKMLP5IfD33byzBV4Th7f1JHT4qPKvJrvr17knAefPRzNqgt9et+xFqaRlPQ==}
+  /@vueuse/core/8.9.4_vue@3.2.37:
+    resolution: {integrity: sha512-B/Mdj9TK1peFyWaPof+Zf/mP9XuGAngaJZBwPaXBvU3aCTZlx3ltlrFFFyMV4iGBwsjSCeUCgZrtkEj9dS2Y3Q==}
     peerDependencies:
       '@vue/composition-api': ^1.1.0
       vue: ^2.6.0 || ^3.2.0
@@ -1560,18 +1566,18 @@ packages:
         optional: true
     dependencies:
       '@types/web-bluetooth': 0.0.14
-      '@vueuse/metadata': 8.9.3
-      '@vueuse/shared': 8.9.3_vue@3.2.37
+      '@vueuse/metadata': 8.9.4
+      '@vueuse/shared': 8.9.4_vue@3.2.37
       vue: 3.2.37
       vue-demi: 0.13.5_vue@3.2.37
     dev: false
 
-  /@vueuse/metadata/8.9.3:
-    resolution: {integrity: sha512-57gZZKtWAmcJaUBmciCohvmumVLz4+FnoVnWj7U5BWs5PC2/7gU9Z0/i1i9leDNeboAauFzAq7z1GjS8eYnT+w==}
+  /@vueuse/metadata/8.9.4:
+    resolution: {integrity: sha512-IwSfzH80bnJMzqhaapqJl9JRIiyQU0zsRGEgnxN6jhq7992cPUJIRfV+JHRIZXjYqbwt07E1gTEp0R0zPJ1aqw==}
     dev: false
 
-  /@vueuse/shared/8.9.3_vue@3.2.37:
-    resolution: {integrity: sha512-foorYQAU3CGknAO1w9No/rpGBJmb7L74MPltnZAYxeBRfhsajjJYYgja+D5IT2vT+/a0NciISaVp3fDwMN1ocA==}
+  /@vueuse/shared/8.9.4_vue@3.2.37:
+    resolution: {integrity: sha512-wt+T30c4K6dGRMVqPddexEVLa28YwxW5OFIPmzUHICjphfAuBFTTdDoyqREZNDOFJZ44ARH1WWQNCUK8koJ+Ag==}
     peerDependencies:
       '@vue/composition-api': ^1.1.0
       vue: ^2.6.0 || ^3.2.0
@@ -1664,7 +1670,7 @@ packages:
     dependencies:
       '@babel/core': 7.18.6
       '@babel/helper-define-polyfill-provider': 0.3.1_@babel+core@7.18.6
-      core-js-compat: 3.23.4
+      core-js-compat: 3.23.5
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -1822,8 +1828,8 @@ packages:
       safe-buffer: 5.1.2
     dev: false
 
-  /core-js-compat/3.23.4:
-    resolution: {integrity: sha512-RkSRPe+JYEoflcsuxJWaiMPhnZoFS51FcIxm53k4KzhISCBTmaGlto9dTIrYuk0hnJc3G6pKufAKepHnBq6B6Q==}
+  /core-js-compat/3.23.5:
+    resolution: {integrity: sha512-fHYozIFIxd+91IIbXJgWd/igXIc8Mf9is0fusswjnGIWVG96y2cwyUdlCkGOw6rMLHKAxg7xtCIVaHsyOUnJIg==}
     dependencies:
       browserslist: 4.21.2
       semver: 7.0.0
@@ -2474,7 +2480,7 @@ packages:
     resolution: {integrity: sha512-KWYVV1c4i+jbMpaBC+U++4Va0cp8OisU185o73T1vo99hqi7w8tSJfUXYswwqqrjzwxa6KpRK54WhPvwf5w6PQ==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.0.5
+      '@types/node': 18.0.6
       merge-stream: 2.0.0
       supports-color: 7.2.0
     dev: false
