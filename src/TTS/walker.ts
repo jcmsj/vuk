@@ -9,7 +9,9 @@ import { EV } from "./EV";
 import { className } from "./constants";
 
 notifier.on(EV.end , () => {
-    ChapterWalker.instance.next()
+
+    if (isReading.value)
+        ChapterWalker.instance.next();
 })
 export class ChapterWalker {
     static instance:ChapterWalker;
@@ -26,7 +28,7 @@ export class ChapterWalker {
         //IMPORTANT: The span tags made by Transformer should never be included.
         Transformer.revert() 
         do {
-            n = this.walker.nextNode() as HTMLElement // ASSURED since treewalker filters onl Elements
+            n = this.walker.nextNode() as HTMLElement // ASSURED since treewalker filters only Elements
         } while(n?.parentElement?.classList.contains(className.para)||false)
 
         if (n == null) {
@@ -53,7 +55,6 @@ export class ChapterWalker {
             //The narrator is going to speak new text. 
             Word.reset(this.walker.currentNode as HTMLElement);
         }
-        Word.setIndex(charIndex)
         readAloud(txt)
     }
     start() {
