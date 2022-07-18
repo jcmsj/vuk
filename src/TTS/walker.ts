@@ -4,19 +4,14 @@ import {isReading} from "./isReading"
 import { readAloud } from "./readAloud";
 import { BookmarkController } from "../Bookmarks";
 import { EV } from "./EV";
-import { className } from "./constants";
 import { EventEmitter } from "events";
 import { scrollIfUnseen } from "./scrollIfUnseen";
 import { EnhancedEpub } from "../modules/EnhancedEpub";
 import { LoadMethod, loadMethod } from "../Library/Load";
 export type MaybeHTMLElement = HTMLElement|null;
 
-function skipClassName(c:HTMLElement, name:string) {
-    return c.classList.contains(name);
-}
-
 //Prevents repeat of text
-function skipSoleChild(n:Node) {
+function isSoleChild(n:Node) {
     return n.parentElement?.childElementCount == 1
 }
 
@@ -26,9 +21,9 @@ function visitChild(l:HTMLElement) {
 function skip(n:Node) {
     const l = n as HTMLElement
     let result = NodeFilter.FILTER_ACCEPT;
-    if (skipClassName(l, className.chapter)  
-    || visitChild(l)
-    || skipSoleChild(n)
+    if (
+    visitChild(l)
+    || isSoleChild(n)
     )
         result = NodeFilter.FILTER_SKIP;
     return  result;
