@@ -4,7 +4,7 @@ import generateSelector from "../modules/generateSelector"
 import { getReadingProgress } from "../modules/useMainElem";
 import {refocus} from "../modules/helpers"
 import Bookmarks from "./Bookmarks";
-import { ChapterWalker } from "../TTS/walker";
+import { narrator } from "../TTS/Narrator";
 
 export class BookmarkController {
     static className = "bookmark"
@@ -174,7 +174,7 @@ export class BookmarkController {
         }
 
         if (target instanceof HTMLElement)
-            ChapterWalker.instance.override(target);
+            narrator.override(target);
 
         return !latest;
     }

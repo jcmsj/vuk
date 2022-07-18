@@ -1,17 +1,17 @@
-import {ChapterWalker} from "./walker"
+import {narrator} from "./Narrator"
 export {isReading} from "./isReading"
 export function toggleReading() {
-    ChapterWalker.instance.toggle()
+    narrator.toggle()
 }
 
 export function startReading() {
-    ChapterWalker.instance.start()
+    narrator.start()
 }
 
 export function stopReading() {
-    ChapterWalker.instance.stop()
+    narrator.stop()
 }
 
 export function identifySpeechTarget(e:MouseEvent) {
-    ChapterWalker.instance.identify(e)
+    narrator.identify(e)
 }

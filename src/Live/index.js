@@ -5,7 +5,7 @@ import {refocus} from "../modules/helpers"
 import { className } from "../TTS/constants";
 import BookmarkController from "../Bookmarks/BookmarkController"
 import { LoadMethod, loadMethod } from "../Library/Load";
-import { ChapterWalker } from "../TTS/walker";
+import { setWalker } from "../TTS/walker";
 export const prev = ref();
 export const next = ref();
 var elem = null;
@@ -75,7 +75,7 @@ export function repaint(paintables = []) {
     if (elem.childElementCount == 3)
         refocus(elem.firstElementChild.nextElementSibling);
     
-    const _ = new ChapterWalker(elem);
+    setWalker(elem);
     BookmarkController.reapply()
 }
 
