@@ -1,6 +1,6 @@
 <template>
+<SpeechSynthesis />
 <article ref=mainElem>
-    <SpeechSynthesis />
     <div class=naver ref=prev />
     <div
         @mouseup="identifySpeechTarget"

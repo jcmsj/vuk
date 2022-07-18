@@ -49,6 +49,7 @@ section
     padding: 3px
     font-size: 1.7rem
     color: var(--color-3)
+    width: 100%
 .pop-up
     font-size: smaller
     padding: 1vh 1vw
