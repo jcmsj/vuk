@@ -12,13 +12,16 @@ notifier.on(EV.end , () => {
 
     if (isReading.value)
         ChapterWalker.instance.next();
+    else {
+        Transformer.revert()
+        BookmarkController.saveProgress(ChapterWalker.instance.walker.currentNode)
+    }
 })
 export class ChapterWalker {
     static instance:ChapterWalker;
     walker:TreeWalker;
     constructor(root:HTMLElement) {
         this.walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
-        
         ChapterWalker.instance = this;
     }
 
@@ -32,6 +35,7 @@ export class ChapterWalker {
         } while(n?.parentElement?.classList.contains(className.para)||false)
 
         if (n == null) {
+            notifier.emit(EV.exhausted)
             /* When walker has been exhausted:
             TODO depending on mode:
             lazy: Try loading next chapter
@@ -68,8 +72,7 @@ export class ChapterWalker {
 
         speechSynthesis.cancel()
         isReading.value = speechSynthesis.speaking
-        BookmarkController.saveProgress(this.walker.currentNode)
-        Transformer.revert()
+        notifier.emit(EV.end)
     }
     toggle() {
         isReading.value ? this.stop():this.start();
