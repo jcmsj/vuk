@@ -7,19 +7,29 @@ import { EV } from "./EV";
 import { className } from "./constants";
 import { EventEmitter } from "events";
 import { scrollIfUnseen } from "./scrollIfUnseen";
+import { EnhancedEpub } from "../modules/EnhancedEpub";
+import { LoadMethod, loadMethod } from "../Library/Load";
 export type MaybeHTMLElement = HTMLElement|null;
 
-const t = (c:HTMLElement, name:string) =>
-c.classList.contains(name);
+function skipClassName(c:HTMLElement, name:string) {
+    return c.classList.contains(name);
+}
 
+function skipTagName(l:HTMLElement) {
+    return ["old", ].includes(l.tagName);
+}
+
+//Prevents repeat of text
+function skipSoleChild(n:Node) {
+    return n.parentElement?.childElementCount == 1
+}
 function skip(n:Node) {
-    //chapter
-    let result = t(n as HTMLElement, className.chapter) ? NodeFilter.FILTER_SKIP:NodeFilter.FILTER_ACCEPT;
-
-    //Prevents repeat of text
-    if (n.parentElement?.childElementCount == 1)
+    const l = n as HTMLElement
+    let result = NodeFilter.FILTER_ACCEPT;
+    if (skipClassName(l, className.chapter)  
+    || skipTagName(l) 
+    || skipSoleChild(n))
         result = NodeFilter.FILTER_SKIP;
-
     return  result;
 }
 export class ChapterWalker extends EventEmitter {
@@ -30,29 +40,47 @@ export class ChapterWalker extends EventEmitter {
         this.walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT,skip);
         ChapterWalker.instance = this;
         this.walker.nextNode() //Skip the root
-        this.on(EV.end , () => {
-            if (isReading.value) {
-                ChapterWalker.instance.next();
-                scrollIfUnseen(this.walker.currentNode as HTMLElement)
-            }
-            else {
-                BookmarkController.saveProgress(ChapterWalker.instance.walker.currentNode)
-            }
-        })
+        this.on(EV.end , this.onEnd)
+        this.on(EV.exhausted, this.onExhausted)
     }
 
-    private next() {
+    private async onEnd() {
+        if (isReading.value) {
+            await ChapterWalker.instance.next();
+        }
+        else {
+            BookmarkController.saveProgress(ChapterWalker.instance.walker.currentNode)
+        }
+    }
+
+    /* Based on loadMethod:
+    lazy: Try loading next chapter or do case `all`
+    all: Notify user
+    */
+    private async onExhausted() {
+        if (loadMethod.value == LoadMethod.lazy) {
+            try {
+                await EnhancedEpub.instance?.next()
+                this.next()
+            } catch(e){};
+
+            return;
+        }
+
+        isReading.value = false;
+    }
+
+    private async scrollIfUnseen() {
+        scrollIfUnseen(this.walker.currentNode as HTMLElement)
+    }
+    private async next() {
         //IMPORTANT: The span tags made by Transformer should never be included.
         Transformer.revert() 
         const n = this.walker.nextNode() as HTMLElement;
 
         if (n == null) {
             this.emit(EV.exhausted)
-            /* When walker has been exhausted:
-            TODO depending on mode:
-            lazy: Try loading next chapter
-            all: Notify user
-            */
+ 
             return;
         }
 
@@ -73,6 +101,7 @@ export class ChapterWalker extends EventEmitter {
             Word.reset(this.walker.currentNode as HTMLElement);
         }
         readAloud(txt)
+        this.scrollIfUnseen()
     }
     start() {
         this.beforeSpeak(this.walker.currentNode.textContent || "")
