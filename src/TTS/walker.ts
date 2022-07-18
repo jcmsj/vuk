@@ -12,15 +12,22 @@ export type MaybeHTMLElement = HTMLElement|null;
 const t = (c:HTMLElement, name:string) =>
 c.classList.contains(name);
 
-function skipChapter(n:Node) {
-    return t(n as HTMLElement, className.chapter) ? NodeFilter.FILTER_SKIP:NodeFilter.FILTER_ACCEPT;
+function skip(n:Node) {
+    //chapter
+    let result = t(n as HTMLElement, className.chapter) ? NodeFilter.FILTER_SKIP:NodeFilter.FILTER_ACCEPT;
+
+    //Prevents repeat of text
+    if (n.parentElement?.childElementCount == 1)
+        result = NodeFilter.FILTER_SKIP;
+
+    return  result;
 }
 export class ChapterWalker extends EventEmitter {
     static instance:ChapterWalker;
     private walker:TreeWalker;
     constructor(root:HTMLElement) {
         super()
-        this.walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT,skipChapter);
+        this.walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT,skip);
         ChapterWalker.instance = this;
         this.walker.nextNode() //Skip the root
         this.on(EV.end , () => {
@@ -86,7 +93,12 @@ export class ChapterWalker extends EventEmitter {
 
     identify(e:MouseEvent) {
         const l = e.target as HTMLElement;
+        this.override(l);
+    }
 
+    override(l:HTMLElement) {
+        console.log("Override: " , l);
+        
         if (l.isSameNode(this.walker.currentNode))
             return false;
 

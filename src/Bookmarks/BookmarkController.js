@@ -4,6 +4,7 @@ import generateSelector from "../modules/generateSelector"
 import { getReadingProgress } from "../modules/useMainElem";
 import {refocus} from "../modules/helpers"
 import Bookmarks from "./Bookmarks";
+import { ChapterWalker } from "../TTS/walker";
 
 export class BookmarkController {
     static className = "bookmark"
@@ -159,7 +160,7 @@ export class BookmarkController {
     */
     static async reapply() {
         let latest = null;
-        let readable = null;
+        let target = null;
         for (const bm of [await this.loadProgress(), ...Bookmarks.items.values()]) {
             const elem = bm ? this.restore(bm.selector) : null;
 
@@ -168,12 +169,12 @@ export class BookmarkController {
 
             if (!latest || bm.percentage > latest.percentage) {
                 latest = bm;
-                if (elem.tagNeme != "IMG")
-                    readable = elem;
+                target = elem;
             }
         }
 
-        refocus(readable ? readable: latest);
+        if (target instanceof HTMLElement)
+            ChapterWalker.instance.override(target);
 
         return !latest;
     }
