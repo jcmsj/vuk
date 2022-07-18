@@ -15,20 +15,21 @@ function skipClassName(c:HTMLElement, name:string) {
     return c.classList.contains(name);
 }
 
-function skipTagName(l:HTMLElement) {
-    return ["old", ].includes(l.tagName);
-}
-
 //Prevents repeat of text
 function skipSoleChild(n:Node) {
     return n.parentElement?.childElementCount == 1
+}
+
+function visitChild(l:HTMLElement) {
+    return l.childElementCount > 1;
 }
 function skip(n:Node) {
     const l = n as HTMLElement
     let result = NodeFilter.FILTER_ACCEPT;
     if (skipClassName(l, className.chapter)  
-    || skipTagName(l) 
-    || skipSoleChild(n))
+    || visitChild(l)
+    || skipSoleChild(n)
+    )
         result = NodeFilter.FILTER_SKIP;
     return  result;
 }
@@ -61,7 +62,7 @@ export class ChapterWalker extends EventEmitter {
         if (loadMethod.value == LoadMethod.lazy) {
             try {
                 await EnhancedEpub.instance?.next()
-                this.next()
+                await this.next()
             } catch(e){};
 
             return;
