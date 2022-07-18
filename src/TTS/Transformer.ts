@@ -4,7 +4,8 @@ import {className} from "./constants"
  * A singleton that transforms the words in a readable element into span tags that can be indexed.
  */
 export default class Transformer {
-    static clone = "";
+    private static clone = "";
+    private static words:string[]; //For Memoization
     public static last:HTMLElement|null;
 
     /**
@@ -16,20 +17,21 @@ export default class Transformer {
         const resumed = elem.isSameNode(this.last)
 
         this.last=elem;
-        this.clone = elem.innerHTML;
-        elem.classList.add(className.para)
+
         let charIndex = 0;
-        const words = elem.innerText.split(' ');
         if (resumed) { //Find the absolute position
             for (let i = 0; i < wordIndex; i++) {
-                charIndex += words[i].length + 1; //offset +1 for the space
+                charIndex += this.words[i].length + 1; //offset +1 for the space
             }
-        }
+        } else {
+            //Actual transformation
+            this.words = elem.innerText.split(' ');
+            this.clone = elem.innerHTML;
+            elem.classList.add(className.para)
 
-        //Actual transformation
-        elem.innerHTML = words
-            .map((w:string) =>`<span>${w}</span>`)
-            .join(' ');
+            elem.innerHTML = this.words
+            .reduce((html, word) => html + `<span>${word} </span>`, "");
+        }
         
         return charIndex;
     }

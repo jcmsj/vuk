@@ -1,17 +1,16 @@
 import Word from "./Word";
-import { EventEmitter } from "events";
 import { EV } from "./EV";
 import speech_rate from "./speech_rate";
 import voice from "./voice";
 import { isReading } from "./isReading";
-export const notifier = new EventEmitter();
+import { ChapterWalker } from "./walker";
 
 export function readAloud(txt:string) {
     const utt = new SpeechSynthesisUtterance(txt)
     utt.onboundary 
     = utt.onstart 
     = Word.highlight.bind(Word);
-    utt.onend = () => notifier.emit(EV.end);
+    utt.onend = () => ChapterWalker.instance.emit(EV.end);
     utt.rate = speech_rate.value
 
     if (voice.value!= null)

@@ -1,41 +1,46 @@
 import Transformer from "./Transformer"
 import Word from "./Word"
-export type MaybeHTMLElement = HTMLElement|null;
 import {isReading} from "./isReading"
 import { readAloud } from "./readAloud";
 import { BookmarkController } from "../Bookmarks";
-import { notifier } from "./readAloud";
 import { EV } from "./EV";
 import { className } from "./constants";
+import { EventEmitter } from "events";
+import { scrollIfUnseen } from "./scrollIfUnseen";
+export type MaybeHTMLElement = HTMLElement|null;
 
-notifier.on(EV.end , () => {
+const t = (c:HTMLElement, name:string) =>
+c.classList.contains(name);
 
-    if (isReading.value)
-        ChapterWalker.instance.next();
-    else {
-        Transformer.revert()
-        BookmarkController.saveProgress(ChapterWalker.instance.walker.currentNode)
-    }
-})
-export class ChapterWalker {
+function skipChapter(n:Node) {
+    return t(n as HTMLElement, className.chapter) ? NodeFilter.FILTER_SKIP:NodeFilter.FILTER_ACCEPT;
+}
+export class ChapterWalker extends EventEmitter {
     static instance:ChapterWalker;
-    walker:TreeWalker;
+    private walker:TreeWalker;
     constructor(root:HTMLElement) {
-        this.walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+        super()
+        this.walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT,skipChapter);
         ChapterWalker.instance = this;
+        this.walker.nextNode() //Skip the root
+        this.on(EV.end , () => {
+            if (isReading.value) {
+                ChapterWalker.instance.next();
+                scrollIfUnseen(this.walker.currentNode as HTMLElement)
+            }
+            else {
+                BookmarkController.saveProgress(ChapterWalker.instance.walker.currentNode)
+            }
+        })
     }
 
-    next() {
-        let n:HTMLElement|null = null
-
+    private next() {
         //IMPORTANT: The span tags made by Transformer should never be included.
         Transformer.revert() 
-        do {
-            n = this.walker.nextNode() as HTMLElement // ASSURED since treewalker filters only Elements
-        } while(n?.parentElement?.classList.contains(className.para)||false)
+        const n = this.walker.nextNode() as HTMLElement;
 
         if (n == null) {
-            notifier.emit(EV.exhausted)
+            this.emit(EV.exhausted)
             /* When walker has been exhausted:
             TODO depending on mode:
             lazy: Try loading next chapter
@@ -43,7 +48,8 @@ export class ChapterWalker {
             */
             return;
         }
-        this.beforeSpeak(n.textContent || "");
+
+        this.beforeSpeak((n instanceof HTMLImageElement ? n.alt:n.textContent) || "");
     }
 
     private beforeSpeak(txt:string) {
@@ -72,7 +78,7 @@ export class ChapterWalker {
 
         speechSynthesis.cancel()
         isReading.value = speechSynthesis.speaking
-        notifier.emit(EV.end)
+        this.emit(EV.end)
     }
     toggle() {
         isReading.value ? this.stop():this.start();
@@ -81,12 +87,13 @@ export class ChapterWalker {
     identify(e:MouseEvent) {
         const l = e.target as HTMLElement;
 
-        if (l.isSameNode(this.walker.currentNode) || l.tagName == "IMG")
+        if (l.isSameNode(this.walker.currentNode))
             return false;
 
+        Transformer.revert()
         this.stop()
 
-        // TODO: Ensure that target is a descendant of walker.root
+        // TODO: Ensure target descends from walker.root
         this.walker.currentNode = l;
     }
 }
