@@ -34,7 +34,7 @@ class Narrator extends EventEmitter {
         if (loadMethod.value == LoadMethod.lazy) {
             try {
                 await EnhancedEpub.instance?.next();
-                await this.next()
+                this.next(true)
             } catch(e){};
 
             return;
@@ -43,12 +43,13 @@ class Narrator extends EventEmitter {
         isReading.value = false;
     }
 
-    private async next() {
+    private async next(exhausted=false) {
         //IMPORTANT: The span tags made by Transformer should never be included.
         Transformer.revert() 
         const n = walker.nextNode();
 
-        if (n == null) {
+        if (n == null && exhausted == false) {
+            
             this.emit(EV.exhausted)
  
             return;
@@ -58,7 +59,7 @@ class Narrator extends EventEmitter {
     }
 
     private beforeSpeak(elem:HTMLElement, txt?:string) {
-        txt = txt ?? elem.innerText;
+        txt = txt ?? elem.innerText ?? "";
 
         if (txt.length == 0) {
             this.next();
