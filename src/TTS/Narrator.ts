@@ -1,5 +1,3 @@
-import Transformer from "./Transformer"
-import Word from "./Word"
 import {isReading} from "./isReading"
 import { readAloud } from "./readAloud";
 import { BookmarkController } from "../Bookmarks";
@@ -8,8 +6,16 @@ import { EventEmitter } from "events";
 import { EnhancedEpub } from "../modules/EnhancedEpub";
 import { LoadMethod, loadMethod } from "../Library/Load";
 export type MaybeHTMLElement = HTMLElement|null;
-import { walker, follow } from "./walker";
+import { walker } from "vuk-walker/src/walker";
+import Transformer from "vuk-walker/src/Transformer";
+import { scrollIfUnseen } from "./scrollIfUnseen";
+import { className } from "./constants";
 
+export function follow() {
+    scrollIfUnseen(walker.currentNode.parentElement)
+}
+
+export const transformer = new Transformer(className.para);
 class Narrator extends EventEmitter {
     constructor() {
         super()
@@ -22,7 +28,7 @@ class Narrator extends EventEmitter {
             await this.next();
         }
         else {
-            BookmarkController.saveProgress(walker.currentNode)
+            BookmarkController.saveProgress(walker.currentNode.parentElement)
         }
     }
 
@@ -45,39 +51,36 @@ class Narrator extends EventEmitter {
 
     private async next(exhausted=false) {
         //IMPORTANT: The span tags made by Transformer should never be included.
-        Transformer.revert() 
+        transformer.revert()
         const n = walker.nextNode();
 
-        if (n == null && exhausted == false) {
+        if (n == null || exhausted == false) {
             
             this.emit(EV.exhausted)
  
             return;
         }
 
-        this.beforeSpeak(n as HTMLElement);
+        this.beforeSpeak(n);
     }
 
-    private beforeSpeak(elem:HTMLElement, txt?:string) {
-        txt = txt ?? elem.innerText ?? "";
+    private beforeSpeak(n:Node, txt?:string) {
+        txt = txt ?? n.textContent ?? "";
 
         if (txt.length == 0) {
             this.next();
             return;
         }
-     
-        const charIndex = Transformer.transform(elem, Word.index);
+        
+        const charIndex = transformer.transform(n, 0);
         if (charIndex) {
             txt = txt.slice(charIndex);
-        } else {
-            //The narrator is going to speak new text. 
-            Word.reset(elem);
         }
         readAloud(txt)
         follow()
     }
     start() {
-        this.beforeSpeak(walker.currentNode as HTMLElement)
+        this.beforeSpeak(walker.currentNode)
     }
 
     stop() {
@@ -99,15 +102,16 @@ class Narrator extends EventEmitter {
     }
 
     override(l:HTMLElement) {
-        if (l.isSameNode(walker.currentNode))
+        let n = l.firstChild;
+        if (!n || n.isSameNode(walker.currentNode))
         return false;
         
-        console.log("Override: " , l);
-        Transformer.revert()
+        console.log("Override: " , n);
+        transformer.revert()
         this.stop()
 
         // TODO: Ensure target descends from walker.root
-        walker.currentNode = l;
+        walker.currentNode = n;
     }
 }
 

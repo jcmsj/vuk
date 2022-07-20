@@ -5,7 +5,7 @@ import {refocus} from "../modules/helpers"
 import { className } from "../TTS/constants";
 import BookmarkController from "../Bookmarks/BookmarkController"
 import { LoadMethod, loadMethod } from "../Library/Load";
-import { setWalker } from "../TTS/walker";
+import { setWalker } from "vuk-walker/src/walker";
 export const prev = ref();
 export const next = ref();
 var elem = null;
