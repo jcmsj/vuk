@@ -10,6 +10,7 @@ import { walker } from "vuk-walker/src/walker";
 import Transformer from "vuk-walker/src/Transformer";
 import { scrollIfUnseen } from "./scrollIfUnseen";
 import { className } from "./constants";
+import { getReadingProgress } from "../modules/useMainElem";
 
 export function follow() {
     scrollIfUnseen(walker.currentNode.parentElement)
@@ -29,7 +30,7 @@ class Narrator extends EventEmitter {
             return;
         }
 
-        BookmarkController.saveProgress(transformer.elem?.parentElement)
+        BookmarkController.saveProgress(transformer.elem?.parentElement, getReadingProgress())
     }
 
     /* Based on loadMethod:
@@ -72,7 +73,7 @@ class Narrator extends EventEmitter {
             return;
         }
         
-        const charIndex = transformer.transform(n, 0);
+        const charIndex = transformer.transform(n, transformer.elem?.index||0);
         if (charIndex) {
             txt = txt.slice(charIndex);
         }
