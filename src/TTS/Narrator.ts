@@ -26,10 +26,10 @@ class Narrator extends EventEmitter {
     private async onEnd() {
         if (isReading.value) {
             await this.next();
+            return;
         }
-        else {
-            BookmarkController.saveProgress(walker.currentNode.parentElement)
-        }
+
+        BookmarkController.saveProgress(transformer.elem?.parentElement)
     }
 
     /* Based on loadMethod:
