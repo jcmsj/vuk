@@ -54,7 +54,7 @@ class Narrator extends EventEmitter {
         transformer.revert()
         const n = walker.nextNode();
 
-        if (n == null || exhausted == false) {
+        if (n == null || exhausted) {
             
             this.emit(EV.exhausted)
  
@@ -106,7 +106,7 @@ class Narrator extends EventEmitter {
         if (!n || n.isSameNode(walker.currentNode))
         return false;
         
-        console.log("Override: " , n);
+        console.log("Override: " , l);
         transformer.revert()
         this.stop()
 
