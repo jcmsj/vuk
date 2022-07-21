@@ -1,7 +1,7 @@
 import { get, set } from "idb-keyval"
 import { idb_prefixes } from "../modules/idb";
 import generateSelector from "../modules/generateSelector"
-import { getReadingProgress } from "../modules/useMainElem";
+import mainElem, { getReadingProgress } from "../modules/useMainElem";
 import Bookmarks from "./Bookmarks";
 import { narrator } from "../TTS/Narrator";
 import { Bookmark } from "./Bookmark";
@@ -68,7 +68,7 @@ export class BookmarkController {
 
     static from(elem:HTMLElement|HTMLImageElement, percentage = getReadingProgress()) {
         return this.create(
-            generateSelector(elem, document.querySelector("#app")),
+            generateSelector(elem, mainElem.value),
             getPreview(elem, this.charPreview),
             percentage
         )
