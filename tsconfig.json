@@ -1,0 +1,12 @@
+{
+  "extends": "@quasar/app-vite/tsconfig-preset",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+  },
+  "lib": [
+    "ESNext",
+    "DOM",
+  ]
+}
