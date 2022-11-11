@@ -108,7 +108,7 @@ import { Dir, getLastWorkingDir, settings_id, Sorter, Status } from "./Handle"
 import { QBtnGroup, QBtn, QList, QItem, QItemSection, QIcon } from "quasar"
 import { aDirHandle } from "./util"
 import Epub from "app/../epub/lib"
-//Refs
+
 const chooser = ref<HTMLInputElement>();
 
 async function selectFile(e: any) {

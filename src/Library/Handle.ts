@@ -27,7 +27,7 @@ export const Dir = reactive<RxDir>({
         }
     },
     async isInRoot() {
-        return this.value?.isSameEntry(this.root!);
+        return (await this.value?.isSameEntry(this.root!)) || false;
     },
     async goto(h?: FileSystemDirectoryHandle) {
         if (!h || !aDirHandle(h))
