@@ -3,7 +3,7 @@
         <nav>
             <q-btn-group>
                 <q-btn
-                    @click="chooser?.click" 
+                    @click="chooser?.click()" 
                     title="Open an EPUB" 
                     icon-right="book"
                 >
@@ -107,7 +107,7 @@ import { db } from "../db/dexie"
 import { Dir, getLastWorkingDir, settings_id, Sorter, Status } from "./Handle"
 import { QBtnGroup, QBtn, QList, QItem, QItemSection, QIcon } from "quasar"
 import { aDirHandle } from "./util"
-import Epub from "app/../epub/lib"
+import {Epub} from "@jcsj/epub"
 
 const chooser = ref<HTMLInputElement>();
 

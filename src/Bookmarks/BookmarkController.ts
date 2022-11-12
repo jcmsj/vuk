@@ -82,7 +82,7 @@ export class BookmarkController {
 
     static mark(elem: HTMLElement, percentage?: number) {
         return {
-            exists: elem.classList.contains(this.className),
+            exists: elem.classList?.contains(this.className),
             bookmark: this.from(elem, percentage)
         }
     }
