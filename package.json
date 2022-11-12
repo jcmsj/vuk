@@ -16,7 +16,8 @@
     "dexie": "^3.2.2",
     "generate-selector": "link:E:/Code/Web Dev/SMALL/generate-selector",
     "quasar": "^2.10.1",
-    "vue": "^3.2.44",
+    "v-walker": "link:D:/code/v-walker",
+    "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
