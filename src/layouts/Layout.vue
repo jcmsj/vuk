@@ -5,26 +5,35 @@
     </q-page-container>
     <q-footer elevated>
         <q-tabs
-          v-model="tab"
           align="center"
         >
           <q-route-tab 
             name="browse" 
             icon="folder"
-            label="Browse"
+            title="Browse"
             to="/"
+            exact
+          />
+          <q-route-tab 
+            name="read" 
+            icon="auto_stories"
+            title="read"
+            to="read"
+            exact
           />
           <q-route-tab
             name="library"
             icon="shelves"
-            label="Library"
+            title="Library"
             to="library"
+            exact
           />
           <q-route-tab
             name="config"
             icon="settings"
-            label="Config"
+            title="Config"
             to="config"
+            exact
           />
           
         </q-tabs>
@@ -33,7 +42,4 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-const tab = ref("")
-
 </script>

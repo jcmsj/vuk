@@ -4,10 +4,10 @@ import { useTitle } from "@vueuse/core";
 import { EnhancedEpub } from "../lib/EnhancedEpub";
 import { loadMethod, LoadMethod } from "./Load";
 import { book } from "../Bookmarks/useBook";
+import router from "src/router";
 
 export async function loadBookFromFile(anEpub: File) {
     const epub = new EnhancedEpub(anEpub)
-
     TOC.items.clear()
     //reset()
     epub.open({
@@ -55,6 +55,7 @@ export async function loadBookFromFile(anEpub: File) {
 }
 
 export async function loadBookFromHandle(h: FileSystemFileHandle) {
+    await router.push("read")
     await loadBookFromFile(
         await h.getFile()
     )

@@ -1,10 +1,7 @@
 import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
-//import { drop, repaint } from "../Live";
+import { drop, reassign, repaint } from "../Book";
 import {range} from "./range"
-
-const drop = (...args:any[])=>{};
-const repaint =drop;
 class BoundaryError extends RangeError {
     name = "BoundaryError"
     constructor(where:string) {
@@ -12,7 +9,7 @@ class BoundaryError extends RangeError {
     }
 }
 
-interface LoadedChapter {
+export interface LoadedChapter {
     id:string,
     html:string
 }
@@ -65,15 +62,18 @@ export class EnhancedEpub extends Epub {
         this.index = index;
         this.id = id;
 
-        repaint(toBeLoaded)
+        await repaint(toBeLoaded)
+        reassign()
         return true;
     }
 
     async loadAll() {
-        repaint(
+        await repaint(
             await Promise.all([...this.flow.keys()]
             .map(this.retrieve, this)
         ));
+
+        reassign()
     }
     private async retrieve(id:string): Promise<LoadedChapter> {
         return {
