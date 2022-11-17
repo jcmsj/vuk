@@ -1,7 +1,7 @@
 <template>
     <q-menu touch-position auto-close>
         <q-list>
-            <q-item v-for="item of menuItems" clickable :key="item.label" @click="item.cb">
+            <q-item v-for="item of items" clickable :key="item.label" @click="item.cb">
                 <q-item-section avatar>
                     <q-icon :name="item.icon">
                     </q-icon>
@@ -14,12 +14,11 @@
     </q-menu>
 </template>
 <script setup lang=ts>
-import { QMenu, QList, QItem, QItemSection, QIcon } from 'quasar';
 import { BookmarkController } from 'src/Bookmarks';
 import { stopReading, startReading } from 'src/TTS';
 import { narrator } from 'src/TTS/Narrator';
 
-const menuItems = [
+const items = [
     {
         label: "Read aloud",
         icon: "campaign",
