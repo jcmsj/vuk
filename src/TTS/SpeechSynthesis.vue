@@ -37,10 +37,10 @@ section
     top: 0
     display: flex
     justify-content: center
-    background-color: var(--color-1)
+    //background-color: var(--color-1)
     padding: 3px
     font-size: 1.7rem
-    color: var(--color-3)
+    //color: var(--color-3)
     width: 100%
 
 .q-btn-group

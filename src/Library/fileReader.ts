@@ -55,7 +55,9 @@ export async function loadBookFromFile(anEpub: File) {
 }
 
 export async function loadBookFromHandle(h: FileSystemFileHandle) {
-    await router.push("read")
+    if (router.currentRoute.value.fullPath != "/desk") {
+        await router.push("read")
+    }
     await loadBookFromFile(
         await h.getFile()
     )
