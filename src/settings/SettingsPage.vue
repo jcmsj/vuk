@@ -1,6 +1,4 @@
 <template>
-    <q-header elevated>
-    </q-header>
     <q-list bordered>
         <q-item-label header>
             Book config

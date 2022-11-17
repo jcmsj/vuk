@@ -9,7 +9,7 @@
 </div>
 </template>
 
-<script setup>
+<script setup lang=ts>
 import NodeStart from "./NodeStart.vue"
 import {TOC} from "."
 </script>

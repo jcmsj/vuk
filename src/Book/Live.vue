@@ -1,30 +1,28 @@
 <template>
     <SpeechSynthesis />
-    <article ref=mainElem>
-        <div class=naver ref="prev"></div>
-        <div @mouseup="identifySpeechTarget" id="__live" ref="view" @click="anchorClicked">
-            <div class="chapter" v-for="page in pages" v-html="page.html" :key="page.id">
+        <article ref=mainElem>
+            <div class=naver ref="prev"></div>
+            <div @mouseup="identifySpeechTarget" id="__live" ref="view" @click="anchorClicked">
+                <div class="chapter" v-for="page in pages" v-html="page.html" :key="page.id">
 
+                </div>
             </div>
-        </div>
-        <div class=naver ref="next"></div>
-        <ContextMenu />
-    </article>
+            <div class=naver ref="next"></div>
+            <ContextMenu />
+        </article>
 </template>
 
 <script setup>
 //ISSUE: TS not working
-import { BookmarkController } from "../Bookmarks";
+import { onMounted } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import { mainElem } from "../lib/useMainElem"
-import { identifySpeechTarget, startReading, stopReading } from "../TTS"
-import { anchorClicked } from "../Library/anchorClicked"
 import SpeechSynthesis from "../TTS/SpeechSynthesis.vue"
+import { anchorClicked } from "../Library/anchorClicked"
+import { identifySpeechTarget } from "../TTS"
 import { view, next, prev, pages } from "./Pages"
-import { unobserve, observe } from "./index"
-import { narrator } from "../TTS/Narrator"
+import { observe } from "./index"
 import ContextMenu from "./ContextMenu.vue";
-import { onActivated, onBeforeUpdate, onDeactivated, onMounted, onUpdated, ref, watch } from "vue";
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 import { savedPositions } from 'src/router/storeScrollBehavior';
 
 onMounted(() => {
@@ -33,7 +31,7 @@ onMounted(() => {
 
 onBeforeRouteLeave((to, from) => {
     console.log(from.matched);
-    savedPositions[from.fullPath] = { x: window.scrollX, top: window.scrollY }
+    savedPositions[from.fullPath] = { left: window.scrollX, top: window.scrollY }
     //unobserve()
 })
 

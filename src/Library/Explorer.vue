@@ -173,10 +173,6 @@ nav
     button
         display: inline
         margin: 5px
-.book, .directory
-    cursor: pointer
-.directory::before
-    content: "\01F4C2 "
-.book::before
-    content: "📖 "
+.q-item
+  padding: 0 1vw
 </style>
