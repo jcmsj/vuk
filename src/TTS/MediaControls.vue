@@ -6,12 +6,12 @@
 />
 <q-btn icon="fast_forward" />
 </template>
-<script setup>
+<script setup lang=ts>
 import {isReading, toggleReading} from ".";
-import { onKeyUp } from "@vueuse/core";
+import {onKeyUp} from "@vueuse/core";
 
-onKeyUp("r", toggleReading)
-
+const keys = ["r","F8"];
+keys.map(k => onKeyUp(k, toggleReading))
 </script>
 <style lang='sass'>
 

@@ -34,6 +34,7 @@ import { ref, watch } from 'vue'
 import TOCVue from 'src/TOC/TOC.vue';
 import { QTabs } from 'quasar';
 import SettingsPage from 'src/settings/SettingsPage.vue';
+import { useEventListener } from '@vueuse/core';
 const tab = ref<string | undefined>("")
 
 const isSelected = ref(false);
@@ -42,6 +43,8 @@ function toggleSelect(tabName: string) {
   console.log({ tabName });
   if (tabName === tab.value) {
     isSelected.value = true
+  } else {
+    tab.value = tabName
   }
 }
 
@@ -52,10 +55,28 @@ watch(tab, it => {
 })
 
 watch(isSelected, n => {
-  console.log({ n });
   if (n === true) {
     tab.value = undefined
     isSelected.value = false
+  }
+})
+
+const hotkeys = {
+  f:"browse",
+  b:"bookmarks",
+  t:"toc"
+}
+useEventListener("keyup", e => {
+  console.log(e.key);
+  
+  switch(e.key)  {
+    case "Escape":
+      tab.value = undefined
+    break;
+    default:
+      if (hotkeys[e.key as keyof typeof hotkeys]) {
+        toggleSelect(hotkeys[e.key as keyof typeof hotkeys])
+      }
   }
 })
 </script>
@@ -91,7 +112,7 @@ watch(isSelected, n => {
 
 .slide-enter-active,
 .slide-leave-active
-  transition: all 100ms ease-in
+  transition: all 50ms
 
 .slide-enter-from,
 .slide-leave-to 

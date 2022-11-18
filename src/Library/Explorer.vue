@@ -1,99 +1,47 @@
 <template>
     <div class="r">
-        <nav>
-            <q-btn-group>
-                <q-btn
-                    @click="chooser?.click()" 
-                    title="Open an EPUB" 
-                    icon-right="book"
-                >
+        <q-btn-group>
+            <q-btn @click="chooser?.click()" title="Open an EPUB" icon-right="book">
                 Open
-                </q-btn>
-                <q-btn 
-                    @click="setLibrary" 
-                    title="Set library" 
-                    class="btn"
-                    icon-right="folder"
-                >
-                    Set&nbsp;
-                </q-btn>
-                <q-btn 
-                    @click="restoreLibrary" 
-                    title="Restore library" 
-                    class="btn"
-                    icon="restore"
-                    icon-right="folder"
-                />
-            </q-btn-group>
-            <input 
-                type=file 
-                hidden 
-                ref=chooser 
-                @change=selectFile 
-                :accept="Epub.MIME"
-            >
-        </nav>
+            </q-btn>
+            <q-btn @click="setLibrary" title="Set library" class="btn" icon-right="folder">
+                Set&nbsp;
+            </q-btn>
+            <q-btn @click="restoreLibrary" title="Restore library" class="btn" icon="restore" icon-right="folder" />
+        </q-btn-group>
+        <input type=file hidden ref=chooser @change=selectFile :accept="Epub.MIME">
         <q-list>
-            <q-item 
-                clickable
-                v-if="Dir.root && !Dir.inRoot" 
-                @click="Dir.goto(Dir.root)"
-            >
-            <q-item-section avatar>
-                <q-icon 
-                    color="primary" 
-                    name="folder" 
-                />
-            </q-item-section>
-            <q-item-section>
-            /
-            </q-item-section>
-        </q-item>
-            <q-item 
-                v-if="Dir.levels.length" 
-                clickable
-                @click="Dir.moveUp()"
-            >
-            <q-item-section avatar>
-            <q-icon 
-                color="primary" 
-                name="folder" 
-            />
-            </q-item-section>
-            <q-item-section>
-            ../
-            </q-item-section>
-        </q-item>
+            <q-item clickable v-if="Dir.root && !Dir.inRoot" @click="Dir.goto(Dir.root)">
+                <q-item-section avatar>
+                    <q-icon color="primary" name="folder" />
+                </q-item-section>
+                <q-item-section>
+                    /
+                </q-item-section>
+            </q-item>
+            <q-item v-if="Dir.levels.length" clickable @click="Dir.moveUp()">
+                <q-item-section avatar>
+                    <q-icon color="primary" name="folder" />
+                </q-item-section>
+                <q-item-section>
+                    ../
+                </q-item-section>
+            </q-item>
         </q-list>
-        <q-item 
-            v-for="(handle, dirname) of Sorter.dirs" 
-            clickable
-            :key="dirname" 
-            @click="Dir.goto(handle)"
-        >
-        <q-item-section avatar>
-            <q-icon 
-                color="primary" 
-                name="folder" 
-            />
+        <q-item v-for="(handle, dirname) of Sorter.dirs" clickable :key="dirname" @click="Dir.goto(handle)">
+            <q-item-section avatar>
+                <q-icon color="primary" name="folder" />
             </q-item-section>
             <q-item-section>
-            {{ dirname }}
+                {{ dirname }}
             </q-item-section>
         </q-item>
-        <q-item 
-        v-for="(handle, name) of Sorter.books" 
-        clickable
-        :key="name" 
-        @click="loadBookFromHandle(handle)">
-        <q-item-section avatar>
-            <q-icon 
-                color="primary" 
-                name="book" 
-            />
+        <q-item v-for="(handle, name) of Sorter.books" clickable :key="name" @click="loadBookFromHandle(handle)">
+            <q-item-section avatar>
+                <q-icon color="primary" name="book" />
             </q-item-section>
             <q-item-section>
-            {{ name }}
+                {{ name }}
             </q-item-section>
         </q-item>
     </div>
@@ -107,7 +55,7 @@ import { db } from "../db/dexie"
 import { Dir, getLastWorkingDir, settings_id, Sorter, Status } from "./Handle"
 import { QBtnGroup, QBtn, QList, QItem, QItemSection, QIcon } from "quasar"
 import { aDirHandle } from "./util"
-import {Epub} from "@jcsj/epub"
+import { Epub } from "@jcsj/epub"
 
 const chooser = ref<HTMLInputElement>();
 
@@ -168,11 +116,16 @@ button
 
 .q-item__section--avatar
     min-width: unset
-nav
+
+button
     display: inline
-    button
-        display: inline
-        margin: 5px
+    margin: 5px
+.q-btn-group
+    margin-bottom: 1vh
 .q-item
   padding: 0 1vw
+  min-height: 2.5em
+
+.q-item__section--avatar 
+    padding-right: 1vw
 </style>
