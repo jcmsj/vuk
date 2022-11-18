@@ -1,12 +1,14 @@
 <template>
-<div>
-    <b class="tab-label">Table of Contents</b>
+<q-list>
+    <q-item-label header>
+            Table of Contents
+        </q-item-label>
     <NodeStart
         :active="true"
         :items="TOC.items"
         :level="0"
     />
-</div>
+</q-list>
 </template>
 
 <script setup lang=ts>

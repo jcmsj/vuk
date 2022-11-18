@@ -1,10 +1,15 @@
 <template>
- <div :active="props.active" class="node">
+ <div 
+    :active="props.active" 
+    class="node"
+>
     <div v-if="props.level > maxLevel" />
-    <div
+    <q-item
         v-else 
         v-for="[key, item] of props.items"
         :key="key"
+        clickable
+        class="column"
     >
         <NodeEnd
             v-if="item.navPoint"
@@ -17,9 +22,9 @@
             :href="'#' + item.id"
             @click="anchorClicked"
         >
-        {{item.title}}
+            {{item.title}}
         </a>
-    </div>
+    </q-item>
 </div>
 </template>
 <script setup>
@@ -47,10 +52,11 @@ const props = defineProps({
 
 </script>
 <style lang='sass' scoped>
-.item
-    cursor: pointer
+@use "src/sass/v-item"
+
 .node
     display: none
     &[active="true"]
         display: block
+
 </style>

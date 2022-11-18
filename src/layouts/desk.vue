@@ -1,13 +1,15 @@
 <template>
-  <q-tabs vertical align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect">
+  <q-tabs vertical align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect" active-color="black" 
+  class="bg-secondary text-grey-7 shadow-2"
+  >
     <q-tab name="browse" icon="folder" title="Browse" @click="toggleSelect('browse')" />
     <q-tab name="toc" icon="list" title="Table of contents" @click="toggleSelect('toc')" />
-    <q-tab name="bookmarks" icon="bookmark" title="Bookmarks" @click="toggleSelect('bookmarks')" />
+    <q-tab name="bookmarks" icon="bookmarks" title="Bookmarks" @click="toggleSelect('bookmarks')" />
     <q-tab name="config" icon="settings" title="Config" @click="toggleSelect('config')" />
   </q-tabs>
   <div>
   <Transition name="slide" >
-    <q-tab-panels v-model="tab" v-if="tab?.length">
+    <q-tab-panels v-model="tab" v-if="tab?.length" class="shadow-3">
       <q-tab-panel name="browse">
         <Explorer />
       </q-tab-panel>
@@ -87,24 +89,23 @@ useEventListener("keyup", e => {
   grid-template-columns: auto 1fr
 </style>
 <style lang=sass scoped>
-.column
-    display: flex
-    flex-direction: column
-.row
-    display: flex
 .q-page-container
   width: 100%
 
-.q-drawer, .q-tabs
+  /* TODO: Class for d/vh usage */
+.q-tabs
   position: sticky
   top: 0
-  max-height: 100dvh
+  height: 100dvh
+  height: 100vh /* Fallback */
+
 .q-tab-panels
   z-index: 1
   width: 30vw
   position: fixed
-  height: 100%
-  border-right: 2px solid black
+  height: 100dvh
+  height: 100vh /* Fallback */
+  resize: horizontal
 .q-tab-panel
   padding: 1vw 1vh
 .q-tabs

@@ -1,13 +1,17 @@
 <template>
-    <div>
-        <b class="tab-label">Bookmarks</b>
-        <ol>
-            <li v-for="bm of book?.bookmarks" :key="bm.selector" class="bookmark-link" @click="focus(bm.selector, bm)"
-                @dblclick="BookmarkController.unmark(bm)" :title="bm.selector">
-                {{ bm.text }} - {{ bm.percentage }}%
-            </li>
-        </ol>
-    </div>
+    <q-list>
+        <q-item-label header>
+            Bookmarks
+        </q-item-label>
+        <q-item 
+            clickable 
+            v-for="bm of book?.bookmarks" 
+            :key="bm.selector"
+            @click="focus(bm.selector, bm)" @dblclick="BookmarkController.unmark(bm)" :title="bm.selector"
+        >
+            {{ bm.text }} - {{ bm.percentage }}%
+        </q-item>
+    </q-list>
 </template>
 <script setup lang="ts">
 import { Bookmark } from "./Bookmark";
@@ -46,8 +50,6 @@ async function focus(selector: string, bm: Bookmark) {
 <style lang='sass'>
 .bookmark
     border: 1px solid green
-.bookmark-link
-    cursor: pointer
 
 </style>
 <style lang="sass" scoped>

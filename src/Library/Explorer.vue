@@ -1,6 +1,6 @@
 <template>
     <div class="r">
-        <q-btn-group>
+        <q-btn-group spread>
             <q-btn @click="chooser?.click()" title="Open an EPUB" icon-right="book">
                 Open
             </q-btn>
@@ -110,22 +110,12 @@ onKeyUp(
 )
 </script>
 <style lang='sass' scoped>
-button
-    display: block
-    margin: 1vh 1vw
-
-.q-item__section--avatar
-    min-width: unset
-
-button
-    display: inline
-    margin: 5px
+@use "src/sass/v-item"
 .q-btn-group
     margin-bottom: 1vh
-.q-item
-  padding: 0 1vw
-  min-height: 2.5em
+    display: flex
+button
+    margin: 1vh 1vw
+    display: inline
 
-.q-item__section--avatar 
-    padding-right: 1vw
 </style>
