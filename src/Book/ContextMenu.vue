@@ -18,7 +18,13 @@ import { BookmarkController } from 'src/Bookmarks';
 import { stopReading, startReading } from 'src/TTS';
 import { narrator } from 'src/TTS/Narrator';
 
-const items = [
+interface MenuItem {
+    label:string,
+    icon:string,
+    cb:()=>void
+}
+
+const items:MenuItem[] = [
     {
         label: "Read aloud",
         icon: "campaign",
