@@ -1,11 +1,12 @@
 
-import {EnhancedEpub} from "../lib/EnhancedEpub";
+import {EnhancedEpub, LoadedChapter} from "../lib/EnhancedEpub";
 import {refocus} from "../lib/helpers"
 import BookmarkController from "../Bookmarks/BookmarkController"
 import { LoadMethod, loadMethod } from "../Library/Load";
 import { setWalker } from "v-walker/index";
 import { narrator } from "../TTS/Narrator";
 import { view, pages, next, prev} from "./Pages";
+import { useLocalStorage } from "@vueuse/core";
 
 const options = {
     root: null,
@@ -13,17 +14,17 @@ const options = {
     threshold : 0.9
 }
 
-const addObserver = new IntersectionObserver(([entry], obs) => {
+const addObserver = new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("add")
-        add()
+        EnhancedEpub.instance?.next()
     }
 }, options)
 
-const dropObserver = new IntersectionObserver(([entry], obs) => {
+const dropObserver = new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("rem", "hasleft")
-        prior()
+        EnhancedEpub.instance?.previous()
     }
 }, options)
 
@@ -70,39 +71,33 @@ export async function reassign() {
         refocus(maybeLatest.elem)
     }
 }
-export async function repaint(paintables = []) {
+export async function repaint(paintables:LoadedChapter[] = []) {
     pages.value = paintables;
 }
 
-function add() {
-    try {
-        EnhancedEpub.instance?.next();
-    } catch(e) {
-        console.log("Possibly end of book", e);
-    }
+export interface Page extends LoadedChapter {
+    pos:LoadPosition
 }
 
-function prior() {
-    try {
-        EnhancedEpub.instance?.previous();
-    } catch(e) {
-        console.log("Possibly start of book", e);
-    }
+export enum LoadPosition {
+    before=-1,
+    after=1
 }
 
-export async function drop(p) {
-    const elem = view.value!
+const ShiftCount = useLocalStorage("shift-count",2)
+
+export async function render(p:Page ) {
     const _pages = pages.value;
     switch (p.pos) {
         case -1:
-            if (elem.childElementCount > 2) {
+            if (_pages.length > ShiftCount.value) {
                 _pages.pop()
             }
-            elem.firstElementChild?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+            view.value!.firstElementChild?.scrollIntoView({ block: "nearest", behavior: "smooth" })
             _pages.unshift(p)
         break;
         case 1:
-            if (elem.childElementCount > 2) {
+            if (_pages.length > ShiftCount.value) {
                 _pages.shift()
             }
             _pages.push(p)
