@@ -4,7 +4,7 @@ import { useTitle } from "@vueuse/core";
 import { EnhancedEpub } from "../lib/EnhancedEpub";
 import { loadMethod, LoadMethod } from "./Load";
 import { book } from "../Bookmarks/useBook";
-import router from "src/router";
+import { hide } from "src/layouts/Tab";
 
 export async function loadBookFromFile(anEpub: File) {
     const epub = new EnhancedEpub(anEpub)
@@ -37,6 +37,8 @@ export async function loadBookFromFile(anEpub: File) {
                 default:
                     epub.loadAll()
             }
+
+            hide()
         },
         manifest() {
             console.log("manifest: ", epub.manifest);
@@ -55,9 +57,6 @@ export async function loadBookFromFile(anEpub: File) {
 }
 
 export async function loadBookFromHandle(h: FileSystemFileHandle) {
-    if (router.currentRoute.value.fullPath != "/desk") {
-        await router.push("read")
-    }
     await loadBookFromFile(
         await h.getFile()
     )

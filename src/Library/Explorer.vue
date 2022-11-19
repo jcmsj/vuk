@@ -47,7 +47,7 @@
     </div>
 </template>
 <script setup lang=ts>
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { onKeyUp } from "@vueuse/core"
 import { directoryOpen } from "browser-fs-access"
 import { loadBookFromFile, loadBookFromHandle } from "./fileReader"
@@ -108,6 +108,10 @@ onKeyUp(
     restoreLibrary,
     { target: document }
 )
+
+onMounted(() => {
+    restoreLibrary()
+})
 </script>
 <style lang='sass' scoped>
 @use "src/sass/v-item"

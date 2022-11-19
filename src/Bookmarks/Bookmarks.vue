@@ -21,6 +21,7 @@ import { refocus } from "../lib/helpers"
 import { book } from "./useBook";
 import { watch } from "vue";
 import { db } from "../db/dexie"
+import { hide } from "src/layouts/Tab";
 
 //Watch len instead of the array itself
 watch(() => book.bookmarks.length, len => {
@@ -37,14 +38,13 @@ async function focus(selector: string, bm: Bookmark) {
 
     if (maybeElem) {
         refocus(maybeElem)
-        return;
     } else {
         const success = await EnhancedEpub.instance!.between({ id: BookmarkController.toManifestID(bm) })
 
         console.log(success ? "Bookmark clicked:" : "Invalid", selector);
     }
-
     BookmarkController.reapply()
+    hide()
 }
 </script>
 <style lang='sass'>
