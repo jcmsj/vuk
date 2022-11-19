@@ -68,7 +68,6 @@ article
     @include lex
     overflow: inherit
     width: 100%
-    height: -webkit-fill-available
     overflow-y: auto
 
 .pager

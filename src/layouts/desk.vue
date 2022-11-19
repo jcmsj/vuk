@@ -1,6 +1,6 @@
 <template>
-  <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect" active-color="black" 
-  class="bg-secondary text-grey-7 shadow-2"
+  <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect" active-color="primary" 
+  class="bg-secondary text-grey-9"
   >
     <q-tab name="browse" icon="folder" title="Browse" @click="toggleSelect('browse')" />
     <q-tab name="toc" icon="list" title="Table of contents" @click="toggleSelect('toc')" />
@@ -9,7 +9,7 @@
   </q-tabs>
   <main>
   <Transition name="slide" >
-    <q-tab-panels v-model="tab" v-if="tab?.length" class="shadow-3">
+    <q-tab-panels v-model="tab" v-if="tab?.length" :class="onDesk ? 'bg-secondary shadow-4':''">
       <q-tab-panel name="browse">
         <Explorer />
       </q-tab-panel>
@@ -89,8 +89,8 @@ useEventListener("keyup", e => {
 @use "../sass/scrollbar"
 #q-app
   display: grid
-  height: 100dvh
-  height: 100vh
+  overflow-y: hidden
+  @include full-height
   @include mobile
     grid-template-areas: "book""nav"
     grid-template-rows: 1fr auto
@@ -107,9 +107,9 @@ useEventListener("keyup", e => {
 
 main
   grid-area: book
+  overflow-y: auto
 .q-tabs
   position: sticky
-
   grid-area: nav
 
   @include mobile
@@ -117,17 +117,14 @@ main
 
   @include desk
     top: 0
-    height: 100dvh
-    height: 100vh /* Fallback */
 
 .q-tab-panels
   z-index: 1
   position: fixed
-  height: 100dvh
-  height: 100vh /* Fallback */
+  @include full-height
   resize: horizontal
   width: 100%
-  
+
   @include desk
     width: 30vw
 
@@ -143,9 +140,7 @@ main
 .slide-enter-from,
 .slide-leave-to 
   opacity: 0
-
-  @include mobile
-    transform: translateY(30vh)
+  transform: translateY(30vh)
   @include desk
     transform: translateX(-30vw)
 
