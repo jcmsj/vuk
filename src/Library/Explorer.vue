@@ -4,10 +4,10 @@
             <q-btn @click="chooser?.click()" title="Open an EPUB" icon-right="book">
                 Open
             </q-btn>
-            <q-btn @click="setLibrary" title="Set library" class="btn" icon-right="folder">
+            <q-btn v-if="qua.platform.is.desktop" @click="setLibrary" title="Set library" class="btn" icon-right="folder">
                 Set&nbsp;
             </q-btn>
-            <q-btn @click="restoreLibrary" title="Restore library" class="btn" icon="restore" icon-right="folder" />
+            <q-btn @click="restoreLibrary" title="Restore library" class="btn" icon="restore" icon-right="folder" v-if="qua.platform.is.desktop" />
         </q-btn-group>
         <input type=file hidden ref=chooser @change=selectFile :accept="Epub.MIME">
         <q-list>
@@ -53,10 +53,11 @@ import { directoryOpen } from "browser-fs-access"
 import { loadBookFromFile, loadBookFromHandle } from "./fileReader"
 import { db } from "../db/dexie"
 import { Dir, getLastWorkingDir, settings_id, Sorter, Status } from "./Handle"
-import { QBtnGroup, QBtn, QList, QItem, QItemSection, QIcon } from "quasar"
+import { QBtnGroup, QBtn, QList, QItem, QItemSection, QIcon, useQuasar } from "quasar"
 import { aDirHandle } from "./util"
 import { Epub } from "@jcsj/epub"
 
+const qua = useQuasar()
 const chooser = ref<HTMLInputElement>();
 
 async function selectFile(e: any) {

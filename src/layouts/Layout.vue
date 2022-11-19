@@ -63,7 +63,7 @@ useEventListener("keyup", e => {
 #q-app
   display: grid
   overflow-y: hidden
-  @include full-height
+  height: 100%
   @include mobile
     grid-template-areas: "book""nav"
     grid-template-rows: 1fr auto
@@ -94,7 +94,7 @@ main
 .q-tab-panels
   z-index: 1
   position: fixed
-  @include full-height
+  height: 100%
   resize: horizontal
   width: 100%
 
