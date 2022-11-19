@@ -4,6 +4,7 @@
             Book config
         </q-item-label>
         <VLoader />
+        <ThemeSwitcher />
         <q-separator />
         <q-item-label header>
             Versions
@@ -23,5 +24,5 @@
 <script setup lang=ts>
 import { version } from "../../package.json"
 import VLoader from "./loader.vue"
-
+import ThemeSwitcher from "./ThemeSwitcher.vue"
 </script>

@@ -1,6 +1,6 @@
 <template>
   <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect" active-color="primary" 
-  class="bg-secondary text-grey-9"
+  class="bg-secondary text-grey-9 shadow-3"
   >
     <q-tab name="browse" icon="folder" title="Browse" @click="toggleSelect('browse')" />
     <q-tab name="toc" icon="list" title="Table of contents" @click="toggleSelect('toc')" />
@@ -9,7 +9,7 @@
   </q-tabs>
   <main>
   <Transition name="slide" >
-    <q-tab-panels v-model="tab" v-if="tab?.length" :class="onDesk ? 'bg-secondary shadow-4':''">
+    <q-tab-panels v-model="tab" v-if="tab?.length" :class="onDesk ? 'shadow-4':''">
       <q-tab-panel name="browse">
         <Explorer />
       </q-tab-panel>
