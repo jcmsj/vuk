@@ -41,7 +41,7 @@ div.chapter
     display: flex
     flex-direction: column
 
-    img /* Uses deep cause of v-html */
+    img, svg:has(image) /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
         max-width: 80%
