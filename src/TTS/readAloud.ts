@@ -5,6 +5,7 @@ import { isReading } from "./isReading";
 import { narrator } from "./Narrator";
 import { transformer } from "./Narrator";
 
+const onEnd = () => narrator.emit(EV.end);
 export function readAloud(txt:string) {
     const utt = new SpeechSynthesisUtterance(txt)
 
@@ -16,7 +17,8 @@ export function readAloud(txt:string) {
         }    
     }
 
-    utt.onend = () => narrator.emit(EV.end);
+    utt.onend = onEnd
+
     utt.rate = speech_rate.value
 
     if (voice.value!= null)

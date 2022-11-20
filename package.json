@@ -6,7 +6,11 @@
   "author": "Jean Carlo San Juan",
   "private": true,
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "pwa":"quasar dev -m pwa",
+    "pwa-build": "quasar build -m pwa",
+    "pwa-surge":"pnpm pwa-build && cd dist/pwa/ && surge --domain https://vuk-pwa.surge.sh/",
+    "pwa-serve": "pnpm pwa-build && cd dist/pwa/ && quasar serve"
   },
   "dependencies": {
     "@jcsj/arraymap": "^0.0.3",
