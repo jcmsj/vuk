@@ -2,7 +2,7 @@
     <SpeechSynthesis />
     <div class=naver ref="prev"></div>
     <div @mouseup="identifySpeechTarget" id="__live" ref="view" @click="anchorClicked">
-        <div class="chapter" v-for="page in pages" v-html="page.html" :key="page.id">
+        <div class="chapter" v-for="page in pages" v-html="page.html" :key="page.id" :id="page.id">
 
         </div>
         <ContextMenu />
