@@ -3,6 +3,8 @@ import mainElem, { getReadingProgress } from "../lib/useMainElem";
 import { Bookmark } from "./Bookmark";
 import { Book, db } from "../db/dexie";
 import { book } from "./useBook";
+import { EnhancedEpub } from "src/lib/EnhancedEpub";
+import { toRaw } from "vue";
 interface Latest {
     bm: Bookmark,
     elem: HTMLElement
@@ -51,10 +53,6 @@ export function create(selector: string, text: string, percentage = 0): Bookmark
     }
 }
 
-//Since Vue uses proxy objects, the real objects need to be recreated.
-export function clone(proxy: Bookmark) {
-    return create(proxy.selector, proxy.text, proxy.percentage);
-}
 export class BookmarkController {
     static className = "bookmark"
     static auto = {
@@ -106,7 +104,7 @@ export class BookmarkController {
         }
 
         elem.classList.add(this.className)
-        if (book["title"]) {
+        if (book.title) {
             book.bookmarks.push(bookmark)
         }
 
@@ -147,7 +145,7 @@ export class BookmarkController {
     static async reapply(): Promise<MaybeLatest> {
         const items = [...book.bookmarks.values()];
         if (book.auto)
-            items.push(clone(book.auto));
+            items.push(toRaw(book.auto));
 
         return determineLatest(items, this.restore.bind(this))
     }

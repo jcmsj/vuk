@@ -15,8 +15,8 @@ export interface Settings {
 }
 
 export class VukDB extends Dexie {
-    books:Table<Book>;
-    settings:Table<Settings>;
+    books!:Table<Book>;
+    settings!:Table<Settings>;
     constructor(
         databaseName: string, options?: DexieOptions
     ) {

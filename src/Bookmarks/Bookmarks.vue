@@ -15,24 +15,12 @@
 </template>
 <script setup lang="ts">
 import { Bookmark } from "./Bookmark";
-import { BookmarkController, clone } from './BookmarkController';
+import { BookmarkController } from './BookmarkController';
 import { EnhancedEpub } from "../lib/EnhancedEpub";
 import { refocus } from "../lib/helpers"
 import { book } from "./useBook";
-import { watch } from "vue";
-import { db } from "../db/dexie"
 import { hide } from "src/layouts/Tab";
 
-//Watch len instead of the array itself
-watch(() => book.bookmarks.length, len => {
-    console.log(book.id, len, book.bookmarks);
-    db.books.update(book.id!, { bookmarks: book.bookmarks.map(clone) });
-});
-
-watch(() => book.auto, auto => {
-    if (auto)
-        db.books.update(book.id!, { auto: clone(auto) })
-})
 async function focus(selector: string, bm: Bookmark) {
     let maybeElem = document.querySelector(selector);
 
