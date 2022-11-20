@@ -53,6 +53,10 @@ div.chapter
 
     h1, h2, h3, h4, h5, h6
         align-self: center
+
+        //Patch for stylized chapter titles for now
+        img
+            display: inline
 </style>
 <style lang='sass' scoped>
 @import "src/sass/media_queries"
