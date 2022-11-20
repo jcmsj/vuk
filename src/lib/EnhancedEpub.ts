@@ -1,7 +1,7 @@
-import Epub from "@jcsj/epub";
 import simplifyHTMLTree from "./simplifyHTMLTree";
 import { render, reassign, repaint, LoadPosition } from "../Book";
 import { range } from "./range"
+import { CachedEpub } from "@jcsj/epub";
 class BoundaryError extends RangeError {
     name = "BoundaryError"
     constructor(where: string) {
@@ -13,7 +13,7 @@ export interface LoadedChapter {
     id: string,
     html: string
 }
-export class EnhancedEpub extends Epub {
+export class EnhancedEpub extends CachedEpub {
     index = 0;
     id = ""; //The currently shown flow item called from between
     static instance: EnhancedEpub | null = null
