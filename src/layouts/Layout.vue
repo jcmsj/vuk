@@ -7,7 +7,7 @@
     <q-tab name="bookmarks" icon="bookmarks" title="Bookmarks" @click="toggleSelect('bookmarks')" />
     <q-tab name="config" icon="settings" title="Config" @click="toggleSelect('config')" />
   </q-tabs>
-  <main>
+  <main ref="mainElem">
   <Transition name="slide" >
     <q-tab-panels v-model="tab" v-if="tab?.length" :class="onDesk ? 'shadow-4':''">
       <q-tab-panel name="browse">
@@ -29,6 +29,7 @@
 </template>
   
 <script setup lang=ts>
+import { mainElem } from "../lib/useMainElem"
 import Live from 'src/Book/Live.vue';
 import Bookmarks from 'src/Bookmarks/Bookmarks.vue';
 import Explorer from 'src/Library/Explorer.vue';
