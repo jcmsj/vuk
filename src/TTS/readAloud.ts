@@ -5,16 +5,20 @@ import { isReading } from "./isReading";
 import { narrator } from "./Narrator";
 import { transformer } from "./Narrator";
 
-const onEnd = () => narrator.emit(EV.end);
+function onEnd() {
+    return narrator.emit(EV.end);
+}
+
+function onBoundary(e: SpeechSynthesisEvent) {
+    if (e.name != "word")
+        return;
+    transformer.elem?.next();
+}    
 export function readAloud(txt:string) {
     const utt = new SpeechSynthesisUtterance(txt)
 
     if (transformer.elem) {
-        utt.onboundary 
-        = e => {
-            if (e.name != "word") return;
-            transformer.elem?.next();
-        }    
+        utt.onboundary = onBoundary
     }
 
     utt.onend = onEnd
