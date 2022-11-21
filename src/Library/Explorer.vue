@@ -1,7 +1,7 @@
 <template>
     <div class="r">
         <q-btn-group spread>
-            <q-btn @click="chooser?.click()" title="Open an EPUB" icon-right="book">
+            <q-btn color="primary" @click="chooser?.click()" title="Open an EPUB" icon-right="book">
                 Open
             </q-btn>
             <q-btn v-if="qua.platform.is.desktop" @click="setLibrary" title="Set library" class="btn" icon-right="folder">
