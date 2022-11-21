@@ -5,7 +5,7 @@
             {{ speech_rate }}
         </label>
         <input type="range" name="speech-rate" list="ticks" :min="min" :max="max" step="0.25" :value="speech_rate"
-            @change="e => speech_rate = e.target.value">
+            @change="speech_rate = $event.target.value">
         <datalist id="ticks">
             <option :value="min" :label="min"></option>
             <option value="1" label="1"></option>

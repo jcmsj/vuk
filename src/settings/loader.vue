@@ -4,7 +4,7 @@
             Load method:
         </q-item-label>
         <q-item-section>
-            <select name="load-method" ref=elem @change="e => loadMethod = elem.value" :value="loadMethod">
+            <select name="load-method" ref=elem @change="loadMethod = elem.value" :value="loadMethod">
                 <option v-for="(key, v) in LoadMethod" :key="key" :value="v">
                     {{ key }}
                 </option>

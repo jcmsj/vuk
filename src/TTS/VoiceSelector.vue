@@ -5,7 +5,7 @@
     <select
         ref="select"
         name="voice-pack"
-        @change="e => voice.set(e.target.value)"
+        @change="voice.set($event.target.value)"
     >
         <option
             v-for="({name}, i) in voices"
