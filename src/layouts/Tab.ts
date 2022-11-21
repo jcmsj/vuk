@@ -1,31 +1,14 @@
-import { ref, watch } from "vue";
+import Router from "src/router";
 
-export const tab = ref<string | undefined>("")
-
-export const isSelected = ref(false);
-
-export function toggleSelect(tabName: string) {
-    console.log({ tabName });
-    if (tabName === tab.value) {
-        isSelected.value = true
-    } else {
-        tab.value = tabName
-    }
+export function toHome(...args:any[]) {
+    Router.replace({path:"../", ...args})
 }
 
-export function hide() {
-    tab.value = undefined
+export function toggleSelect(e: MouseEvent | KeyboardEvent, tabName: string) {
+    if (Router.currentRoute.value.path.includes(tabName)) {
+      e.preventDefault()
+      toHome()
+    } else if (e instanceof KeyboardEvent) {
+      Router.replace(tabName)
+    }
 }
-
-watch(tab, it => {
-    if (typeof it === "string") {
-        isSelected.value = false
-    }
-})
-
-watch(isSelected, n => {
-    if (n === true) {
-        hide()
-        isSelected.value = false
-    }
-})

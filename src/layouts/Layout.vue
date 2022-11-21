@@ -1,58 +1,50 @@
 <template>
-  <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect" active-color="primary" class="bg-secondary text-grey-9 shadow-3">
-    <q-tab name="browse" icon="folder" title="Browse" @click="toggleSelect('browse')" />
-    <q-tab name="toc" icon="list" title="Table of contents" @click="toggleSelect('toc')" />
-    <q-tab name="bookmarks" icon="bookmarks" title="Bookmarks" @click="toggleSelect('bookmarks')" />
-    <q-tab name="config" icon="settings" title="Config" @click="toggleSelect('config')" />
+  <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" on-same-tab="deselect"
+    active-color="primary" class="bg-secondary text-grey-9 shadow-3">
+    <q-route-tab exact :to="hotkeys.f" icon="folder" title="Browse" @click="toggleSelect($event, hotkeys.f)" />
+    <q-route-tab exact :to="hotkeys.t" icon="list" title="Table of contents" @click="toggleSelect($event, hotkeys.t)" />
+    <q-route-tab exact :to="hotkeys.b" icon="bookmarks" title="Bookmarks" @click="toggleSelect($event, hotkeys.b)" />
+    <q-route-tab exact :to="hotkeys.c" icon="settings" title="Config" @click="toggleSelect($event, hotkeys.c)" />
   </q-tabs>
-  <main ref="mainElem">
-    <Transition name="slide">
-      <q-tab-panels v-model="tab" v-if="tab?.length" :class="onDesk ? 'shadow-4' : ''">
-        <q-tab-panel name="browse">
-          <Explorer />
-        </q-tab-panel>
-        <q-tab-panel name="toc">
-          <TOCVue />
-        </q-tab-panel>
-        <q-tab-panel name="bookmarks">
-          <Bookmarks />
-        </q-tab-panel>
-        <q-tab-panel name="config">
-          <SettingsPage />
-        </q-tab-panel>
-      </q-tab-panels>
-    </Transition>
+  <main>
+    <RouterView v-slot="{ Component, route }">
+      <Transition name="slide">
+      <q-card v-if="route.path != '/'" class="panel" :class="onDesk ? 'shadow-4' : ''">
+          <component :is="Component" :key="route.path" />
+      </q-card>
+      </Transition>
+    </RouterView>
     <Live />
   </main>
 </template>
   
 <script setup lang=ts>
-import { mainElem } from "../lib/useMainElem"
 import Live from 'src/Book/Live.vue';
-import Bookmarks from 'src/Bookmarks/Bookmarks.vue';
-import Explorer from 'src/Library/Explorer.vue';
-import TOCVue from 'src/TOC/TOC.vue';
-import SettingsPage from 'src/settings/SettingsPage.vue';
 import { useEventListener, useMediaQuery } from '@vueuse/core';
-import { tab, toggleSelect } from "./Tab"
+import {toggleSelect, toHome} from "./Tab"
+import { onBeforeRouteLeave, onBeforeRouteUpdate, RouterView } from 'vue-router';
+import { QTabs, QRouteTab, QCard } from 'quasar';
+import { Transition } from 'vue';
 /* if device has no touch screen */
 const onDesk = useMediaQuery("(any-pointer: fine) and (min-width: 1024px)");
 
 const hotkeys = {
   f: "browse",
   b: "bookmarks",
-  t: "toc"
+  t: "toc",
+  c: "config",
 }
+
 useEventListener("keyup", e => {
   console.log(e.key);
 
   switch (e.key) {
     case "Escape":
-      tab.value = undefined
+      toHome()
       break;
     default:
       if (hotkeys[e.key as keyof typeof hotkeys]) {
-        toggleSelect(hotkeys[e.key as keyof typeof hotkeys])
+        toggleSelect(e, hotkeys[e.key as keyof typeof hotkeys])
       }
   }
 })
@@ -62,6 +54,7 @@ useEventListener("keyup", e => {
 #q-app
   display: grid
   overflow-y: hidden
+  position: fixed
   height: 100%
   @include mobile
     grid-template-areas: "book""nav"
@@ -77,8 +70,7 @@ useEventListener("keyup", e => {
 
 main
   grid-area: book
-  overflow-y: auto
-  width: 100%
+  overflow-y: hidden
   max-width: 100vw
 .q-tabs
   position: sticky
@@ -90,16 +82,18 @@ main
   @include desk
     top: 0
 
-.q-tab-panels
+.panel
   z-index: 1
-  position: fixed
   height: 100%
-  resize: horizontal
+  position: sticky
+  top: 0
   width: 100%
-
+  overflow-y: auto
+  padding: 1vh 1vw
   @include desk
     width: 30vw
-
+    resize: horizontal
+    position: fixed
 .q-tab-panel
   padding: 1vw 1vh
 .q-tabs

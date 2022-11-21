@@ -1,12 +1,10 @@
 import {loadMethod, LoadMethod} from "./Load"
 import {EnhancedEpub} from "../lib/EnhancedEpub"
-import { hide } from "src/layouts/Tab";
 
 export async function anchorClicked(e:MouseEvent) {
-    hide()
-    if (loadMethod.value == LoadMethod.all)
-      return;
-    e.preventDefault()
+  if (loadMethod.value == LoadMethod.all) {
+    return;
+  }
     let l= e.target as HTMLElement||HTMLAnchorElement;
     if (!(l instanceof HTMLAnchorElement))
       return;

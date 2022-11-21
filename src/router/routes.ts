@@ -6,8 +6,20 @@ const routes: RouteRecordRaw[] = [
     component: () => import("src/layouts/Layout.vue"),
     children:[
       {
-        path:"",
-        component: () => import("src/Book/Live.vue"),
+        path:"browse",
+        component: () => import("src/Library/Explorer.vue")
+      },
+      {
+        path:"config",
+        component: () => import("src/settings/SettingsPage.vue")
+      },
+      {
+        path:"toc",
+        component: () => import ("src/TOC/TOC.vue")
+      },
+      {
+        path:"bookmarks",
+        component: () => import ("src/Bookmarks/Bookmarks.vue")
       }
     ]
   },

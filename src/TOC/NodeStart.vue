@@ -16,14 +16,13 @@
             :item="item"
             :items="item.navPoint"
         />
-        <a 
+        <router-link 
             v-else 
-            class="item"
-            :href="'#' + item.id"
-            @click="anchorClicked"
+            :to="'/#' + item.id"
+            @click.prevent="anchorClicked"
         >
             {{item.title}}
-        </a>
+        </router-link>
     </q-item>
 </div>
 </template>
@@ -58,5 +57,4 @@ const props = defineProps({
     display: none
     &[active="true"]
         display: block
-
 </style>

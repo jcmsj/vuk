@@ -7,7 +7,7 @@
             clickable 
             v-for="bm of book?.bookmarks" 
             :key="bm.selector"
-            @click="focus(bm.selector, bm)" @dblclick="BookmarkController.unmark(bm)" :title="bm.selector"
+            @click="focus($event, bm.selector, bm)" @dblclick="BookmarkController.unmark(bm)" :title="bm.selector"
         >
             {{ bm.text }} - {{ bm.percentage }}%
         </q-item>
@@ -19,9 +19,9 @@ import { BookmarkController } from './BookmarkController';
 import { EnhancedEpub } from "../lib/EnhancedEpub";
 import { refocus } from "../lib/helpers"
 import { book } from "./useBook";
-import { hide } from "src/layouts/Tab";
-
-async function focus(selector: string, bm: Bookmark) {
+import { useRouter } from "vue-router";
+const router = useRouter()
+async function focus(e:MouseEvent,selector: string, bm: Bookmark) {
     let maybeElem = document.querySelector(selector);
 
     if (maybeElem) {
@@ -30,9 +30,9 @@ async function focus(selector: string, bm: Bookmark) {
         const success = await EnhancedEpub.instance!.between({ id: BookmarkController.toManifestID(bm) })
 
         console.log(success ? "Bookmark clicked:" : "Invalid", selector);
+        BookmarkController.reapply()
     }
-    BookmarkController.reapply()
-    hide()
+    router.replace({path:"/", hash: bm.selector})
 }
 </script>
 <style lang='sass'>

@@ -1,13 +1,15 @@
 <template>
-    <SpeechSynthesis />
-    <div class=naver ref="prev"></div>
-    <div @mouseup="identifySpeechTarget" id="__live" ref="view" @click="anchorClicked">
-        <div class="chapter" v-for="page in pages" v-html="page.html" :key="page.id" :id="page.id">
+    <article ref="mainElem">
+        <SpeechSynthesis />
+        <div class=naver ref="prev"></div>
+        <div @mouseup="identifySpeechTarget" id="__live" ref="view" @click="anchorClicked">
+            <div class="chapter" v-for="page in pages" v-html="page.html" :key="page.id" :id="page.id">
 
+            </div>
+            <ContextMenu />
         </div>
-        <ContextMenu />
-    </div>
-    <div class=naver ref="next"></div>
+        <div class=naver ref="next"></div>
+    </article>
 </template>
 
 <script setup>
@@ -72,4 +74,8 @@ div.chapter
 
 .naver
     height: 8vh
+
+article
+    overflow-y: auto
+    height: 100%
 </style>

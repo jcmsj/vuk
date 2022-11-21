@@ -1,50 +1,49 @@
 <template>
-    <div class="r">
-        <q-btn-group spread>
-            <q-btn color="primary" @click="chooser?.click()" title="Open an EPUB" icon-right="book">
-                Open
-            </q-btn>
-            <q-btn v-if="qua.platform.is.desktop" @click="setLibrary" title="Set library" class="btn" icon-right="folder">
-                Set&nbsp;
-            </q-btn>
-            <q-btn @click="restoreLibrary" title="Restore library" class="btn" icon="restore" icon-right="folder" v-if="qua.platform.is.desktop" />
-        </q-btn-group>
-        <input type=file hidden ref=chooser @change=selectFile :accept="Epub.MIME">
-        <q-list>
-            <q-item clickable v-if="Dir.root && !Dir.inRoot" @click="Dir.goto(Dir.root)">
-                <q-item-section avatar>
-                    <q-icon color="primary" name="folder" />
-                </q-item-section>
-                <q-item-section>
-                    /
-                </q-item-section>
-            </q-item>
-            <q-item v-if="Dir.levels.length" clickable @click="Dir.moveUp()">
-                <q-item-section avatar>
-                    <q-icon color="primary" name="folder" />
-                </q-item-section>
-                <q-item-section>
-                    ../
-                </q-item-section>
-            </q-item>
-        </q-list>
-        <q-item v-for="(handle, dirname) of Sorter.dirs" clickable :key="dirname" @click="Dir.goto(handle)">
+    <q-btn-group spread>
+        <q-btn color="primary" @click="chooser?.click()" title="Open an EPUB" icon-right="book">
+            Open
+        </q-btn>
+        <q-btn v-if="qua.platform.is.desktop" @click="setLibrary" title="Set library" class="btn" icon-right="folder">
+            Set&nbsp;
+        </q-btn>
+        <q-btn @click="restoreLibrary" title="Restore library" class="btn" icon="restore" icon-right="folder"
+            v-if="qua.platform.is.desktop" />
+    </q-btn-group>
+    <input type=file hidden ref=chooser @change=selectFile :accept="Epub.MIME">
+    <q-list>
+        <q-item clickable v-if="Dir.root && !Dir.inRoot" @click="Dir.goto(Dir.root)">
             <q-item-section avatar>
                 <q-icon color="primary" name="folder" />
             </q-item-section>
             <q-item-section>
-                {{ dirname }}
+                /
             </q-item-section>
         </q-item>
-        <q-item v-for="(handle, name) of Sorter.books" clickable :key="name" @click="loadBookFromHandle(handle)">
+        <q-item v-if="Dir.levels.length" clickable @click="Dir.moveUp()">
             <q-item-section avatar>
-                <q-icon color="primary" name="book" />
+                <q-icon color="primary" name="folder" />
             </q-item-section>
             <q-item-section>
-                {{ name }}
+                ../
             </q-item-section>
         </q-item>
-    </div>
+    </q-list>
+    <q-item v-for="(handle, dirname) of Sorter.dirs" clickable :key="dirname" @click="Dir.goto(handle)">
+        <q-item-section avatar>
+            <q-icon color="primary" name="folder" />
+        </q-item-section>
+        <q-item-section>
+            {{ dirname }}
+        </q-item-section>
+    </q-item>
+    <q-item v-for="(handle, name) of Sorter.books" clickable :key="name" @click="loadBookFromHandle(handle)">
+        <q-item-section avatar>
+            <q-icon color="primary" name="book" />
+        </q-item-section>
+        <q-item-section>
+            {{ name }}
+        </q-item-section>
+    </q-item>
 </template>
 <script setup lang=ts>
 import { onMounted, ref } from "vue"

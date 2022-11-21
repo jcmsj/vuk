@@ -4,7 +4,7 @@ import { useTitle } from "@vueuse/core";
 import { EnhancedEpub } from "../lib/EnhancedEpub";
 import { loadMethod, LoadMethod } from "./Load";
 import { book } from "../Bookmarks/useBook";
-import { hide } from "src/layouts/Tab";
+import { toHome } from "src/layouts/Tab";
 
 export async function loadBookFromFile(anEpub: File) {
     const epub = new EnhancedEpub(anEpub)
@@ -38,7 +38,7 @@ export async function loadBookFromFile(anEpub: File) {
                     epub.loadAll()
             }
 
-            hide()
+            toHome()
         },
         manifest() {
             console.log("manifest: ", epub.manifest);
