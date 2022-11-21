@@ -7,7 +7,9 @@
             clickable 
             v-for="bm of book?.bookmarks" 
             :key="bm.selector"
-            @click="focus($event, bm.selector, bm)" @dblclick="BookmarkController.unmark(bm)" :title="bm.selector"
+            is="RouterLink"
+            :to="'/' + bm.selector"
+            @click="focus(bm.selector, bm)" @dblclick="BookmarkController.unmark(bm)" :title="bm.selector"
         >
             {{ bm.text }} - {{ bm.percentage }}%
         </q-item>
@@ -19,9 +21,7 @@ import { BookmarkController } from './BookmarkController';
 import { EnhancedEpub } from "../lib/EnhancedEpub";
 import { refocus } from "../lib/helpers"
 import { book } from "./useBook";
-import { useRouter } from "vue-router";
-const router = useRouter()
-async function focus(e:MouseEvent,selector: string, bm: Bookmark) {
+async function focus(selector: string, bm: Bookmark) {
     let maybeElem = document.querySelector(selector);
 
     if (maybeElem) {
@@ -32,7 +32,6 @@ async function focus(e:MouseEvent,selector: string, bm: Bookmark) {
         console.log(success ? "Bookmark clicked:" : "Invalid", selector);
         BookmarkController.reapply()
     }
-    router.replace({path:"/", hash: bm.selector})
 }
 </script>
 <style lang='sass'>
