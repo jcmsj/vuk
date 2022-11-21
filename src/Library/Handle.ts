@@ -1,16 +1,17 @@
 import { Epub } from "@jcsj/epub";
 import { reactive, watch } from "vue";
 import { db } from "../db/dexie";
-import { aDirHandle } from "./util";
+import { aDirHandle, isSameEntry } from "./util";
 
-export interface RxDir {
-    value?: FileSystemDirectoryHandle;
-    root?: FileSystemDirectoryHandle;
-    levels: FileSystemDirectoryHandle[];
-    setRoot: (h: any) => void;
+export interface RxDir<D = FileSystemDirectoryHandle> {
+    value?:D;
+    root?: D;
+    levels:D[];
+    setRoot: (h: D) => void;
     isInRoot: () => Promise<boolean>;
-    goto: (h?: FileSystemDirectoryHandle) => void;
-    setDir: (h?: FileSystemDirectoryHandle) => void;
+    isRoot: (d?:D) => Promise<boolean>;
+    goto: (h?: D) => void;
+    setDir: (h?: D) => void;
     moveUp: () => void;
     inRoot:boolean;
 }
@@ -26,46 +27,51 @@ export const Dir = reactive<RxDir>({
             this.root = h;
         }
     },
-    async isInRoot() {
-        return (await this.value?.isSameEntry(this.root!)) || false;
+    async isRoot(d) {
+        return isSameEntry(this.root, d)
     },
-    async goto(h?: FileSystemDirectoryHandle) {
+    async isInRoot() {
+        return this.isRoot(this.value)
+    },
+    async goto(h) {
         if (!h || !aDirHandle(h))
             this.value = this.root;
 
-        if (await this.value!.isSameEntry(h!)) {
+        if (await isSameEntry(this.value, h)) {
             return
         }
 
-        if (await this.root!.isSameEntry(h!)) {
+        if (await this.isRoot(h)) {
             this.levels = [];
         } else {
             this.levels.push(this.value!);
         }
 
-        await this.setDir(h)
+        this.setDir(h)
     },
 
-    async setDir(h?: FileSystemDirectoryHandle) {
+    async setDir(h) {
+        if (await isSameEntry(this.value, h))  {
+            return
+        }
+
         this.value = h;
         await Sorter.sort(h!)
     },
 
     async moveUp() {
-        console.log(this);
-        
         if (this.levels.length)
             this.setDir(this.levels.pop())
     }
 })
 
 watch(() => Dir.value, async(d) => {
-    Dir.inRoot = (await Dir.root?.isSameEntry(d!))||false
+    Dir.inRoot = await Dir.isRoot(d)
 })
-export interface RxSorter {
-    dirs: Record<string, FileSystemDirectoryHandle>,
+export interface RxSorter<D = FileSystemDirectoryHandle> {
+    dirs: Record<string, D>,
     books: Record<string, FileSystemFileHandle>,
-    sort: (dir: FileSystemDirectoryHandle) => Promise<void>;
+    sort: (dir: D) => Promise<void>;
 }
 
 export enum Status {
@@ -92,14 +98,14 @@ export async function getLastWorkingDir(): Promise<{
 export const Sorter = reactive<RxSorter>({
     books: {},
     dirs: {},
-    async sort(dir: FileSystemDirectoryHandle): Promise<void> {
+    async sort(dir) {
         const books:typeof this.books = {}, //reset
         dirs:typeof this.dirs = {};
         try {
             for await (const [key, h] of dir.entries()) {
-                if (h.kind == "file") {
+                if (h.kind === "file") {
                     const file = await h.getFile()
-                    if (file.type == Epub.MIME)
+                    if (file.type === Epub.MIME)
                         books[key] = h
                 } else {
                     dirs[key] = h

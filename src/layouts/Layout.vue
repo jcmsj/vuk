@@ -1,31 +1,29 @@
 <template>
-  <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect" active-color="primary" 
-  class="bg-secondary text-grey-9 shadow-3"
-  >
+  <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" v-model="tab" on-same-tab="deselect" active-color="primary" class="bg-secondary text-grey-9 shadow-3">
     <q-tab name="browse" icon="folder" title="Browse" @click="toggleSelect('browse')" />
     <q-tab name="toc" icon="list" title="Table of contents" @click="toggleSelect('toc')" />
     <q-tab name="bookmarks" icon="bookmarks" title="Bookmarks" @click="toggleSelect('bookmarks')" />
     <q-tab name="config" icon="settings" title="Config" @click="toggleSelect('config')" />
   </q-tabs>
   <main ref="mainElem">
-  <Transition name="slide" >
-    <q-tab-panels v-model="tab" v-if="tab?.length" :class="onDesk ? 'shadow-4':''">
-      <q-tab-panel name="browse">
-        <Explorer />
-      </q-tab-panel>
-      <q-tab-panel name="toc">
-        <TOCVue />
-      </q-tab-panel>
-      <q-tab-panel name="bookmarks">
-        <Bookmarks />
-      </q-tab-panel>
-      <q-tab-panel name="config">
-        <SettingsPage />
-      </q-tab-panel>
-    </q-tab-panels>
-  </Transition>
+    <Transition name="slide">
+      <q-tab-panels v-model="tab" v-if="tab?.length" :class="onDesk ? 'shadow-4' : ''">
+        <q-tab-panel name="browse">
+          <Explorer />
+        </q-tab-panel>
+        <q-tab-panel name="toc">
+          <TOCVue />
+        </q-tab-panel>
+        <q-tab-panel name="bookmarks">
+          <Bookmarks />
+        </q-tab-panel>
+        <q-tab-panel name="config">
+          <SettingsPage />
+        </q-tab-panel>
+      </q-tab-panels>
+    </Transition>
     <Live />
-</main>
+  </main>
 </template>
   
 <script setup lang=ts>
@@ -36,22 +34,22 @@ import Explorer from 'src/Library/Explorer.vue';
 import TOCVue from 'src/TOC/TOC.vue';
 import SettingsPage from 'src/settings/SettingsPage.vue';
 import { useEventListener, useMediaQuery } from '@vueuse/core';
-import {tab, toggleSelect} from "./Tab"
+import { tab, toggleSelect } from "./Tab"
 /* if device has no touch screen */
 const onDesk = useMediaQuery("(any-pointer: fine) and (min-width: 1024px)");
 
 const hotkeys = {
-  f:"browse",
-  b:"bookmarks",
-  t:"toc"
+  f: "browse",
+  b: "bookmarks",
+  t: "toc"
 }
 useEventListener("keyup", e => {
   console.log(e.key);
-  
-  switch(e.key)  {
+
+  switch (e.key) {
     case "Escape":
       tab.value = undefined
-    break;
+      break;
     default:
       if (hotkeys[e.key as keyof typeof hotkeys]) {
         toggleSelect(hotkeys[e.key as keyof typeof hotkeys])
@@ -77,11 +75,11 @@ useEventListener("keyup", e => {
 .q-page-container
   width: 100%
 
-  /* TODO: Class for d/vh usage */
-
 main
   grid-area: book
   overflow-y: auto
+  width: 100%
+  max-width: 100vw
 .q-tabs
   position: sticky
   grid-area: nav
