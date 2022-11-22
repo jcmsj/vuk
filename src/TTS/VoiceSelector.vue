@@ -3,12 +3,12 @@
         Narrator:
     </label>
     <select
-        ref="select"
         name="voice-pack"
         @change="voice.set($event.target.value)"
+        :value="prefVoice"
     >
         <option
-            v-for="({name}, i) in voices"
+            v-for="({name}, i) in voice.voices"
             :key="i"
             :value="name"
         >
@@ -16,23 +16,8 @@
         </option>
     </select>
 </template>
-<script setup>
-import {ref, onMounted} from "vue"
-import voice from "./voice";
-const voices = ref([])
-
-// Can't instanstly set voices, must use this.
-async function loadvoices() {
-    if(speechSynthesis.getVoices().length == 0) {
-        setTimeout(loadvoices, 1000)
-    }
-
-    voices.value = speechSynthesis.getVoices()
-}
-
-onMounted(() => {
-    loadvoices()
-})
+<script setup lang="ts">
+import voice, {prefVoice} from "./voice";
 
 </script>
 <style lang='sass' scoped>

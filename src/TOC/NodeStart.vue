@@ -19,7 +19,7 @@
         <router-link 
             v-else 
             :to="'/#' + item.id"
-            @click.prevent="anchorClicked"
+            @click="anchorClicked"
         >
             {{item.title}}
         </router-link>

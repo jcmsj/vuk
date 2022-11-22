@@ -2,13 +2,7 @@ import simplifyHTMLTree from "./simplifyHTMLTree";
 import { render, reassign, repaint, LoadPosition } from "../Book";
 import { range } from "./range"
 import { CachedEpub } from "@jcsj/epub";
-class BoundaryError extends RangeError {
-    name = "BoundaryError"
-    constructor(where: string) {
-        super(`Unable to load book element beyond the ${where}.`)
-    }
-}
-
+import { BoundaryError } from "./BoundaryError";
 export interface LoadedChapter {
     id: string,
     html: string
