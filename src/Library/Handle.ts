@@ -1,20 +1,8 @@
 import { Epub } from "@jcsj/epub";
 import { reactive, watch } from "vue";
 import { db } from "../db/dexie";
+import { RxDir, RxSorter } from "./RxDir";
 import { aDirHandle, isSameEntry } from "./util";
-
-export interface RxDir<H = FileSystemDirectoryHandle> {
-    value?:H;
-    root?: H;
-    levels:H[];
-    setRoot: (h: H) => void;
-    isInRoot: () => Promise<boolean>;
-    isRoot: (h?:H) => Promise<boolean>;
-    goto: (h?: H) => void;
-    setDir: (h?: H) => void;
-    moveUp: () => void;
-    inRoot:boolean;
-}
 
 export const settings_id = 0;
 export const Dir = reactive<RxDir>({
@@ -68,11 +56,6 @@ export const Dir = reactive<RxDir>({
 watch(() => Dir.value, async(d) => {
     Dir.inRoot = await Dir.isRoot(d)
 })
-export interface RxSorter<D = FileSystemDirectoryHandle> {
-    dirs: Record<string, D>,
-    books: Record<string, FileSystemFileHandle>,
-    sort: (dir: D) => Promise<void>;
-}
 
 export enum Status {
     unset,
@@ -95,6 +78,7 @@ export async function getLastWorkingDir(): Promise<{
 
     return { status: Status.denied };
 }
+
 export const Sorter = reactive<RxSorter>({
     books: {},
     dirs: {},

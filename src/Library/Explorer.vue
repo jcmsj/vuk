@@ -1,66 +1,28 @@
 <template>
-    <q-btn-group spread>
-        <q-btn color="primary" @click="chooser?.click()" title="Open an EPUB" icon-right="book">
-            Open
-        </q-btn>
+    <BaseActions>
         <q-btn v-if="$q.platform.is.desktop" @click="setLibrary" title="Set library" class="btn" icon-right="folder">
             Set&nbsp;
         </q-btn>
         <q-btn @click="restoreLibrary" title="Restore library" class="btn" icon="restore" icon-right="folder"
             v-if="$q.platform.is.desktop" />
-    </q-btn-group>
-    <input type=file hidden ref=chooser @change=selectFile :accept="Epub.MIME">
-    <q-list>
-        <q-item clickable v-if="Dir.root && !Dir.inRoot" @click="Dir.goto(Dir.root)">
-            <q-item-section avatar>
-                <q-icon color="primary" name="folder" />
-            </q-item-section>
-            <q-item-section>
-                /
-            </q-item-section>
-        </q-item>
-        <q-item v-if="Dir.levels.length" clickable @click="Dir.moveUp()">
-            <q-item-section avatar>
-                <q-icon color="primary" name="folder" />
-            </q-item-section>
-            <q-item-section>
-                ../
-            </q-item-section>
-        </q-item>
-    </q-list>
-    <q-item v-for="(handle, dirname) of Sorter.dirs" clickable :key="dirname" @click="Dir.goto(handle)">
-        <q-item-section avatar>
-            <q-icon color="primary" name="folder" />
-        </q-item-section>
-        <q-item-section>
-            {{ dirname }}
-        </q-item-section>
-    </q-item>
-    <q-item v-for="(handle, name) of Sorter.books" clickable :key="name" @click="loadBookFromHandle(handle)">
-        <q-item-section avatar>
-            <q-icon color="primary" name="book" />
-        </q-item-section>
-        <q-item-section>
-            {{ name }}
-        </q-item-section>
-    </q-item>
+    </BaseActions>
+    <VListing 
+        :library="Dir" 
+        :sorter="Sorter" 
+        @open-book="loadBookFromHandle"
+    >
+    </VListing>
 </template>
 <script setup lang=ts>
-import { onMounted, ref } from "vue"
+import { onMounted } from "vue"
 import { onKeyUp } from "@vueuse/core"
 import { directoryOpen } from "browser-fs-access"
-import { loadBookFromFile, loadBookFromHandle } from "./fileReader"
+import { loadBookFromHandle } from "./fileReader"
 import { db } from "../db/dexie"
 import { Dir, getLastWorkingDir, settings_id, Sorter, Status } from "./Handle"
-import { QBtnGroup, QBtn, QList, QItem, QItemSection, QIcon } from "quasar"
 import { aDirHandle } from "./util"
-import { Epub } from "@jcsj/epub"
-
-const chooser = ref<HTMLInputElement>();
-
-async function selectFile(e: any) {
-    loadBookFromFile(chooser.value!.files![settings_id])
-}
+import BaseActions from "./BaseActions.vue"
+import VListing from "./Listing.vue"
 
 async function setLibrary() {
     let handle;
