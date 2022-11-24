@@ -3,15 +3,15 @@ import { reactive, watch } from "vue";
 import { db } from "../db/dexie";
 import { aDirHandle, isSameEntry } from "./util";
 
-export interface RxDir<D = FileSystemDirectoryHandle> {
-    value?:D;
-    root?: D;
-    levels:D[];
-    setRoot: (h: D) => void;
+export interface RxDir<H = FileSystemDirectoryHandle> {
+    value?:H;
+    root?: H;
+    levels:H[];
+    setRoot: (h: H) => void;
     isInRoot: () => Promise<boolean>;
-    isRoot: (d?:D) => Promise<boolean>;
-    goto: (h?: D) => void;
-    setDir: (h?: D) => void;
+    isRoot: (h?:H) => Promise<boolean>;
+    goto: (h?: H) => void;
+    setDir: (h?: H) => void;
     moveUp: () => void;
     inRoot:boolean;
 }
@@ -130,6 +130,7 @@ export async function verifyPermission(handle?: FileSystemDirectoryHandle, mode:
         handle,
         name: "push"
     };
+    
     // Check if permission was already granted.
     if ((await handle.queryPermission(options)) === g) {
         return true;

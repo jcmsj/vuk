@@ -3,21 +3,13 @@
  * @returns String
  */
  export function getSelectionText() {
-    let text = "";
-    if (window.getSelection)
-        text = window.getSelection().toString();
-    else if (document.selection && document.selection.type != "Control")
-        text = document.selection.createRange().text;
-
-    return text;
+    return window.getSelection()?.toString() || "";
 }
 
 /**
  * https://stackoverflow.com/questions/123999/how-can-i-tell-if-a-dom-element-is-visible-in-the-current-viewport
- * @param {HTMLElement} el 
- * @returns boolean
  */
-export function isElementInViewport (el) {
+export function isElementInViewport (el:HTMLElement) {
 
     const rect = el.getBoundingClientRect();
 
@@ -29,9 +21,6 @@ export function isElementInViewport (el) {
     );
 }
 
-/**
- * @param {Element} lem 
- */
-export function refocus(lem) {
-    lem && lem.scrollIntoView({ block: "start", behavior: "smooth" })
+export function refocus(el:Element) {
+    el && el.scrollIntoView({ block: "start", behavior: "smooth" })
 }
