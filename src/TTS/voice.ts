@@ -20,6 +20,10 @@ export const voice = reactive({
         return speechSynthesis.getVoices()
     },
     onMount() {
+        if (!window.speechSynthesis) {
+            console.log("Speech Synthesis is unsupported!");
+            return;
+        }
         if (!this.voices.length) {
             this.load()
             if (attempts && this.voices.length == 0) {
