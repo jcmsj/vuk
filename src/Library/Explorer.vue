@@ -1,10 +1,7 @@
 <template>
     <BaseActions>
-        <q-btn v-if="$q.platform.is.desktop" @click="setLibrary" title="Set library" class="btn" icon-right="folder">
-            Set&nbsp;
-        </q-btn>
-        <q-btn @click="restoreLibrary" title="Restore library" class="btn" icon="restore" icon-right="folder"
-            v-if="$q.platform.is.desktop" />
+        <LibraryBtn  v-if="$q.platform.is.desktop" @click="setLibrary" />
+        <RestoreBtn v-if="$q.platform.is.desktop" @click="restoreLibrary" />
     </BaseActions>
     <VListing 
         :library="Dir" 
@@ -23,6 +20,8 @@ import { Dir, getLastWorkingDir, settings_id, Sorter, Status } from "./Handle"
 import { aDirHandle } from "./util"
 import BaseActions from "./BaseActions.vue"
 import VListing from "./Listing.vue"
+import LibraryBtn from "./LibraryBtn.vue"
+import RestoreBtn from "./RestoreBtn.vue"
 
 async function setLibrary() {
     let handle;
