@@ -11,14 +11,16 @@
     "pwa-build": "quasar build -m pwa",
     "pwa-surge": "pnpm pwa-build && cd dist/pwa/ && surge --domain https://vuk-pwa.surge.sh/",
     "pwa-serve": "pnpm pwa-build && cd dist/pwa/ && quasar serve",
-    "elec":"quasar dev -m electron '--' --no-sandbox --disable-setuid-sandbox"
+    "elec": "quasar dev -m electron '--' --no-sandbox --disable-setuid-sandbox",
+    "elec-debug":"quasar build -m electron --debug"
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "@jcsj/arraymap": "^0.0.3",
     "@jcsj/epub": "link:D:/code/epub",
-    "@quasar/extras": "^1.15.5",
-    "@vueuse/core": "^9.5.0",
+    "@jcsj/sax": "^1.2.7",
+    "@quasar/extras": "^1.15.6",
+    "@vueuse/core": "^9.6.0",
     "browser-fs-access": "^0.31.1",
     "dexie": "^3.2.2",
     "generate-selector": "link:E:/Code/Web Dev/SMALL/generate-selector",
@@ -33,14 +35,15 @@
     "@types/wicg-file-system-access": "^2020.9.5",
     "autoprefixer": "^10.4.13",
     "electron": "^21.3.1",
+    "electron-packager": "15.5.2",
     "typescript": "^4.9.3",
-    "workbox-build": "^6.5.0",
-    "workbox-cacheable-response": "^6.5.0",
-    "workbox-core": "^6.5.0",
-    "workbox-expiration": "^6.5.0",
-    "workbox-precaching": "^6.5.0",
-    "workbox-routing": "^6.5.0",
-    "workbox-strategies": "^6.5.0"
+    "workbox-build": "^6.5.4",
+    "workbox-cacheable-response": "^6.5.4",
+    "workbox-core": "^6.5.4",
+    "workbox-expiration": "^6.5.4",
+    "workbox-precaching": "^6.5.4",
+    "workbox-routing": "^6.5.4",
+    "workbox-strategies": "^6.5.4"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",
