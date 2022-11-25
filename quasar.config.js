@@ -111,7 +111,7 @@ module.exports = configure(function (/* ctx */) {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#sourcefiles
     sourceFiles: {
     //   rootComponent: 'src/App.vue',
-    //   router: 'src/router/index',
+    //router: 'src/router/index',
     //   store: 'src/store/index',
     //   registerServiceWorker: 'src-pwa/register-service-worker',
     //   serviceWorker: 'src-pwa/custom-service-worker',
@@ -172,11 +172,8 @@ module.exports = configure(function (/* ctx */) {
     electron: {
       // extendElectronMainConf (esbuildConf)
       // extendElectronPreloadConf (esbuildConf)
-
       inspectPort: 5858,
-
       bundler: 'packager', // 'packager' or 'builder'
-
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
 

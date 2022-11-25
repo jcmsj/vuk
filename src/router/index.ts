@@ -4,6 +4,7 @@ import {
   createRouter,
   createWebHashHistory,
   createWebHistory,
+  RouterOptions,
 } from 'vue-router';
 
 import routes from './routes';
@@ -21,16 +22,21 @@ const createHistory = process.env.SERVER
   ? createMemoryHistory
   : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
 
-export const Router = createRouter({
-  routes,
+
+export const baseOptions: RouterOptions = {
+  routes:[],
   scrollBehavior(to, from, savedPosition) {
-      return savedPosition ?? savedPositions[to.fullPath] ?? {top:0}
+    return savedPosition ?? savedPositions[to.fullPath] ?? { top: 0 }
   },
   // Leave this as is and make changes in quasar.conf.js instead!
   // quasar.conf.js -> build -> vueRouterMode
   // quasar.conf.js -> build -> publicPath
   history: createHistory(process.env.VUE_ROUTER_BASE),
+}
 
+export const Router = createRouter({
+  ...baseOptions,
+  routes,
 });
 
-  export default Router;
+export default Router;

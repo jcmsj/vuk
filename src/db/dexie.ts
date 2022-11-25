@@ -10,6 +10,7 @@ export interface Book {
 
 export interface Settings {
     lastDir?:FileSystemDirectoryHandle,
+    electronDir?:string,
     speechRate:number,
     id:number
 }

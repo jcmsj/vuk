@@ -5,6 +5,15 @@ import { RxDir, RxSorter } from "./RxDir";
 import { aDirHandle, isSameEntry } from "./util";
 
 export const settings_id = 0;
+
+export function prepLibrary<T>() {
+    return {
+        value:undefined,
+        root:undefined,
+        levels:[],
+        inRoot:false,
+    } as Partial<RxDir<T>>
+}
 export const Dir = reactive<RxDir>({
     value: undefined,
     root: undefined,

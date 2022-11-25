@@ -1,5 +1,5 @@
+import { Platform } from "quasar";
 import { RouteRecordRaw } from "vue-router";
-
 const routes: RouteRecordRaw[] = [
   {
     path:"/",
@@ -7,7 +7,12 @@ const routes: RouteRecordRaw[] = [
     children:[
       {
         path:"browse",
-        component: () => import("src/Library/Explorer.vue")
+        component: () => {
+          if (Platform.is.electron) {
+            return import("src/Library/ElectronExplorer.vue")
+          }
+          return import("src/Library/Explorer.vue")
+        }
       },
       {
         path:"config",
