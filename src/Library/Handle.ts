@@ -14,7 +14,7 @@ export function prepLibrary<T>() {
         inRoot:false,
     } as Partial<RxDir<T>>
 }
-export const Dir = reactive<RxDir>({
+export const library = reactive<RxDir>({
     value: undefined,
     root: undefined,
     levels: [],
@@ -53,7 +53,7 @@ export const Dir = reactive<RxDir>({
         }
 
         this.value = h;
-        await Sorter.sort(h!)
+        await sorter.sort(h!)
     },
 
     async moveUp() {
@@ -62,8 +62,8 @@ export const Dir = reactive<RxDir>({
     }
 })
 
-watch(() => Dir.value, async(d) => {
-    Dir.inRoot = await Dir.isRoot(d)
+watch(() => library.value, async(d) => {
+    library.inRoot = await library.isRoot(d)
 })
 
 export enum Status {
@@ -88,7 +88,7 @@ export async function getLastWorkingDir(): Promise<{
     return { status: Status.denied };
 }
 
-export const Sorter = reactive<RxSorter>({
+export const sorter = reactive<RxSorter>({
     books: {},
     dirs: {},
     async sort(dir) {

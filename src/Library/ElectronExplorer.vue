@@ -49,9 +49,11 @@ async function setLibrary() {
     libraryRoot && library.setRoot(libraryRoot)
 }
 onBeforeMount(async () => {
-    const settings = await db.settings.get(settings_id);
-    if (settings && settings.electronDir) {
-        library.setRoot(settings.electronDir)
+    if (!library.root) {
+        const settings = await db.settings.get(settings_id);
+        if (settings && settings.electronDir) {
+            library.setRoot(settings.electronDir)
+        }
     }
 })
 </script>

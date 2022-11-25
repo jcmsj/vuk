@@ -4,8 +4,8 @@
         <RestoreBtn v-if="$q.platform.is.desktop" @click="restoreLibrary" />
     </BaseActions>
     <VListing 
-        :library="Dir" 
-        :sorter="Sorter" 
+        :library="library" 
+        :sorter="sorter" 
         @open-book="loadBookFromHandle"
     >
     </VListing>
@@ -16,7 +16,7 @@ import { onKeyUp } from "@vueuse/core"
 import { directoryOpen } from "browser-fs-access"
 import { loadBookFromHandle } from "./fileReader"
 import { db } from "../db/dexie"
-import { Dir, getLastWorkingDir, settings_id, Sorter, Status } from "./Handle"
+import { library, getLastWorkingDir, settings_id, sorter, Status } from "./Handle"
 import { aDirHandle } from "./util"
 import BaseActions from "./BaseActions.vue"
 import VListing from "./Listing.vue"
@@ -43,11 +43,17 @@ async function setLibrary() {
     restoreLibrary()
 }
 
+async function restoreLibIfUnset() {
+    if (library.root)
+        return;
+
+    return restoreLibrary()
+}
 async function restoreLibrary() {
     const res = await getLastWorkingDir()
     if (res.handle) {
-        Dir.setRoot(res.handle)
-        Dir.setDir(Dir.root)
+        library.setRoot(res.handle)
+        library.setDir(library.root)
         return;
     }
 
@@ -65,12 +71,12 @@ async function restoreLibrary() {
 
 onKeyUp(
     "f",
-    restoreLibrary,
+    restoreLibIfUnset,
     { target: document }
 )
 
 onMounted(() => {
-    restoreLibrary()
+    restoreLibIfUnset()
 })
 </script>
 <style lang='sass' scoped>
