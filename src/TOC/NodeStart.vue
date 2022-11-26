@@ -16,10 +16,10 @@
             :item="item"
             :items="item.navPoint"
         />
-        <router-link 
+        <router-link
             v-else 
             :to="'/#' + item.id"
-            @click="anchorClicked"
+            @click="anchorClicked($event, item.id)"
         >
             {{item.title}}
         </router-link>

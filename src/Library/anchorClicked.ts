@@ -1,16 +1,16 @@
-import {loadMethod, LoadMethod} from "./Load"
-import {EnhancedEpub} from "../lib/EnhancedEpub"
+import { EnhancedEpub } from "../lib/EnhancedEpub"
+import { LoadMethod, loadMethod } from "./Load";
 
-export async function anchorClicked(e:MouseEvent) {
-  if (loadMethod.value == LoadMethod.all) {
-    return;
+export async function anchorClicked(e: MouseEvent, id?:string) {
+  if (e.target instanceof HTMLAnchorElement) {
+    id = id ?? e.target.hash.split("#")[1];
   }
-    let l= e.target as HTMLElement||HTMLAnchorElement;
-    if (!(l instanceof HTMLAnchorElement))
-      return;
-    try {
-      EnhancedEpub.instance?.between({id:l.href.split("#",2)[1]}); 
-    } catch (e) {
-      console.log(e);
+
+  if (id) {
+    if (loadMethod.value == LoadMethod.all) {
+      document.getElementById(id)?.scrollIntoView()
+    } else {
+      EnhancedEpub.instance?.between({id})
     }
+  }
 }
