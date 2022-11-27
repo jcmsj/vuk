@@ -1,5 +1,6 @@
 <template>
     <article ref="mainElem">
+        <EPUBStyle />
         <SpeechSynthesis />
         <div class=naver ref="prev"></div>
         <div @mouseup="identifySpeechTarget" id="__live" ref="view" @click="anchorClicked">
@@ -26,6 +27,7 @@ import ContextMenu from "./ContextMenu.vue";
 import { savedPositions } from 'src/router/storeScrollBehavior';
 import { LoadMethod, loadMethod } from "src/Library/Load";
 import { EnhancedEpub } from "src/lib/EnhancedEpub";
+import EPUBStyle from "./EPUBStyle.vue";
 
 onMounted(() => {
     observe(false)
