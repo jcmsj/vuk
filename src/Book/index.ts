@@ -33,16 +33,16 @@ export function clearChilds(lem:HTMLElement) {
         lem.firstElementChild.remove();
 }
 
+/**
+ * Disables Chapter loaders
+ */
 export async function unobserve() {
     if (!(next.value && prev.value)) {
         throw TypeError("One or more observer elements ('next' or 'prev') are absent");
     }
 
-    //Temporarily disable navigation when loading.
-    if (loadMethod.value == LoadMethod.lazy) {
-        addObserver.unobserve(next.value)
-        dropObserver.unobserve(prev.value)
-    }
+    addObserver.unobserve(next.value)
+    dropObserver.unobserve(prev.value)
 }
 
 export async function observe(fresh=true) {

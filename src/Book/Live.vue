@@ -14,25 +14,35 @@
 
 <script setup>
 //ISSUE: TS not working
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 import { mainElem } from "../lib/useMainElem"
 import SpeechSynthesis from "../TTS/SpeechSynthesis.vue"
 import { anchorClicked } from "../Library/anchorClicked"
 import { identifySpeechTarget } from "../TTS"
 import { view, next, prev, pages } from "./Pages"
-import { observe } from "./index"
+import { observe, unobserve } from "./index"
 import ContextMenu from "./ContextMenu.vue";
 import { savedPositions } from 'src/router/storeScrollBehavior';
+import { LoadMethod, loadMethod } from "src/Library/Load";
+import { EnhancedEpub } from "src/lib/EnhancedEpub";
 
 onMounted(() => {
     observe(false)
 })
 
+watch(loadMethod, async(preferred) => {
+    console.log(preferred);
+    if (preferred == LoadMethod.all) {
+        await unobserve()
+        EnhancedEpub.instance?.loadAll()
+    } else {
+        await observe(false)
+    }
+})
 onBeforeRouteLeave((to, from) => {
     console.log(from.matched);
     savedPositions[from.fullPath] = { left: window.scrollX, top: window.scrollY }
-    //unobserve()
 })
 
 </script>
