@@ -58,8 +58,8 @@ div.chapter
     img, svg:has(image) /* Uses deep cause of v-html */
         /* Sizing */
         object-fit: contain
-        max-width: 80%
-        max-height: 80vh
+        max-width: 80% !important
+        max-height: 80vh !important
 
         /* Aligns center */
         margin-inline: auto
