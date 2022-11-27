@@ -1,7 +1,7 @@
 <template>
     <BaseActions>
-        <LibraryBtn  v-if="$q.platform.is.desktop" @click="setLibrary" />
-        <RestoreBtn v-if="$q.platform.is.desktop" @click="restoreLibrary" />
+        <LibraryBtn  v-if="$q.platform.is.desktop && !$q.platform.is.firefox" @click="setLibrary" />
+        <RestoreBtn v-if="$q.platform.is.desktop && !$q.platform.is.firefox" @click="restoreLibrary" />
     </BaseActions>
     <VListing 
         :library="library" 
