@@ -49,7 +49,7 @@ function createWindow() {
   ipcMain.handle("open", vuk.open)
 
   ipcMain.handle("list", vuk.list)
-
+  ipcMain.handle("launch-file", vuk.getLaunchedFile)
   mainWindow.on('closed', () => {
     mainWindow = undefined;
   });

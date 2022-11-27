@@ -36,5 +36,8 @@ contextBridge.exposeInMainWorld('vuk', {
   },
   list(name: string) {
     return ipcRenderer.invoke("list", name)
+  },
+  getLaunchedFile() {
+    return ipcRenderer.invoke("launch-file")
   }
 })

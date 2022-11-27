@@ -194,6 +194,10 @@ module.exports = configure(function (/* ctx */) {
           ext:"epub",
           icon:"./public/icons/favicon.ico",
           role:"viewer",
+        },
+        nsis: {
+          //othersettings,
+          "perMachine": true
         }
       }
     },

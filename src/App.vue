@@ -3,19 +3,28 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { useQuasar, Platform } from 'quasar';
 import { onBeforeMount, watch } from 'vue';
 import { RouterView } from 'vue-router';
-import { loadBookFromLauncher } from './Library/fileReader';
-import {dark} from "./settings/Theme"
+import { loadBookFromFile, loadBookFromLauncher } from './Library/fileReader';
+import { dark } from "./settings/Theme"
 loadBookFromLauncher()
 const q = useQuasar()
+
+//Do this as early as possible
+if (Platform.is.electron) {
+  window.vuk.getLaunchedFile().then(maybeBuffer => {
+    if (maybeBuffer) {
+      loadBookFromFile(new Blob([maybeBuffer]) as File)
+    }
+  });
+}
 
 onBeforeMount(() => {
   q.dark.set(dark.value)
 })
 
 watch(dark, t => {
-    q.dark.set(t)
+  q.dark.set(t)
 })
 </script>

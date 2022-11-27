@@ -33,3 +33,8 @@ export async function dir(e: InvokeEV, name:string) {
     
     return canceled ? undefined : filePaths[0]/* .replaceAll("\\","/") */
 }
+
+export async function getLaunchedFile(e:InvokeEV) {
+    const maybePath = process.argv[1]
+    return maybePath?.endsWith(".epub") ? open(e, maybePath):undefined
+}
