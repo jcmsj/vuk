@@ -3,7 +3,6 @@ lockfileVersion: 5.4
 specifiers:
   '@jcsj/arraymap': ^0.0.3
   '@jcsj/epub': link:D:/code/epub
-  '@jcsj/sax': ^1.2.7
   '@quasar/app-vite': ^1.1.3
   '@quasar/extras': ^1.15.6
   '@types/node': ^18.11.9
@@ -32,7 +31,6 @@ specifiers:
 dependencies:
   '@jcsj/arraymap': 0.0.3
   '@jcsj/epub': link:../epub
-  '@jcsj/sax': 1.2.7
   '@quasar/extras': 1.15.6
   '@vueuse/core': 9.6.0_vue@3.2.45
   browser-fs-access: 0.31.1
@@ -1288,10 +1286,6 @@ packages:
 
   /@jcsj/arraymap/0.0.3:
     resolution: {integrity: sha512-vy8WChoDQqDnqwAjxYR6bZiCmNS6T75uFF0yP6hGmntcyhe6jQaXjENEnnXGhztVEkrOrI6WwmDU5wIazPLqrQ==}
-    dev: false
-
-  /@jcsj/sax/1.2.7:
-    resolution: {integrity: sha512-gHF5jlPernovbRTU3s3k0kwR7dm6qWciN3DCupnipsTVOrqQhp7fBQSwLYghYceqRrpHGvzrtgkUfbV0JonlYw==}
     dev: false
 
   /@jridgewell/gen-mapping/0.1.1:
