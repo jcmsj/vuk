@@ -18,7 +18,7 @@ export function follow() {
 export const transformer = new Transformer(className.para);
 class Narrator {
     bus: UseEventBusReturn<string, string>;
-    target?:HTMLElement;
+    target?: HTMLElement;
     constructor() {
         this.bus = useEventBus("narrator")
         const eventMap: EventMap = {
@@ -48,30 +48,28 @@ class Narrator {
         if (loadMethod.value == LoadMethod.lazy) {
             try {
                 await EnhancedEpub.instance?.next();
-                this.next(true)
-            } catch (e) { };
-
-            return;
+            } catch (e) {
+                isReading.value = false;
+                return;
+            }
+            this.next(true) //Never called when the above throws
         }
-
-        isReading.value = false;
     }
 
-    private async next(exhausted = false) {
+    private async next(exhausted=false) {
         //IMPORTANT: The span tags made by Transformer should never be included.
         transformer.revert()
         const n = walker.nextNode();
-
-        if (n == null || exhausted) {
-
+        if (n) {
+            this.beforeSpeak(n);
+        } else if (!exhausted){
             this.emit(EV.exhausted)
-
-            return;
         }
-
-        this.beforeSpeak(n);
     }
 
+    /**
+     * `txt` or the node's text
+     */
     private beforeSpeak(n: Node, txt?: string) {
         txt = txt ?? n.textContent ?? "";
 
@@ -79,7 +77,6 @@ class Narrator {
             this.next();
             return;
         }
-
         const charIndex = transformer.transform(n, transformer.elem?.index || 0);
         if (charIndex) {
             txt = txt.slice(charIndex);
@@ -87,8 +84,8 @@ class Narrator {
         readAloud(txt)
         follow()
     }
-    start() {
-        this.beforeSpeak(walker.currentNode)
+    start(at?: string) {
+        this.beforeSpeak(walker.currentNode, at)
     }
 
     stop() {

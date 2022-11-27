@@ -77,12 +77,10 @@ export class EnhancedEpub extends CachedEpub {
     }
 
     async next() {
-        try {
-            if (this.index! + 2 < this.flow.size!) {
-                await this.render(LoadPosition.after)
-            }
-        } catch(e) {
-            console.log(`No more chapters after index ${this.index}`, e);
+        if (this.index! + 2 < this.flow.size!) {
+            await this.render(LoadPosition.after)
+        } else {
+            throw Error(`No more chapters after index ${this.index}`)
         }
     }
 
@@ -107,7 +105,7 @@ export class EnhancedEpub extends CachedEpub {
             if (this.index > 0) {
                 await this.render(LoadPosition.before)
             }
-        } catch(e) {
+        } catch (e) {
             console.log(`No chapters before index ${this.index}`, e);
         }
     }
