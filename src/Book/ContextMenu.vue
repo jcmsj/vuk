@@ -15,22 +15,21 @@
 </template>
 <script setup lang=ts>
 import { BookmarkController } from 'src/Bookmarks';
-import { stopReading, startReading } from 'src/TTS';
 import { narrator } from 'src/TTS/Narrator';
 
 interface MenuItem {
-    label:string,
-    icon:string,
-    cb:()=>void
+    label: string,
+    icon: string,
+    cb: () => void
 }
 
-const items:MenuItem[] = [
+const items: MenuItem[] = [
     {
         label: "Read aloud",
         icon: "campaign",
         cb() {
-            stopReading()
-            startReading()
+            narrator.stop()
+            narrator.start()
         }
     },
     {
