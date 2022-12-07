@@ -26,7 +26,7 @@ export class EnhancedEpub extends CachedEpub {
         if (id == undefined && index == undefined) {
             throw new TypeError("Must provide either 'id' or 'index'.");
         } else if (index == undefined && id != undefined) {
-            id = id.replace("\\", ""); //Patch id may have "\"
+            id = id.replace("\\", ""); //Patch: id may have "\"
             index = this.flow.pairOf(id)[0] ?? -1;
         } else if (id == undefined && index != undefined) {
             [id] = this.flow.at(index);
