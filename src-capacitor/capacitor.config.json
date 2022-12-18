@@ -1,7 +1,0 @@
-{
-  "appId": "com.jcsj.vuk",
-  "appName": "Vuk",
-  "bundledWebRuntime": false,
-  "npmClient": "yarn",
-  "webDir": "www"
-}
