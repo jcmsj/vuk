@@ -2,7 +2,7 @@ import { isReading } from "./isReading"
 import { readAloud } from "./readAloud";
 import { BookmarkController } from "../Bookmarks";
 import { EV } from "./EV";
-import { EnhancedEpub } from "../lib/EnhancedEpub";
+import { instance } from "../lib/EnhancedEpub";
 import { LoadMethod, loadMethod } from "../Library/Load";
 import { walker, Transformer } from "v-walker";
 import { scrollIfUnseen } from "./scrollIfUnseen";
@@ -47,7 +47,7 @@ class Narrator {
     private async onExhausted() {
         if (loadMethod.value == LoadMethod.lazy) {
             try {
-                await EnhancedEpub.instance?.next();
+                await instance?.next();
             } catch (e) {
                 isReading.value = false;
                 return;

@@ -6,11 +6,11 @@
         </q-btn>
         <slot></slot>
     </q-btn-group>
-    <input type=file hidden ref=chooser @change=selectFile :accept="Epub.MIME">
+    <input type=file hidden ref=chooser @change=selectFile :accept="INFO.MIME">
 </template>
 <script setup lang=ts>
 import { ref } from 'vue';
-import { Epub } from '@jcsj/epub';
+import { INFO } from '@jcsj/epub/lib/Reader';
 import { loadBookFromFile } from './fileReader';
 const chooser = ref<HTMLInputElement>();
 

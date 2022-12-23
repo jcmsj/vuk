@@ -1,4 +1,4 @@
-import { EnhancedEpub } from "../lib/EnhancedEpub"
+import { instance } from "../lib/EnhancedEpub"
 import { LoadMethod, loadMethod } from "./Load";
 
 export async function anchorClicked(e: MouseEvent, id?:string) {
@@ -10,7 +10,7 @@ export async function anchorClicked(e: MouseEvent, id?:string) {
     if (loadMethod.value == LoadMethod.all) {
       document.getElementById(id)?.scrollIntoView()
     } else {
-      EnhancedEpub.instance?.between({id})
+      instance.between({id})
     }
   }
 }

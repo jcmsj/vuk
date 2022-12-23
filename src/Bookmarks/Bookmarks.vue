@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { Bookmark } from "./Bookmark";
 import { BookmarkController } from './BookmarkController';
-import { EnhancedEpub } from "../lib/EnhancedEpub";
+import { instance } from "../lib/EnhancedEpub";
 import { refocus } from "../lib/helpers"
 import { book } from "./useBook";
 async function focus(selector: string, bm: Bookmark) {
@@ -27,7 +27,7 @@ async function focus(selector: string, bm: Bookmark) {
     if (maybeElem) {
         refocus(maybeElem)
     } else {
-        const success = await EnhancedEpub.instance!.between({ id: BookmarkController.toManifestID(bm) })
+        const success = await instance!.between({ id: BookmarkController.toManifestID(bm) })
 
         console.log(success ? "Bookmark clicked:" : "Invalid", selector);
         BookmarkController.reapply()

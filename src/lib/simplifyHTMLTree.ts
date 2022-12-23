@@ -1,4 +1,4 @@
-import { ChapterTransformer } from "@jcsj/epub";
+import { ChapterTransformer } from "@jcsj/epub/lib/sanitize";
 
 /**
  * Wraps the fragment with a div to get the innerHTML

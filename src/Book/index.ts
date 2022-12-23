@@ -1,5 +1,5 @@
 
-import {EnhancedEpub, LoadedChapter} from "../lib/EnhancedEpub";
+import {instance, LoadedChapter} from "../lib/EnhancedEpub";
 import {refocus} from "../lib/helpers"
 import BookmarkController from "../Bookmarks/BookmarkController"
 import { LoadMethod, loadMethod } from "../Library/Load";
@@ -17,14 +17,14 @@ const options = {
 const addObserver = new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("add")
-        EnhancedEpub.instance?.next()
+        instance?.next()
     }
 }, options)
 
 const dropObserver = new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("rem", "hasleft")
-        EnhancedEpub.instance?.previous()
+        instance?.previous()
     }
 }, options)
 

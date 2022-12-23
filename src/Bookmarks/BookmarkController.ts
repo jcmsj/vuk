@@ -3,7 +3,6 @@ import mainElem, { getReadingProgress } from "../lib/useMainElem";
 import { Bookmark } from "./Bookmark";
 import { Book, db } from "../db/dexie";
 import { book } from "./useBook";
-import { EnhancedEpub } from "src/lib/EnhancedEpub";
 import { toRaw } from "vue";
 interface Latest {
     bm: Bookmark,
@@ -113,8 +112,8 @@ export class BookmarkController {
 
     static async load(title: string) {
         book.title = title;
-        let _book: Book | undefined;
-        if (_book = await db.books.get({ title })) {
+        let _book: Book | undefined = await db.books.get({ title }) || undefined;
+        if (_book) {
             //Restore
             book.id = _book.id;
             book.bookmarks = _book.bookmarks;

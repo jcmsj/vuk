@@ -26,7 +26,7 @@ import { observe, unobserve } from "./index"
 import ContextMenu from "./ContextMenu.vue";
 import { savedPositions } from 'src/router/storeScrollBehavior';
 import { LoadMethod, loadMethod } from "src/Library/Load";
-import { EnhancedEpub } from "src/lib/EnhancedEpub";
+import { instance } from "src/lib/EnhancedEpub";
 import EPUBStyle from "./EPUBStyle.vue";
 
 onMounted(() => {
@@ -37,7 +37,7 @@ watch(loadMethod, async(preferred) => {
     console.log(preferred);
     if (preferred == LoadMethod.all) {
         await unobserve()
-        EnhancedEpub.instance?.loadAll()
+        instance?.loadAll()
     } else {
         await observe(false)
     }

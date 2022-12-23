@@ -5,7 +5,7 @@
 </template>
 <script setup lang=ts>
 import { book } from 'src/Bookmarks/useBook';
-import { EnhancedEpub } from 'src/lib/EnhancedEpub';
+import { instance } from 'src/lib/EnhancedEpub';
 import { watch } from 'vue';
 import { rawStyle, epubStyle, prefix } from './styles';
 
@@ -39,11 +39,11 @@ watch(rawStyle, style => {
 watch(() => book.title, async (it) => {
     if (!it)
         return;
-    const styles = EnhancedEpub.instance?.matchAll(/style|css/)
+    const styles = instance?.matchAll(/style|css/)
     console.log(styles);
     
     if (styles?.length) {
-        rawStyle.value = await EnhancedEpub.instance?.getContentRaw(styles[0].id);
+        rawStyle.value = await instance.getContentRaw(styles[0].id);
     }
 })
 </script>

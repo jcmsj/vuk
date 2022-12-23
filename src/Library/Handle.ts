@@ -1,4 +1,4 @@
-import { Epub } from "@jcsj/epub";
+import { INFO } from "@jcsj/epub/lib/Reader";
 import { reactive, watch } from "vue";
 import { db } from "../db/dexie";
 import { RxDir, RxSorter } from "./RxDir";
@@ -98,7 +98,7 @@ export const sorter = reactive<RxSorter>({
             for await (const [key, h] of dir.entries()) {
                 if (h.kind === "file") {
                     const file = await h.getFile()
-                    if (file.type === Epub.MIME)
+                    if (file.type === INFO.MIME)
                         books[key] = h
                 } else {
                     dirs[key] = h
