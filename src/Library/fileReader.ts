@@ -38,18 +38,16 @@ export async function loadBookFromFile(anEpub: File) {
     switch (loadMethod.value) {
         case LoadMethod.lazy:
             let index = 0;
-            if (book.bookmarks.length) { // New book
-                const tail = book.bookmarks[book.bookmarks.length - 1]
-                let i = 0;
-                if (tail) {
-                    const id = BookmarkController.toManifestID(tail);
-                    const [_i] = epub.parts.flow.pairOf(id)
-                    if (_i) i = _i;
-                }
-
-                index = i < 0 ? 0 : i;
+            const tail = book.bookmarks[book.bookmarks.length - 1]
+            //else new book
+            if (tail) {
+                const id = BookmarkController.toManifestID(tail);
+                const [i] = epub.parts.flow.pairOf(id)
+                if (i) {
+                    index = Math.max(i, index)
+                };
             }
-            epub.between({ index })
+            await epub.between({ index })
             break;
         default:
             epub.loadAll()
