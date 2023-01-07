@@ -43,9 +43,7 @@ export async function loadBookFromFile(anEpub: File) {
             if (tail) {
                 const id = BookmarkController.toManifestID(tail);
                 const [i] = epub.parts.flow.pairOf(id)
-                if (i) {
-                    index = Math.max(i, index)
-                };
+                index = Math.max(i, index)
             }
             await epub.between({ index })
             break;

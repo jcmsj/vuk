@@ -15,7 +15,7 @@
     "elec-debug": "quasar build -m electron --debug"
   },
   "dependencies": {
-    "@jcsj/arraymap": "^0.0.3",
+    "@jcsj/arraymap": "^0.0.4",
     "@jcsj/epub": "link:D:/code/epub",
     "@quasar/extras": "^1.15.9",
     "@tauri-apps/api": "^1.2.0",
