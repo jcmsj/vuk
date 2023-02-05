@@ -10,8 +10,9 @@
 import {isReading, toggleReading} from ".";
 import {onKeyUp} from "@vueuse/core";
 
-const keys = ["r","F8"];
-keys.map(k => onKeyUp(k, toggleReading))
+const keys = ["r","F8","MediaPlayPause"];
+onKeyUp(keys, toggleReading)
+
 </script>
 <style lang='sass'>
 
