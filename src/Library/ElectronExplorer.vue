@@ -9,7 +9,7 @@ import { db } from 'src/db/dexie';
 import { onBeforeMount, watch } from 'vue';
 import BaseActions from './BaseActions.vue';
 import { loadBookFromFile } from './fileReader';
-import { settings_id } from './Handle';
+import { settings_id } from "src/settings/settings_id";
 import LibraryBtn from './LibraryBtn.vue';
 import VListing from './Listing.vue';
 import { sorter, library } from "./electron.handle"

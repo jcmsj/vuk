@@ -14,7 +14,8 @@ import { loadBookFromFile } from './fileReader';
 import BaseActions from './BaseActions.vue';
 import { sorter, library } from "./tauri.handle"
 import { onBeforeMount, watch } from 'vue';
-import { settings_id } from './Handle';
+import { settings_id } from "src/settings/settings_id";
+
 async function loadBook(h: FileEntry) {
     loadBookFromFile(
         new Blob([await readBinaryFile(h.path)]) as File
