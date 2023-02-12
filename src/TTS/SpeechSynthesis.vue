@@ -1,6 +1,6 @@
 <template>
     <section>
-        <q-btn-group class="controls">
+        <q-btn-group class="controls" v-if="reveal">
             <MediaControls />
             <Settings />
         </q-btn-group>
@@ -8,12 +8,11 @@
 </template>
 <script setup>
 import { ref } from "vue";
+import reveal from "./reveal";
 import MediaControls from "./MediaControls.vue"
 import Settings from "./Settings.vue"
 
-const
-    showOps = ref(false)
-    ;
+const showOps = ref(false);
 
 function toggleops() {
     showOps.value = !showOps.value

@@ -1,6 +1,6 @@
 {
   "name": "vuk",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "A cross-platform epub reader",
   "productName": "Vuk",
   "author": "Jean Carlo San Juan",
@@ -30,10 +30,10 @@
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.2.0",
-    "@types/node": "^18.11.19",
+    "@types/node": "^18.13.0",
     "@types/wicg-file-system-access": "^2020.9.5",
     "autoprefixer": "^10.4.13",
-    "electron": "^22.2.0",
+    "electron": "^23.0.0",
     "electron-builder": "^23.6.0",
     "electron-packager": "17.1.1",
     "typescript": "^4.9.5",

@@ -5,17 +5,15 @@
     </q-item-label>
     <q-item-section>
         <q-toggle 
-            :label="dark === true ? 'dark':'light'"
+            :label="dark ? 'dark':'light'"
             v-model="dark" 
-            @click="q.dark.toggle" 
-            :icon="dark === true ? 'nightlight': 'light_mode'"
+            :icon="dark ? 'nightlight': 'light_mode'"
         />
     </q-item-section>
 </q-item>
 </template>
 <script setup lang=ts>
-import { QItem, QItemLabel, QToggle, useQuasar } from 'quasar';
+import { QItem, QItemLabel, QToggle } from 'quasar';
 import {dark} from "./Theme"
-const q = useQuasar()
 
 </script>
