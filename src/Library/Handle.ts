@@ -1,10 +1,9 @@
 import { INFO } from "@jcsj/epub/lib/Reader";
+import { settings_id } from "src/settings/settings_id";
 import { reactive, watch } from "vue";
 import { db } from "../db/dexie";
 import { RxDir, RxSorter } from "./RxDir";
 import { aDirHandle, isSameEntry } from "./util";
-
-export const settings_id = 0;
 
 export function prepLibrary<T>() {
     return {

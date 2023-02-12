@@ -1,18 +1,23 @@
 import {Dexie, Table, DexieOptions} from "dexie"
+import { LoadMethod } from "src/Library/Load";
 import { Bookmark } from "../Bookmarks/Bookmark";
 
 export interface Book {
-    id?:number;
-    title: string;
-    bookmarks:Bookmark[];
-    auto?:Bookmark;
+    id?:number,
+    title: string,
+    bookmarks:Bookmark[],
+    auto?:Bookmark,
 }
 
+//TODO: Migrate useLocalStorage keys with Settings
 export interface Settings {
+    id:number,
     lastDir?:FileSystemDirectoryHandle,
     electronDir?:string,
     speechRate:number,
-    id:number
+    theme:string,
+    speechPanel:boolean,
+    loadMethod:LoadMethod,
 }
 
 export class VukDB extends Dexie {
