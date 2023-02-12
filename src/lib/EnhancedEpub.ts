@@ -3,7 +3,7 @@ import { render as renderView, reassign, repaint, LoadPosition } from "../Book";
 import { range } from "./range"
 import { BoundaryError } from "./BoundaryError";
 import { EpubArgs } from "@jcsj/epub";
-import {MemoizedEpubAndSanitized} from "@jcsj/epub/lib/Cached"
+import { MemoizedEpubAndSanitized } from "@jcsj/epub/lib/Cached"
 import { CleanEpub } from "@jcsj/epub/lib/sanitize";
 export interface LoadedChapter {
     id: string,
@@ -25,10 +25,11 @@ export interface EnhancedEpub extends CleanEpub {
     render(pos: LoadPosition): Promise<void>;
     previous(): Promise<void>;
 }
-export let instance:EnhancedEpub;
+export let instance: EnhancedEpub;
 
 export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
-    const old = await MemoizedEpubAndSanitized({...a, chapterTransformer:simplifyHTMLTree});
+    a.chapterTransformer = simplifyHTMLTree;
+    const old = await MemoizedEpubAndSanitized(a);
     instance = {
         ...old,
         index: 0,
@@ -108,24 +109,24 @@ export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
              * Advancing by two since 3 chapters are loaded  at a time.
              */
             const offset = pos * 2
-            const pair = this.parts.flow.at(this.index + offset)
-            if (pair[0] == undefined)
+            const id = this.parts.flow.at(this.index + offset)[0];
+            if (id === undefined)
                 throw new BoundaryError("start or end")
 
             this.index += pos
             renderView({
                 pos,
-                ... (await this.retrieve(pair[0]))
+                ... (await this.retrieve(id))
             })
         },
 
         async previous() {
-            try {
-                if (this.index > 0) {
+            if (this.index > 0) {
+                try {
                     await this.render(LoadPosition.before)
+                } catch (e) {
+                    console.log(`No chapters before index ${this.index}`, e);
                 }
-            } catch (e) {
-                console.log(`No chapters before index ${this.index}`, e);
             }
         }
     }

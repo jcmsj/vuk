@@ -56,7 +56,7 @@ class Narrator {
         }
     }
 
-    private async next(exhausted=false) {
+    private next(exhausted=false) {
         //IMPORTANT: The span tags made by Transformer should never be included.
         transformer.revert()
         const n = walker.nextNode();
