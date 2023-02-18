@@ -3,7 +3,7 @@ import { render as renderView, reassign, repaint, LoadPosition } from "../Book";
 import { range } from "./range"
 import { BoundaryError } from "./BoundaryError";
 import { EpubArgs } from "@jcsj/epub";
-import { MemoizedEpubAndSanitized } from "@jcsj/epub/lib/Cached"
+import { MemoizedEpubAndSanitized } from "@jcsj/epub"
 import { CleanEpub } from "@jcsj/epub/lib/sanitize";
 export interface LoadedChapter {
     id: string,

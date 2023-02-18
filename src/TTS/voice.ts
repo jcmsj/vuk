@@ -2,10 +2,10 @@ import { useLocalStorage } from "@vueuse/core";
 import { reactive } from "vue";
 
 export const voice = reactive({
-    value : undefined as SpeechSynthesisVoice | undefined,
+    value : null as SpeechSynthesisVoice | null,
     voices: [] as SpeechSynthesisVoice[],
     set(name:string) {
-        this.value = this.find(v => v.name == name)
+        this.value = this.find(v => v.name == name) ?? null
     },
     find(cb:(v:SpeechSynthesisVoice)=>boolean) {
         return this.voices.find(cb)
@@ -21,7 +21,7 @@ export const voice = reactive({
     },
     onMount() {
         if (!window.speechSynthesis) {
-            console.log("Speech Synthesis is unsupported!");
+            alert("Speech Synthesis is unsupported!");
             return;
         }
         if (!this.voices.length) {

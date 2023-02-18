@@ -16,17 +16,13 @@ function onBoundary(e: SpeechSynthesisEvent) {
 }    
 export function readAloud(txt:string) {
     const utt = new SpeechSynthesisUtterance(txt)
-
     if (transformer.elem) {
         utt.onboundary = onBoundary
     }
 
     utt.onend = onEnd
-
     utt.rate = speech_rate.value
-
-    if (voice.value!= null)
-        utt.voice = voice.value;
+    utt.voice = voice.value;
 
     speechSynthesis.speak(utt);
     isReading.value = true;

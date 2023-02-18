@@ -17,8 +17,12 @@
     </select>
 </template>
 <script setup lang="ts">
+import { onBeforeMount } from "vue";
 import voice, {prefVoice} from "./voice";
 
+onBeforeMount(() => {
+    voice.onMount()
+})
 </script>
 <style lang='sass' scoped>
 </style>

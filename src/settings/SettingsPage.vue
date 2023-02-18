@@ -9,6 +9,7 @@
             Application
         </q-item-label>
         <ThemeSwitcher />
+        <q-separator />
         <q-item-label header>
             Narrator
         </q-item-label>
