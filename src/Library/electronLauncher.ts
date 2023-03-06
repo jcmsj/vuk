@@ -7,6 +7,7 @@ import { loadBookFromFile } from './fileReader';
 export default async function loadBookFromElectron() {
     if (Platform.is.electron && window.vuk) {
         const maybeBuffer = await window.vuk.getLaunchedFile();
+
         if (maybeBuffer) {
             loadBookFromFile(new Blob([maybeBuffer]) as File)
         }

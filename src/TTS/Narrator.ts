@@ -33,7 +33,7 @@ class Narrator {
     }
     private async onEnd() {
         if (isReading.value) {
-            await this.next();
+            this.next();
             return;
         }
 
