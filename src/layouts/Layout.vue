@@ -1,5 +1,5 @@
 <template>
-  <q-tabs :vertical="onDesk" align="left" switch-indicator shrink content-class="sidebar" on-same-tab="deselect"
+  <q-tabs :vertical="onNoTouch" align="left" switch-indicator shrink content-class="sidebar" on-same-tab="deselect"
     active-color="primary" class="bg-secondary text-grey-9 shadow-3">
     <q-route-tab exact :to="hotkeys.f" icon="folder" title="Browse" @click="toggleSelect($event, hotkeys.f)" />
     <q-route-tab exact :to="hotkeys.t" icon="list" title="Table of contents" @click="toggleSelect($event, hotkeys.t)" />
@@ -9,9 +9,9 @@
   <main>
     <RouterView v-slot="{ Component, route }">
       <Transition name="slide">
-      <q-card v-if="route.path != '/'" class="panel" :class="onDesk ? 'shadow-4' : ''">
+        <q-card v-if="route.path != '/'" class="panel" :class="onNoTouch ? 'shadow-4' : ''">
           <component :is="Component" :key="route.path" />
-      </q-card>
+        </q-card>
       </Transition>
     </RouterView>
     <Live />
@@ -21,12 +21,12 @@
 <script setup lang=ts>
 import Live from 'src/Book/Live.vue';
 import { useEventListener, useMediaQuery } from '@vueuse/core';
-import {toggleSelect, toHome} from "./Tab"
+import { toggleSelect, toHome } from "./Tab"
 import { RouterView } from 'vue-router';
 import { QTabs, QRouteTab, QCard } from 'quasar';
 import { Transition } from 'vue';
 /* if device has no touch screen */
-const onDesk = useMediaQuery("(any-pointer: fine) and (min-width: 1024px)");
+const onNoTouch = useMediaQuery("(any-pointer: fine) and (min-width: 1024px)");
 
 const hotkeys = {
   f: "browse",
