@@ -1,42 +1,24 @@
 <template>
     <q-list>
-        <q-item clickable v-if="library.root && !library.inRoot" @click="library.goto(library.root)">
-            <q-item-section avatar>
-                <q-icon color="primary" name="folder" />
-            </q-item-section>
-            <q-item-section>
-                /
-            </q-item-section>
-        </q-item>
-        <q-item v-if="library.levels.length" clickable @click="library.moveUp()">
-            <q-item-section avatar>
-                <q-icon color="primary" name="folder" />
-            </q-item-section>
-            <q-item-section>
-                ../
-            </q-item-section>
-        </q-item>
+        <VItem v-if="library.root && !library.inRoot" @click="library.goto(library.root)">
+            /
+        </VItem>
+        <VItem v-if="library.levels.length" @click="library.moveUp()">
+            ../
+        </VItem>
     </q-list>
-    <q-item v-for="(item, dirname) of sorter.dirs" clickable :key="dirname" @click="library.goto(item)">
-        <q-item-section avatar>
-            <q-icon color="primary" name="folder" />
-        </q-item-section>
-        <q-item-section>
-            {{ dirname }}
-        </q-item-section>
-    </q-item>
-    <q-item v-for="(item, name) of sorter.books" clickable :key="name" @click="emit('open-book', item)">
-        <q-item-section avatar>
-            <q-icon color="primary" name="book" />
-        </q-item-section>
-        <q-item-section>
-            {{ name }}
-        </q-item-section>
-    </q-item>
+    <VItem v-for="(item, dirname) of sorter.dirs" :key="dirname" @click="library.goto(item)">
+        {{ dirname }}
+    </VItem>
+    <VItem name="book"
+    v-for="(item, name) of sorter.books" :key="name" @click="emit('open-book', item)"
+    >
+        {{ name }}
+    </VItem>
 </template>
 <script setup lang=ts>
 import { RxDir, RxSorter } from './RxDir';
-
+import VItem from "./VItem.vue"
 const emit = defineEmits(["open-book"])
 
 const { sorter, library } = defineProps<{

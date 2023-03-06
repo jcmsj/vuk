@@ -22,7 +22,7 @@
 import Live from 'src/Book/Live.vue';
 import { useEventListener, useMediaQuery } from '@vueuse/core';
 import {toggleSelect, toHome} from "./Tab"
-import { onBeforeRouteLeave, onBeforeRouteUpdate, RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
 import { QTabs, QRouteTab, QCard } from 'quasar';
 import { Transition } from 'vue';
 /* if device has no touch screen */
