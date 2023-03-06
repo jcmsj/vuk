@@ -6,6 +6,7 @@
 <script setup lang=ts>
 import { book } from 'src/Bookmarks/useBook';
 import { instance } from 'src/lib/EnhancedEpub';
+import { DevMode } from 'src/settings/DevMode';
 import { watch } from 'vue';
 import { rawStyle, epubStyle, prefix } from './styles';
 
@@ -40,7 +41,10 @@ watch(() => book.title, async (it) => {
     if (!it)
         return;
     const styles = instance?.matchAll(/style|css/)
-    console.log(styles);
+
+    if (DevMode.value) {
+        console.log(styles);
+    }
     
     if (styles?.length) {
         rawStyle.value = await instance.getContentRaw(styles[0].id);

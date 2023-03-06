@@ -5,33 +5,47 @@ import { Enhanced } from "../lib/EnhancedEpub";
 import { loadMethod, LoadMethod } from "./Load";
 import { book } from "../Bookmarks/useBook";
 import { toHome } from "src/layouts/Tab";
+import { ProgressEvents } from "@jcsj/epub/lib/Parts";
+import DevMode from "src/settings/DevMode";
 
+const withLogs:ProgressEvents =  {
+    async root() {
+        TOC.items.clear()
+    },
+    async metadata(metadata) {
+        console.log("Meta:", metadata);
+        useTitle(metadata.title)
+    },
+    manifest(manifest) {
+        console.log("manifest: ", manifest);
+    },
+    spine(spine) {
+        console.log("spine:", spine);
+    },
+    flow(flow) {
+        console.log("Flow: ", flow);
+    },
+    toc(toc) {
+        console.log("TOC: ", toc);
+        TOC.items = toc
+    }
+}
+
+const noLogs:ProgressEvents = {
+    async root() {
+        TOC.items.clear()
+    },
+    async metadata(metadata) {
+        useTitle(metadata.title)
+    },
+    toc(toc) {
+        TOC.items = toc
+    }
+}
 export async function loadBookFromFile(anEpub: File) {
     const epub = await Enhanced({
         blob: anEpub,
-        events: {
-            async root() {
-                TOC.items.clear()
-                //epub.parseRootFile(epub.parser.root_xml)
-            },
-            async metadata(metadata) {
-                console.log("Meta:", metadata);
-                useTitle(metadata.title)
-            },
-            manifest(manifest) {
-                console.log("manifest: ", manifest);
-            },
-            spine(spine) {
-                console.log("spine:", spine);
-            },
-            flow(flow) {
-                console.log("Flow: ", flow);
-            },
-            toc(toc) {
-                console.log("TOC: ", toc);
-                TOC.items = toc
-            }
-        }
+        events: DevMode.value ? withLogs:noLogs 
     })
 
     await BookmarkController.load(epub.parts.metadata.title);
