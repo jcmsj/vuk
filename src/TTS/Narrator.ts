@@ -10,13 +10,13 @@ import { className } from "./constants";
 import { getReadingProgress } from "../lib/useMainElem";
 import { useEventBus, UseEventBusReturn } from "@vueuse/core";
 
-export type MaybeHTMLElement = HTMLElement | null;
 interface EventMap extends Partial<Record<EV, Function | undefined>> { };
 export function follow() {
     scrollIfUnseen(transformer.elem)
 }
 export const transformer = new Transformer(className.para);
-class Narrator {
+
+export class Narrator {
     bus: UseEventBusReturn<string, string>;
     target?: HTMLElement;
     constructor() {
@@ -48,11 +48,10 @@ class Narrator {
         if (loadMethod.value == LoadMethod.lazy) {
             try {
                 await instance?.next();
+                this.next(true)
             } catch (e) {
                 isReading.value = false;
-                return;
             }
-            this.next(true) //Never called when the above throws
         }
     }
 
@@ -71,7 +70,7 @@ class Narrator {
      * `txt` or the node's text
      */
     private beforeSpeak(n: Node, txt?: string) {
-        txt = txt ?? n.textContent ?? "";
+        txt ??= n.textContent ?? "";
 
         if (txt.length == 0) {
             this.next();
@@ -107,7 +106,7 @@ class Narrator {
     }
 
     override(l: HTMLElement) {
-        let n = l.firstChild;
+        const n = l.firstChild;
         if (!n || walker.currentNode?.isSameNode(n))
             return false;
 

@@ -9,7 +9,6 @@
     </q-item>
 </template>
 <script setup lang=ts>
-import { QItem, QItemLabel, QToggle } from 'quasar';
 import { DevMode } from './DevMode';
 
 </script>

@@ -16,7 +16,7 @@ export interface EnhancedEpub extends CleanEpub {
     range: number;
     slice(start: number, exclusiveEnd: number): string[];
     retrieve(id: string): Promise<LoadedChapter>;
-    between({ id, index }: {
+    between(data: {
         id?: string;
         index?: number;
     }): Promise<boolean>;
@@ -48,7 +48,7 @@ export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
             }
         },
 
-        async between({ id, index }: { id?: string, index?: number }) {
+        async between({ id, index }) {
             if (id == undefined && index == undefined) {
                 throw new TypeError("Must provide either 'id' or 'index'.");
             } else if (index == undefined && id != undefined) {
@@ -68,9 +68,9 @@ export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
 
             const leftMost = index - this.range
             const rightMost = index + this.range
-            let before: string[] = this.slice(Math.max(0, leftMost), index - 1);
+            const before: string[] = this.slice(Math.max(0, leftMost), index - 1);
             //center == id
-            let after: string[] = this.slice(index + 1, Math.min(rightMost, this.parts.flow.size))
+            const after: string[] = this.slice(index + 1, Math.min(rightMost, this.parts.flow.size))
 
             const toBeLoaded = await Promise.all([
                 ...before,

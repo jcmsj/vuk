@@ -5,4 +5,4 @@ export enum LoadMethod {
     lazy = "lazy"
 }
 
-export const loadMethod = useLocalStorage("load-method",LoadMethod.lazy);
+export const loadMethod = useLocalStorage("load-method",LoadMethod.all);

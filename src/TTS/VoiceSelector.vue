@@ -4,12 +4,12 @@
     </label>
     <select
         name="voice-pack"
-        @change="voice.set($event.target.value)"
+        @change="voice.set($event.target!.value)"
         :value="prefVoice"
     >
         <option
-            v-for="({name}, i) in voice.voices"
-            :key="i"
+            v-for="({name}) in voice.voices"
+            :key="name"
             :value="name.trim()"
         >
         {{name}}

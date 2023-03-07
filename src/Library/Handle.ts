@@ -5,14 +5,6 @@ import { db } from "../db/dexie";
 import { RxDir, RxSorter } from "./RxDir";
 import { aDirHandle, isSameEntry } from "./util";
 
-export function prepLibrary<T>() {
-    return {
-        value:undefined,
-        root:undefined,
-        levels:[],
-        inRoot:false,
-    } as Partial<RxDir<T>>
-}
 export const library = reactive<RxDir>({
     value: undefined,
     root: undefined,

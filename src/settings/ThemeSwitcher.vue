@@ -13,7 +13,6 @@
 </q-item>
 </template>
 <script setup lang=ts>
-import { QItem, QItemLabel, QToggle } from 'quasar';
 import {dark} from "./Theme"
 
 </script>

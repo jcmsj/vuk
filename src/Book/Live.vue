@@ -12,7 +12,6 @@
         <div class=naver ref="next"></div>
     </article>
 </template>
-
 <script setup>
 //ISSUE: TS not working
 import { onMounted, watch } from "vue";
@@ -28,13 +27,13 @@ import { savedPositions } from 'src/router/storeScrollBehavior';
 import { LoadMethod, loadMethod } from "src/Library/Load";
 import { instance } from "src/lib/EnhancedEpub";
 import EPUBStyle from "./EPUBStyle.vue";
+import { useEventListener } from "@vueuse/core";
 
 onMounted(() => {
     observe(false)
 })
 
-watch(loadMethod, async(preferred) => {
-    console.log(preferred);
+watch(loadMethod, async (preferred) => {
     if (preferred == LoadMethod.all) {
         await unobserve()
         instance?.loadAll()
@@ -42,14 +41,21 @@ watch(loadMethod, async(preferred) => {
         await observe(false)
     }
 })
-onBeforeRouteLeave((to, from) => {
-    console.log(from.matched);
+
+useEventListener("beforeunload", ev => {
+    //For preventing 3rd party navigation
+    // and times where the parser fails to reconcile spine ids with anchors
+    ev.preventDefault();
+    return ev.returnValue = '';
+})
+
+onBeforeRouteLeave((_, from) => {
+    console.log("before", from.matched);
     savedPositions[from.fullPath] = { left: window.scrollX, top: window.scrollY }
 })
 
 </script>
 <style lang="sass">
-
 div.chapter
     min-height: 110vh
     display: flex
