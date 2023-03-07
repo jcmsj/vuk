@@ -10,7 +10,7 @@
         <option
             v-for="({name}) in voice.voices"
             :key="name"
-            :value="name.trim()"
+            :value="name"
         >
         {{name}}
         </option>
