@@ -28,6 +28,7 @@ import { LoadMethod, loadMethod } from "src/Library/Load";
 import { instance } from "src/lib/EnhancedEpub";
 import EPUBStyle from "./EPUBStyle.vue";
 import { useEventListener } from "@vueuse/core";
+import "../Bookmarks/background"; // For Side effects
 
 onMounted(() => {
     observe(false)
@@ -56,6 +57,9 @@ onBeforeRouteLeave((_, from) => {
 
 </script>
 <style lang="sass">
+.bookmark
+    border: 1px solid green
+
 div.chapter
     min-height: 110vh
     display: flex
@@ -85,7 +89,7 @@ div.chapter
 #__live 
     flex: 1
     margin: 1vh 1vw
-
+    
 .pager
     position: sticky
     bottom: 0

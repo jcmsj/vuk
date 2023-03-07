@@ -1,6 +1,5 @@
 import { isReading } from "./isReading"
 import { readAloud } from "./readAloud";
-import { BookmarkController } from "../Bookmarks";
 import { EV } from "./EV";
 import { instance } from "../lib/EnhancedEpub";
 import { LoadMethod, loadMethod } from "../Library/Load";
@@ -9,6 +8,7 @@ import { scrollIfUnseen } from "./scrollIfUnseen";
 import { className } from "./constants";
 import { getReadingProgress } from "../lib/useMainElem";
 import { useEventBus, UseEventBusReturn } from "@vueuse/core";
+import { saveProgress } from "src/Bookmarks/useBook";
 
 interface EventMap extends Partial<Record<EV, Function | undefined>> { };
 export function follow() {
@@ -37,7 +37,7 @@ export class Narrator {
             return;
         }
 
-        BookmarkController.saveProgress(transformer.elem?.parentElement, getReadingProgress())
+        saveProgress(transformer.elem?.parentElement, getReadingProgress())
     }
 
     /* Based on loadMethod:

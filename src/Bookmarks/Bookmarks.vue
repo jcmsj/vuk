@@ -1,45 +1,38 @@
 <template>
     <q-list>
+        <q-item-label header v-if="book.auto">
+            Last Spoken:
+        </q-item-label>
+        <BookmarkItem v-if="book.auto" :bookmark="book.auto" />
+        <q-separator v-if="book.auto" />
         <q-item-label header>
             Bookmarks
         </q-item-label>
-        <q-item 
-            clickable 
-            v-for="bm of book?.bookmarks" 
-            :key="bm.selector"
-            is="RouterLink"
-            :to="'/' + bm.selector"
-            @click="focus(bm.selector, bm)" @dblclick="BookmarkController.unmark(bm)" :title="bm.selector"
-        >
-            {{ bm.text }} - {{ bm.percentage }}%
-        </q-item>
+        <BookmarkItem v-for="bm of book?.bookmarks" :key="bm.selector" :bookmark="bm" @click="focus(bm)"
+            @dblclick="unmark(bm)" :title="bm.selector" />
     </q-list>
 </template>
 <script setup lang="ts">
-import { Bookmark } from "./Bookmark";
-import { BookmarkController } from './BookmarkController';
+import { Bookmark } from "./";
 import { instance } from "../lib/EnhancedEpub";
 import { refocus } from "../lib/helpers"
-import { book } from "./useBook";
-async function focus(selector: string, bm: Bookmark) {
-    let maybeElem = document.querySelector(selector);
+import { unmark, toManifestID } from "./useBook";
+import { book, reapply } from "./useBook";
+import BookmarkItem from "./BookmarkItem.vue";
+async function focus(bm: Bookmark) {
+    const maybeElem = document.querySelector(bm.selector);
 
     if (maybeElem) {
         refocus(maybeElem)
     } else {
-        const success = await instance!.between({ id: BookmarkController.toManifestID(bm) })
+        const success = await instance!.between({ id: toManifestID(bm) })
 
-        console.log(success ? "Bookmark clicked:" : "Invalid", selector);
-        BookmarkController.reapply()
+        console.log(success ? "Bookmark clicked:" : "Invalid", bm.selector);
+        reapply()
     }
 }
-</script>
-<style lang='sass'>
-.bookmark
-    border: 1px solid green
 
-</style>
+</script>
 <style lang="sass" scoped>
-ol
-    padding-inline-start: 2vw
+/* Note: bookmark class is in Live.vue */
 </style>

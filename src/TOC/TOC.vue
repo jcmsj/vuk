@@ -1,8 +1,8 @@
 <template>
 <q-list>
     <q-item-label header>
-            Table of Contents
-        </q-item-label>
+        Table of Contents
+    </q-item-label>
     <NodeStart
         :active="true"
         :items="TOC.items"

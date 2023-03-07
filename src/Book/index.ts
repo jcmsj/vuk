@@ -1,12 +1,12 @@
 
 import {instance, LoadedChapter} from "../lib/EnhancedEpub";
 import {refocus} from "../lib/helpers"
-import BookmarkController from "../Bookmarks/BookmarkController"
 import { LoadMethod, loadMethod } from "../Library/Load";
 import { setWalker } from "v-walker/index";
 import { narrator } from "../TTS/Narrator";
 import { view, pages, next, prev} from "./Pages";
 import { useLocalStorage } from "@vueuse/core";
+import { reapply } from "src/Bookmarks/useBook";
 
 const options = {
     root: null,
@@ -65,7 +65,7 @@ export async function reassign() {
     if (view.value.childElementCount == 3)
     refocus(view.value.firstElementChild?.nextElementSibling!);
     setWalker(view.value);
-    const maybeLatest = await BookmarkController.reapply()
+    const maybeLatest = await reapply()
     if (maybeLatest) {
         narrator.override(maybeLatest.elem);
         refocus(maybeLatest.elem)

@@ -1,14 +1,13 @@
 import { TOC } from "../TOC";
-import { BookmarkController } from "../Bookmarks"
 import { useTitle } from "@vueuse/core";
 import { Enhanced } from "../lib/EnhancedEpub";
 import { loadMethod, LoadMethod } from "./Load";
-import { book } from "../Bookmarks/useBook";
+import { book, load, toManifestID } from "../Bookmarks/useBook";
 import { toHome } from "src/layouts/Tab";
 import { ProgressEvents } from "@jcsj/epub/lib/Parts";
 import DevMode from "src/settings/DevMode";
 
-const withLogs:ProgressEvents =  {
+const withLogs: ProgressEvents = {
     async root() {
         TOC.items.clear()
     },
@@ -31,7 +30,7 @@ const withLogs:ProgressEvents =  {
     }
 }
 
-const noLogs:ProgressEvents = {
+const noLogs: ProgressEvents = {
     async root() {
         TOC.items.clear()
     },
@@ -45,17 +44,18 @@ const noLogs:ProgressEvents = {
 export async function loadBookFromFile(anEpub: File) {
     const epub = await Enhanced({
         blob: anEpub,
-        events: DevMode.value ? withLogs:noLogs 
+        events: DevMode.value ? withLogs : noLogs
     })
-
-    await BookmarkController.load(epub.parts.metadata.title);
+    if (epub.parts.metadata.title) {
+        await load(epub.parts.metadata.title || "");
+    }
     switch (loadMethod.value) {
         case LoadMethod.lazy:
             let index = 0;
             const tail = book.bookmarks[book.bookmarks.length - 1]
             //else new book
             if (tail) {
-                const id = BookmarkController.toManifestID(tail);
+                const id = toManifestID(tail);
                 const [i] = epub.parts.flow.pairOf(id)
                 index = Math.max(i, index)
             }

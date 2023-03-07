@@ -1,6 +1,6 @@
 import {Dexie, Table, DexieOptions} from "dexie"
 import { LoadMethod } from "src/Library/Load";
-import { Bookmark } from "../Bookmarks/Bookmark";
+import { Bookmark } from "../Bookmarks/";
 
 export interface Book {
     id?:number,

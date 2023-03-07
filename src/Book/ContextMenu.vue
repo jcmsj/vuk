@@ -13,7 +13,7 @@
     </q-menu>
 </template>
 <script setup lang=ts>
-import { BookmarkController } from 'src/Bookmarks';
+import { toggle } from 'src/Bookmarks/useBook';
 import { narrator } from 'src/TTS/Narrator';
 
 interface MenuItem {
@@ -35,7 +35,7 @@ const items: MenuItem[] = [
         label: "Bookmark",
         icon: "bookmark_add",
         cb() {
-            BookmarkController.toggle(
+            toggle(
                 narrator.target!
             )
         }
