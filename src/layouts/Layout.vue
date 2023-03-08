@@ -85,17 +85,15 @@ main
 .panel
   z-index: 1
   height: 100%
+  width: 100%
   position: sticky
   top: 0
-  width: 100%
   overflow-y: auto
   padding: 1vh 1vw
   @include desk
     width: 30vw
     resize: horizontal
     position: fixed
-.q-tab-panel
-  padding: 1vw 1vh
 .q-tabs
   z-index: 2
 

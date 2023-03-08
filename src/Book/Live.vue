@@ -59,9 +59,7 @@ onBeforeRouteLeave((_, from) => {
 
 </script>
 <style lang="sass">
-.bookmark
-    border: 1px solid green
-
+@use "../Bookmarks/style"
 div.chapter
     min-height: 110vh
     display: flex
