@@ -62,8 +62,10 @@ export async function observe(fresh=true) {
 export async function reassign() {
     if (!view.value) return;
 
-    if (view.value.childElementCount == 3)
-    refocus(view.value.firstElementChild?.nextElementSibling!);
+    if (view.value.childElementCount == 3) {
+            refocus(view.value.firstElementChild?.nextElementSibling!)
+    }
+    
     setWalker(view.value);
     const maybeLatest = await reapply()
     if (maybeLatest) {

@@ -18,4 +18,5 @@ export function isElementInViewport(el: HTMLElement): boolean {
 
 export function refocus(el: Element) {
     el && el.scrollIntoView({ block: "start", behavior: "smooth" })
+    return el;
 }

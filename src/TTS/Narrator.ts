@@ -36,7 +36,6 @@ export class Narrator {
             this.next();
             return;
         }
-
         saveProgress(transformer.elem?.parentElement, getReadingProgress())
     }
 

@@ -83,7 +83,7 @@ export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
             this.id = id;
 
             await repaint(toBeLoaded)
-            reassign()
+            await reassign()
             return true;
         },
 
@@ -93,7 +93,7 @@ export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
                     .map(this.retrieve, this)
                 ));
 
-            reassign()
+            await reassign()
         },
 
         async next() {
