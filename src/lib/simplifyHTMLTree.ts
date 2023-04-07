@@ -7,7 +7,7 @@ export const simplifyHTMLTree:ChapterTransformer = frag => {
     if (!(frag instanceof DocumentFragment))
         throw TypeError("Not a DocumentFragment")
 
-    return Array.from(frag.children).reduce((s, child) => s + child.outerHTML, "")
+    return Array.from(frag.children).map(child => child.outerHTML).join();
 }
 
 export default simplifyHTMLTree;

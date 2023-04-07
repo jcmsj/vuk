@@ -16,7 +16,8 @@ function onBoundary(e: SpeechSynthesisEvent) {
 }    
 export function readAloud(txt:string) {
     const utt = new SpeechSynthesisUtterance(txt)
-    if (transformer.elem) {
+    //Don't add the boundary if `txt` contains digits as it unsyncs the highlight with the narrator
+    if (!/\d+/.test(txt)) {
         utt.onboundary = onBoundary
     }
 

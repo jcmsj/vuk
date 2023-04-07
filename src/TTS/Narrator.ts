@@ -3,7 +3,7 @@ import { readAloud } from "./readAloud";
 import { EV } from "./EV";
 import { instance } from "../lib/EnhancedEpub";
 import { LoadMethod, loadMethod } from "../Library/Load";
-import { walker, Transformer } from "v-walker";
+import Transformer, { walker } from "v-walker";
 import { scrollIfUnseen } from "./scrollIfUnseen";
 import { className } from "./constants";
 import { getReadingProgress } from "../lib/useMainElem";

@@ -2,7 +2,7 @@
 import {instance, LoadedChapter} from "../lib/EnhancedEpub";
 import {refocus} from "../lib/helpers"
 import { LoadMethod, loadMethod } from "../Library/Load";
-import { setWalker } from "v-walker/index";
+import { setWalker } from "v-walker";
 import { narrator } from "../TTS/Narrator";
 import { view, pages, next, prev} from "./Pages";
 import { useLocalStorage } from "@vueuse/core";

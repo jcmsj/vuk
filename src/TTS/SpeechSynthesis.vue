@@ -6,17 +6,10 @@
         </q-btn-group>
     </section>
 </template>
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
 import reveal from "./reveal";
 import MediaControls from "./MediaControls.vue"
 import Settings from "./Settings.vue"
-
-const showOps = ref(false);
-
-function toggleops() {
-    showOps.value = !showOps.value
-}
 
 </script>
 <style lang="sass">

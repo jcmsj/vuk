@@ -26,11 +26,10 @@ watch(rawStyle, style => {
         } else {
             selector += c;
         }
-
         if (c === "}") {
             scoped += prefix + selector + rules;
-            rules = ""
-            selector= ""
+            rules = "";
+            selector= "";
         }
     }
 
@@ -38,16 +37,16 @@ watch(rawStyle, style => {
 })
 
 watch(() => book.title, async (it) => {
-    if (!it)
+    if (!instance || !it)
         return;
-    const styles = instance?.matchAll(/style|css/)
+    const styles = instance.matchAll(/style|css/) || []
 
     if (DevMode.value) {
         console.log(styles);
     }
     
-    if (styles?.length) {
-        rawStyle.value = await instance.getContentRaw(styles[0].id);
-    }
+    rawStyle.value = (await Promise.all(
+        styles.map(s => instance.getContentRaw(s.id))))
+        .join("\n");
 })
 </script>

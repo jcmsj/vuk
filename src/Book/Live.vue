@@ -43,15 +43,6 @@ watch(loadMethod, async (preferred) => {
     }
 })
 
-useEventListener("beforeunload", ev => {
-    //For preventing 3rd party navigation
-    // and times where the parser fails to reconcile spine ids with anchors
-    if (pages.value.length) {
-        ev.preventDefault();
-        return ev.returnValue = '';
-    }
-})
-
 onBeforeRouteLeave((_, from) => {
     console.log("before", from.matched);
     savedPositions[from.fullPath] = { left: window.scrollX, top: window.scrollY }
@@ -89,7 +80,6 @@ div.chapter
 #__live 
     flex: 1
     margin: 1vh 1vw
-
 .pager
     position: sticky
     bottom: 0

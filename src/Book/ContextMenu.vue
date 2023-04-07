@@ -4,10 +4,10 @@
             <q-item v-for="item of items" clickable :key="item.label" @click="item.cb">
                 <q-item-section avatar>
                     <q-icon :name="item.icon" />
-                </q-item-section>
+                </q-item-section> 
                 <q-item-section>
                     {{ item.label }}
-                </q-item-section>
+                </q-item-section>             
             </q-item>
         </q-list>
     </q-menu>
