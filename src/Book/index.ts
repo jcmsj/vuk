@@ -8,11 +8,11 @@ import { view, pages, next, prev} from "./Pages";
 import { useLocalStorage } from "@vueuse/core";
 import { reapply } from "src/Bookmarks/useBook";
 
-const options = {
+const options = Object.freeze({
     root: null,
     rootMargin: "0px",
     threshold : 0.9
-}
+});
 
 const addObserver = new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {

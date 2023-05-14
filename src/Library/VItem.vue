@@ -1,7 +1,7 @@
 <template>
-    <q-item clickable :bind="props">
+    <q-item clickable @click="$props.onClick">
         <q-item-section avatar>
-            <q-icon color="primary" :name="name" />
+            <q-icon color="primary" :name="item_name" />
         </q-item-section>
         <q-item-section>
             <slot></slot>
@@ -12,13 +12,14 @@
 import { QItemProps } from 'quasar';
 
 interface ItemProps extends QItemProps {
-    name?:string
+    item_name?:string
 }
 
-const { name, ...props } = withDefaults(
+const {item_name} = withDefaults(
     defineProps<ItemProps>(), 
     {
-        name: "folder"
+        item_name: "folder"
     }
 );
+
 </script>

@@ -7,10 +7,10 @@
             ../
         </VItem>
     </q-list>
-    <VItem v-for="(item, dirname) of sorter.dirs" :key="dirname" @click="library.goto(item)">
+    <VItem v-for="(item, dirname) of sorter.dirs" :key="dirname"  item_name="folder" @click="library.goto(item)">
         {{ dirname }}
     </VItem>
-    <VItem name="book"
+    <VItem item_name="book"
     v-for="(item, name) of sorter.books" :key="name" @click="emit('open-book', item)"
     >
         {{ name }}
@@ -19,9 +19,11 @@
 <script setup lang=ts>
 import { RxDir, RxSorter } from './RxDir';
 import VItem from "./VItem.vue"
-const emit = defineEmits(["open-book"])
+const emit = defineEmits<{
+    "open-book":any
+}>();
 
-const { sorter, library } = defineProps<{
+const {sorter, library} = defineProps<{
     sorter: RxSorter<any, any>,
     library: RxDir<any>
 }>()
