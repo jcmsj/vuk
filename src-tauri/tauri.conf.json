@@ -1,34 +1,16 @@
 {
   "build": {
-    "beforeBuildCommand": "quasar build -m spa",
-    "beforeDevCommand": "quasar dev",
-    "devPath": "https://localhost:9000",
-    "distDir": "../dist/spa",
-    "withGlobalTauri": true
+    "beforeBuildCommand": "pnpm pwa-build",
+    "beforeDevCommand": "pnpm pwa",
+    "devPath": "https://localhost:9200",
+    "distDir": "../dist/spa"
   },
   "package": {
     "productName": "vuk",
     "version": "0.1.0"
   },
   "tauri": {
-    "allowlist": {
-      "all": false,
-      "fs": {
-        "readFile": true,
-        "readDir": true,
-        "exists": true
-      },
-      "dialog": {
-        "all": false,
-        "open":true,
-        "save":false
-      },
-      "clipboard": {
-        "all": false,
-        "readText": true,
-        "writeText": false
-      }
-    },
+
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
@@ -64,9 +46,6 @@
     },
     "security": {
       "csp": null
-    },
-    "updater": {
-      "active": false
     },
     "windows": [
       {

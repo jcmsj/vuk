@@ -1,19 +1,12 @@
 import { getSelectionText } from "../lib/helpers";
 
-export function resumeFrom(l:HTMLElement) {
+export function resumeFrom(l: HTMLElement) {
     const sel = getSelectionText()
+    const index = l.innerText.indexOf(sel);
     let offset = 0;
-    let index = 0
-    if (sel.length) {
-        index = l.innerText.indexOf(sel)
-
-        if (index) {
-            for (let i = index; i > 0; i--) {
-                if (l.innerText.charAt(i) == ' ') 
-                    offset++;
-            }
-        }
+    for (let i = index; i > 0; i--) {
+        if (l.innerText.charAt(i) == ' ')
+            offset++;
     }
-
-    return {char:index, word:offset};
+    return { char: index, word: offset };
 }

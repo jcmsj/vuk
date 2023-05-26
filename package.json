@@ -18,7 +18,7 @@
     "@jcsj/arraymap": "^0.0.4",
     "@jcsj/epub": "link:D:/code/epub",
     "@quasar/extras": "^1.16.4",
-    "@tauri-apps/api": "1.3.0",
+    "@tauri-apps/api": "^2.0.0-alpha.4",
     "@vueuse/core": "^10.1.2",
     "browser-fs-access": "^0.34.1",
     "dexie": "^3.2.3",

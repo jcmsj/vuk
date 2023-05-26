@@ -1,7 +1,8 @@
 .DS_Store
 .thumbs.db
 node_modules
-
+__src-tauri
+_src-tauri
 # Quasar core related directories
 .quasar
 /dist
