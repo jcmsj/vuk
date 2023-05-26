@@ -1,66 +1,10 @@
-import { UnwrapNestedRefs, reactive } from "vue";
-import { FS, Dir, Librarian, Library, Handle, Item, asRoot, Status } from ".";
+import { reactive } from "vue";
+import { Dir, Librarian, Library, Handle, Item, Status } from ".";
 import { INFO } from "@jcsj/epub/lib/Reader";
 import { db } from "../db/dexie";
 import { settings_id } from "../settings/settings_id";
-
-export function prepFS(l: Librarian): (rootDir: Dir) => Promise<UnwrapNestedRefs<FS>> {
-    return async (rootDir: Dir) => {
-        const root = asRoot(rootDir);
-        const fs = reactive<FS>({
-            root,
-            currentDir: root,
-            levels: [],
-            get inRoot() {
-                return this.currentDir.isRoot;
-            },
-            /**
-             * Changing this would also update {{@link FS.dirs}, {@link FS.books}}
-             * @returns if currentDir was changed
-             */
-            async setDir(d: Dir) {
-                if (await this.currentDir.isSame(d)) {
-                    return false;
-                }
-                this.currentDir = d;
-                await l.sort(d);
-                return true;
-            },
-
-            /**
-             * 
-             * @returns whether the current directory was changed
-             */
-            async goto(d: Dir) {
-                if (!this.setDir(d)) {
-                    return false;
-                }
-                if (d.isRoot) {
-                    this.levels = [];
-                } else {
-                    this.levels.push(this.currentDir);
-                }
-
-                return true;
-            },
-            async moveUp() {
-                if (this.levels.length <= 0) {
-                    return;
-                }
-
-                const maybeLast = this.levels.pop();
-                if (maybeLast == null) {
-                    return;
-                }
-
-                await this.setDir(maybeLast);
-            },
-        })
-        //IMPORTANT: update the librarian
-        l.sort(root);
-        return fs;
-    }
-}
+import { prepLibrarian } from "./prepLibrarian";
+import { prepFS } from "./prepFS";
 
 const g = "granted"
 export async function verifyPermission(handle?: FileSystemDirectoryHandle, mode: FileSystemPermissionMode = "read") {
@@ -85,7 +29,7 @@ export async function verifyPermission(handle?: FileSystemDirectoryHandle, mode:
     // Permission denied.
     return false;
 }
-export function aDirHandle(h:any): h is FileSystemDirectoryHandle  {
+export function aDirHandle(h: any): h is FileSystemDirectoryHandle {
     return h instanceof FileSystemDirectoryHandle;
 }
 export async function getLastWorkingDir(): Promise<{
@@ -104,7 +48,7 @@ export async function getLastWorkingDir(): Promise<{
     return { status: Status.denied };
 }
 
-export async function sort(dir: Dir) {
+export async function sort(dir: Dir): Promise<Library> {
     const books: Library["books"] = {},
         dirs: Library["dirs"] = {};
     for await (const h of dir.entries()) {
@@ -119,17 +63,7 @@ export async function sort(dir: Dir) {
     return { books, dirs };
 }
 
-export const librarian = reactive<Librarian>({
-    dirs: {},
-    books: {},
-    async sort(dir: Dir) {
-        const pair = await sort(dir);
-        this.books = pair.books;
-        this.dirs = pair.dirs;
-        return this;
-    },
-})
-
+export const librarian = reactive<Librarian>(prepLibrarian(sort));
 export const createWeb = prepFS(librarian)
 
 export async function isSameEntry(one?: FileSystemHandle, other?: FileSystemHandle) {
@@ -171,5 +105,5 @@ export function asDir(dir: FileSystemDirectoryHandle): Dir {
 }
 
 export async function FileSystemDirectoryHandleToDir(raw: FileSystemDirectoryHandle): Promise<Dir | undefined> {
-    return await verifyPermission(raw) ? asDir(raw):undefined;
+    return await verifyPermission(raw) ? asDir(raw) : undefined;
 }

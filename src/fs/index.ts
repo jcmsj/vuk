@@ -7,7 +7,7 @@ export interface FS {
     currentDir: Dir,
     readonly root: RootDir;
     levels: Dir[];
-    inRoot: boolean;
+    readonly inRoot: boolean;
     goto: (d: Dir) => Promise<boolean>;
     setDir: (d: Dir) => Promise<boolean>;
     moveUp: () => void;
@@ -23,23 +23,23 @@ export interface Transformer {
 export interface Librarian extends Transformer, Library {}
 export interface Handle<O = any> {
     isSame(other: Handle): Promise<boolean>;
-    name: string;
-    kind: "directory"|"file";
-    origin:O;
+    readonly name: string;
+    readonly kind: "directory"|"file";
+    readonly origin:O;
 }
 
 export interface Item extends Handle {
     get: () => Promise<File>;
-    kind:"file";
+    readonly kind:"file";
 }
 
 export interface RootDir extends Dir {
-    isRoot:true;
+    readonly isRoot:true;
 }
 
 export interface Dir extends Handle {
     readonly name: string;
-    kind:"directory";
+    readonly kind:"directory";
     readonly isRoot: boolean;
     getItem: (name:string) => Promise<Item>;
     entries: () => AsyncIterableIterator<Item | Dir>;
