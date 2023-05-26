@@ -4,25 +4,27 @@
         <RestoreBtn v-if="$q.platform.is.desktop && !$q.platform.is.firefox" @click="restoreLibrary" />
     </BaseActions>
     <VListing 
+        v-if="library"
         :library="library" 
-        :sorter="sorter" 
-        @open-book="loadBookFromHandle"
+        :sorter="librarian" 
+        @open-book="loadBook"
     >
     </VListing>
 </template>
 <script setup lang=ts>
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
 import { onKeyUp } from "@vueuse/core"
 import { directoryOpen } from "browser-fs-access"
-import { loadBookFromHandle } from "./fileReader"
+import { loadBook } from "./fileReader"
 import { db } from "../db/dexie"
-import { library, getLastWorkingDir, sorter, Status } from "./Handle"
 import { settings_id } from 'src/settings/settings_id';
 import { aDirHandle } from "./util"
 import BaseActions from "./BaseActions.vue"
 import VListing from "./Listing.vue"
 import LibraryBtn from "./LibraryBtn.vue"
 import RestoreBtn from "./RestoreBtn.vue"
+import { FileSystemDirectoryHandleToDir, createWeb, getLastWorkingDir, librarian } from "src/fs/web"
+import { FS, Status } from "src/fs"
 
 async function setLibrary() {
     let handle;
@@ -41,11 +43,11 @@ async function setLibrary() {
         lastDir: handle,
         speechRate: 0 //TODO migrate settings to dexie
     })
-    restoreLibrary()
+    restoreLibrary();
 }
-
+const library = ref<FS>();
 async function restoreLibIfUnset() {
-    if (library.root)
+    if (library.value)
         return;
 
     return restoreLibrary()
@@ -53,8 +55,8 @@ async function restoreLibIfUnset() {
 async function restoreLibrary() {
     const res = await getLastWorkingDir()
     if (res.handle) {
-        library.setRoot(res.handle)
-        library.setDir(library.root)
+        const dir = await FileSystemDirectoryHandleToDir(res.handle);
+        library.value = await createWeb(dir!);
         return;
     }
 
@@ -79,6 +81,8 @@ onKeyUp(
 onMounted(() => {
     restoreLibIfUnset()
 })
+
+
 </script>
 <style lang='sass' scoped>
 @use "src/sass/v-item"

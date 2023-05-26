@@ -17,15 +17,15 @@
     </VItem>
 </template>
 <script setup lang=ts>
-import { RxDir, RxSorter } from './RxDir';
+import { FS, Librarian } from 'src/fs';
 import VItem from "./VItem.vue"
 const emit = defineEmits<{
     "open-book":any
 }>();
 
 const {sorter, library} = defineProps<{
-    sorter: RxSorter<any, any>,
-    library: RxDir<any>
+    sorter: Librarian,
+    library: FS
 }>()
 
 </script>

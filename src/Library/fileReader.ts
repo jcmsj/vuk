@@ -3,9 +3,10 @@ import { useTitle } from "@vueuse/core";
 import { Enhanced } from "../lib/EnhancedEpub";
 import { loadMethod, LoadMethod } from "./Load";
 import { book, load, toManifestID } from "../Bookmarks/useBook";
-import { toHome } from "src/layouts/Tab";
+import { toHome } from "../layouts/Tab";
 import { ProgressEvents } from "@jcsj/epub/lib/Parts";
-import DevMode from "src/settings/DevMode";
+import DevMode from "../settings/DevMode";
+import { Item } from "../fs";
 
 const withLogs: ProgressEvents = {
     async root() {
@@ -67,7 +68,11 @@ export async function loadBookFromFile(anEpub: File) {
 
     toHome()
 }
-
+export async function loadBook(item:Item) {
+    await loadBookFromFile(
+        await item.get()
+    )
+}
 export async function loadBookFromHandle(h: FileSystemFileHandle) {
     await loadBookFromFile(
         await h.getFile()
