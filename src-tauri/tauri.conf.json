@@ -2,7 +2,7 @@
   "build": {
     "beforeBuildCommand": "pnpm pwa-build",
     "beforeDevCommand": "pnpm pwa",
-    "devPath": "https://localhost:9200",
+    "devPath": "https://localhost:5173",
     "distDir": "../dist/spa"
   },
   "package": {

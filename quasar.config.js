@@ -10,7 +10,8 @@
 
 const { configure } = require('quasar/wrappers');
 const open = require('open')
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(async function(/* ctx */) {
+const host = await (await import('internal-ip')).internalIpV4();
   return {
     
 
@@ -21,8 +22,6 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      
-      
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -68,7 +67,7 @@ module.exports = configure(function (/* ctx */) {
       // distDir
 
       // extendViteConf (viteConf) {},
-      // viteVuePluginOptions: {},
+      viteVuePluginOptions: {},
 
       
       // vitePlugins: [
@@ -78,10 +77,17 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
+      host: '0.0.0.0', // listen on all addresses
+      port: 5173,
       https: true,
-      open: {
+      /* open: {
         app: {name: open.apps.edge}
-      }, // opens browser window 
+      },  */// opens browser window 
+      hmr: {
+        protocol: 'wss',
+        host,
+        port: 5183,
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

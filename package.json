@@ -36,6 +36,7 @@
     "electron": "^24.3.1",
     "electron-builder": "^23.6.0",
     "electron-packager": "17.1.1",
+    "internal-ip": "^7.0.0",
     "typescript": "^5.0.4",
     "workbox-build": "^6.5.4",
     "workbox-cacheable-response": "^6.5.4",
