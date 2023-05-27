@@ -1,4 +1,18 @@
-import { Dir, Library } from ".";
+import { Dir, HandleKind, Librarian, Library } from ".";
+import { reactive } from "vue";
+
+export async function sort(dir: Dir): Promise<Library> {
+    const books: Library["books"] = {},
+        dirs: Library["dirs"] = {};
+    for await (const h of dir.entries()) {
+        if (h.kind === HandleKind.FILE) {
+            books[h.name] = h
+        } else {
+            dirs[h.name] = h
+        }
+    }
+    return { books, dirs };
+}
 
 export function prepLibrarian(sort: (dir: Dir) => Promise<Library>) {
     return {
@@ -12,3 +26,4 @@ export function prepLibrarian(sort: (dir: Dir) => Promise<Library>) {
         },
     };
 }
+export const librarian = reactive<Librarian>(prepLibrarian(sort));

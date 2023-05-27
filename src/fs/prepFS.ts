@@ -1,10 +1,11 @@
 import { UnwrapNestedRefs, reactive } from "vue";
 import { FS, Dir, Librarian, asRoot } from ".";
+import { librarian } from "./prepLibrarian";
 
 export function prepFS(l: Librarian): (rootDir: Dir) => Promise<UnwrapNestedRefs<FS>> {
     return async (rootDir: Dir) => {
         const root = asRoot(rootDir);
-        const fs = reactive<FS>({
+        return reactive<FS>({
             root,
             currentDir: root,
             levels: [],
@@ -53,8 +54,7 @@ export function prepFS(l: Librarian): (rootDir: Dir) => Promise<UnwrapNestedRefs
                 await this.setDir(maybeLast);
             },
         });
-        //IMPORTANT: update the librarian
-        l.sort(root);
-        return fs;
     };
 }
+
+export const createFS = prepFS(librarian)

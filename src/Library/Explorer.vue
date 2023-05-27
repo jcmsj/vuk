@@ -12,7 +12,7 @@
     </VListing>
 </template>
 <script setup lang=ts>
-import { onMounted, ref } from "vue"
+import { onMounted } from "vue"
 import { onKeyUp } from "@vueuse/core"
 import { directoryOpen } from "browser-fs-access"
 import { loadBook } from "./fileReader"
@@ -23,9 +23,11 @@ import BaseActions from "./BaseActions.vue"
 import VListing from "./Listing.vue"
 import LibraryBtn from "./LibraryBtn.vue"
 import RestoreBtn from "./RestoreBtn.vue"
-import { FileSystemDirectoryHandleToDir, createWeb, getLastWorkingDir, librarian } from "src/fs/web"
-import { FS, Status } from "src/fs"
-
+import { FileSystemDirectoryHandleToDir, getLastWorkingDir,  } from "src/fs/web"
+import { Status } from "src/fs"
+import { library } from "."
+import { createFS } from "src/fs/prepFS"
+import { librarian } from "src/fs/prepLibrarian"
 async function setLibrary() {
     let handle;
     try {
@@ -45,7 +47,6 @@ async function setLibrary() {
     })
     restoreLibrary();
 }
-const library = ref<FS>();
 async function restoreLibIfUnset() {
     if (library.value)
         return;
@@ -53,12 +54,16 @@ async function restoreLibIfUnset() {
     return restoreLibrary()
 }
 async function restoreLibrary() {
-    const res = await getLastWorkingDir()
-    if (res.handle) {
-        const dir = await FileSystemDirectoryHandleToDir(res.handle);
-        library.value = await createWeb(dir!);
+    const res = await getLastWorkingDir();
+    if (!res.handle)
         return;
-    }
+
+    const dir = await FileSystemDirectoryHandleToDir(res.handle);
+    if (!dir)
+        return;
+
+    library.value = await createFS(dir);
+    await librarian.sort(dir);
 
     switch (res.status) {
         case Status.denied:

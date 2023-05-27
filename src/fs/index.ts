@@ -21,16 +21,24 @@ export interface Transformer {
 }
 
 export interface Librarian extends Transformer, Library {}
+
+export enum HandleKind {
+    DIR,
+    FILE
+}
+/**
+ * `O` will be used for the implementations. However, {@link Item} nor {@link Dir} needs to know about it.
+ */
 export interface Handle<O = any> {
     isSame(other: Handle): Promise<boolean>;
     readonly name: string;
-    readonly kind: "directory"|"file";
+    readonly kind: HandleKind;
     readonly origin:O;
 }
 
 export interface Item extends Handle {
     get: () => Promise<File>;
-    readonly kind:"file";
+    readonly kind:HandleKind.FILE;
 }
 
 export interface RootDir extends Dir {
@@ -39,7 +47,7 @@ export interface RootDir extends Dir {
 
 export interface Dir extends Handle {
     readonly name: string;
-    readonly kind:"directory";
+    readonly kind:HandleKind.DIR;
     readonly isRoot: boolean;
     getItem: (name:string) => Promise<Item>;
     entries: () => AsyncIterableIterator<Item | Dir>;
