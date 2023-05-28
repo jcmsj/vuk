@@ -1,13 +1,13 @@
 <template>
     <q-list>
-        <VItem v-if="library.root && !library.inRoot" @click="library.goto(library.root)">
+        <VItem v-if="!fs.inRoot" @click="fs.goto(fs.root)">
             /
         </VItem>
-        <VItem v-if="library.levels.length" @click="library.moveUp()">
+        <VItem v-if="!fs.inRoot" @click="fs.moveUp()">
             ../
         </VItem>
     </q-list>
-    <VItem v-for="(item, dirname) of sorter.dirs" :key="dirname"  item_name="folder" @click="library.goto(item)">
+    <VItem v-for="(item, dirname) of sorter.dirs" :key="dirname"  item_name="folder" @click="fs.goto(item)">
         {{ dirname }}
     </VItem>
     <VItem item_name="book"
@@ -17,15 +17,15 @@
     </VItem>
 </template>
 <script setup lang=ts>
-import { FS, Librarian } from 'src/fs';
+import { FS, Item, Librarian } from 'src/fs';
 import VItem from "./VItem.vue"
 const emit = defineEmits<{
-    "open-book":any
+    (event:"open-book", item:Item):void
 }>();
 
-const {sorter, library} = defineProps<{
+const {sorter, fs} = defineProps<{
     sorter: Librarian,
-    library: FS
+    fs: FS
 }>()
 
 </script>

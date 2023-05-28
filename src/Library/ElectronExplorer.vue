@@ -2,7 +2,7 @@
     <BaseActions>
         <LibraryBtn @click="setLibrary" />
     </BaseActions>
-    <VListing v-if="library" :sorter="librarian" :library="library" @open-book="loadBook" />
+    <VListing v-if="library" :sorter="librarian" :fs="library" @open-book="loadBook" />
 </template>
 <script setup lang=ts>
 import { db } from 'src/db/dexie';

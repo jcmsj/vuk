@@ -5,7 +5,7 @@
     </BaseActions>
     <VListing 
         v-if="library"
-        :library="library" 
+        :fs="library" 
         :sorter="librarian" 
         @open-book="loadBook"
     >
