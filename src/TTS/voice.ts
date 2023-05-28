@@ -1,20 +1,24 @@
 import { useLocalStorage } from "@vueuse/core";
 import { reactive } from "vue";
-
+import { Platform } from "quasar";
 export const voice = reactive({
-    value : null as SpeechSynthesisVoice | null,
+    // Using null as SpeechSynthesisUtterance.value uses null
+    value: null as SpeechSynthesisVoice | null,
     voices: [] as SpeechSynthesisVoice[],
-    set(name:string) {
+    attempts: 5,
+    set(name: string) {
         this.value = this.find(v => v.name == name) ?? null
     },
-    find(cb:(v:SpeechSynthesisVoice)=>boolean) {
+    find(cb: (v: SpeechSynthesisVoice) => boolean) {
         return this.voices.find(cb)
     },
-    search(name:string) {
+    search(name: string) {
         return this.find(v => v.name.includes(name))
     },
     load() {
-        this.voices = this.init
+        if (!this.voices.length) {
+            this.voices = this.init
+        }
     },
     get init() {
         return speechSynthesis.getVoices()
@@ -24,16 +28,16 @@ export const voice = reactive({
             alert("Speech Synthesis is unsupported!");
             return;
         }
-        if (!this.voices.length) {
-            this.load()
-            if (attempts && this.voices.length == 0) {
-                setTimeout(this.onMount.bind(this))
-                attempts--
-            }
-        }
+        this.load()
     }
 });
-let attempts = 5;
-export const prefVoice = useLocalStorage("voice", "English")
+export const prefVoice = useLocalStorage("voice", () => {
+    // The default in Google's TTS has the country included
+    if (Platform.is.android) {
+        return "English (United States)"
+    }
+
+    return "English"
+})
 
 export default voice;

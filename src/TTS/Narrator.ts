@@ -17,15 +17,15 @@ export function follow() {
 export const transformer = new Transformer(className.para);
 
 export class Narrator {
-    bus: UseEventBusReturn<string, string>;
+    bus: UseEventBusReturn<EV, void>;
     target?: HTMLElement;
     constructor() {
-        this.bus = useEventBus("narrator")
+        this.bus = useEventBus<EV, void>("narrator")
         const eventMap: EventMap = {
-            "0": this.onExhausted.bind(this),
-            "2": this.onEnd.bind(this),
+            [EV.exhausted]: this.onExhausted.bind(this),
+            [EV.end]: this.onEnd.bind(this),
         };
-        this.bus.on(ev => eventMap[ev as keyof EventMap]?.())
+        this.bus.on(ev => eventMap[ev]?.())
     }
 
     emit(ev: EV) {
