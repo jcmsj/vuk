@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"No test specified\" && exit 0",
+    "spa": "quasar dev -m spa",
     "pwa": "quasar dev -m pwa",
     "pwa-build": "quasar build -m pwa",
     "pwa-surge": "pnpm pwa-build && cd dist/pwa/ && surge --domain https://vuk-pwa.surge.sh/",
@@ -35,6 +36,7 @@
     "autoprefixer": "^10.4.14",
     "electron": "^24.3.1",
     "electron-builder": "^23.6.0",
+    "electron-devtools-installer": "^3.2.0",
     "electron-packager": "17.1.1",
     "internal-ip": "^7.0.0",
     "typescript": "^5.0.4",

@@ -1,7 +1,5 @@
 import { Dirent } from "fs"
 
-export {}
-
 export interface VukElectron {
     open:(e:Electron.IpcMainInvokeEvent, name:string) => Promise<Buffer>,
     list:(e:Electron.IpcMainInvokeEvent, name:string) => Promise<DirectoryEntry[]>,

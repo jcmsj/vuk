@@ -1,7 +1,9 @@
-import { app, BrowserWindow, dialog, ipcMain, nativeTheme } from 'electron';
+import { app, BrowserWindow, nativeTheme } from 'electron';
 import path from 'path';
 import os from 'os';
-import * as vuk from "./vuk"
+import { prepLeave } from './prepLeave';
+import { prepIPC } from './ipc';
+import { prepDev } from './prepDev';
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -35,32 +37,9 @@ function createWindow() {
   mainWindow.maximize()
   mainWindow.loadURL(process.env.APP_URL);
 
-  if (process.env.DEBUGGING) {
-    // if on DEV or Production with debug enabled
-    mainWindow.webContents.openDevTools();
-  } else {
-    // we're on production; no access to devtools pls
-    mainWindow.webContents.on('devtools-opened', () => {
-      mainWindow?.webContents.closeDevTools();
-    });
-  }
-  ipcMain.handle('dialog:openDirectory', vuk.dir)
-  ipcMain.handle("open", vuk.open)
-  ipcMain.handle("list", vuk.list)
-  ipcMain.handle("launch-file", vuk.getLaunchedFile)
-
-  function onLeave(event:Electron.Event) {
-    const options = {
-      type: 'question',
-      buttons: ['Cancel', 'Leave'],
-      message: 'Leave app?',
-      detail: 'Reading progress made may not be saved.',
-    };
-    const response = dialog.showMessageBoxSync(mainWindow, options)
-    if (response === 1) event.preventDefault();
-  };
-
-  mainWindow.webContents.on('will-prevent-unload', onLeave);
+  prepDev(mainWindow);
+  prepIPC();
+  mainWindow.webContents.on('will-prevent-unload', prepLeave(mainWindow));
 }
 
 app.whenReady().then(createWindow);
