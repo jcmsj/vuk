@@ -25,7 +25,7 @@ async function focus(bm: Bookmark) {
     if (maybeElem) {
         refocus(maybeElem)
     } else {
-        const success = await instance!.between({ id: toManifestID(bm) })
+        const success = await instance.value!.between({ id: toManifestID(bm) })
 
         console.log(success ? "Bookmark clicked:" : "Invalid", bm.selector);
         reapply()

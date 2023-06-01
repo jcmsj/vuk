@@ -3,12 +3,13 @@ import { readAloud } from "./readAloud";
 import { EV } from "./EV";
 import { instance } from "../lib/EnhancedEpub";
 import { LoadMethod, loadMethod } from "../Library/Load";
-import Transformer, { walker } from "v-walker";
+import Transformer from "v-walker";
 import { scrollIfUnseen } from "./scrollIfUnseen";
 import { className } from "./constants";
 import { getReadingProgress } from "../lib/useMainElem";
 import { useEventBus, UseEventBusReturn } from "@vueuse/core";
 import { saveProgress } from "src/Bookmarks/useBook";
+import { walker } from "src/Book/Target";
 
 interface EventMap extends Partial<Record<EV, Function | undefined>> { };
 export function follow() {
@@ -18,7 +19,6 @@ export const transformer = new Transformer(className.para);
 
 export class Narrator {
     bus: UseEventBusReturn<EV, void>;
-    target?: HTMLElement;
     constructor() {
         this.bus = useEventBus<EV, void>("narrator")
         const eventMap: EventMap = {
@@ -97,25 +97,6 @@ export class Narrator {
     }
     toggle() {
         isReading.value ? this.stop() : this.start();
-    }
-
-    identify(e: MouseEvent) {
-        const l = e.target as HTMLElement;
-        this.override(l);
-    }
-
-    override(l: HTMLElement) {
-        const n = l.firstChild;
-        if (!n ||walker?.currentNode?.isSameNode(n))
-            return false;
-
-        console.log("Override: ", l);
-        transformer.revert()
-        this.stop()
-
-        // TODO: Ensure target descends from walker.root
-        walker.currentNode = n;
-        this.target = l;
     }
 }
 

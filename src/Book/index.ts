@@ -2,11 +2,11 @@
 import {instance, LoadedChapter} from "../lib/EnhancedEpub";
 import {refocus} from "../lib/helpers"
 import { LoadMethod, loadMethod } from "../Library/Load";
-import { setWalker } from "v-walker";
-import { narrator } from "../TTS/Narrator";
 import { view, pages, next, prev} from "./Pages";
 import { useLocalStorage } from "@vueuse/core";
 import { reapply } from "src/Bookmarks/useBook";
+import { shallowRef } from "vue";
+import { setWalker, target } from "./Target";
 
 const options = Object.freeze({
     root: null,
@@ -14,24 +14,18 @@ const options = Object.freeze({
     threshold : 0.9
 });
 
-const addObserver = new IntersectionObserver(([entry], _) => {
+const addObserver = shallowRef(new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
-        entry.target.classList.remove("add")
-        instance.value?.next()
+        entry.target.classList.remove("add");
+        instance.value?.next();
     }
-}, options)
-
-const dropObserver = new IntersectionObserver(([entry], _) => {
+}, options));
+const dropObserver = shallowRef(new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
-        entry.target.classList.remove("rem", "hasleft")
-        instance.value?.previous()
+        entry.target.classList.remove("rem", "hasleft");
+        instance.value?.previous();
     }
-}, options)
-
-export function clearChilds(lem:HTMLElement) {
-    while(lem?.firstElementChild)
-        lem.firstElementChild.remove();
-}
+}, options));
 
 /**
  * Disables Chapter loaders
@@ -41,8 +35,8 @@ export async function unobserve() {
         throw TypeError("One or more observer elements ('next' or 'prev') are absent");
     }
 
-    addObserver.unobserve(next.value)
-    dropObserver.unobserve(prev.value)
+    addObserver.value.unobserve(next.value)
+    dropObserver.value.unobserve(prev.value)
 }
 
 export async function observe(fresh=true) {
@@ -50,8 +44,8 @@ export async function observe(fresh=true) {
         return;
 
     if (loadMethod.value == LoadMethod.lazy) {
-        addObserver.observe(next.value!)
-        dropObserver.observe(prev.value!)
+        addObserver.value.observe(next.value!)
+        dropObserver.value.observe(prev.value!)
     }
 
     if(fresh) {
@@ -69,7 +63,7 @@ export async function reassign() {
     setWalker(view.value);
     const maybeLatest = await reapply()
     if (maybeLatest) {
-        narrator.override(maybeLatest.elem);
+        target.override(maybeLatest.elem);
         refocus(maybeLatest.elem)
     }
 }

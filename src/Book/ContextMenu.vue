@@ -14,7 +14,7 @@ import { toggle } from 'src/Bookmarks/useBook';
 import { narrator } from 'src/TTS/Narrator';
 import MenuItem from './MenuItem.vue';
 import { MenuItemProps } from './MenuItemProps';
-
+import {target} from "./Target"
 const items: MenuItemProps[] = [
     {
         label: "Read aloud",
@@ -29,7 +29,7 @@ const items: MenuItemProps[] = [
         icon: "bookmark_add",
         cb() {
             toggle(
-                narrator.target!
+                target.element!
             )
         }
     },
