@@ -37,16 +37,16 @@ watch(rawStyle, style => {
 })
 
 watch(() => book.title, async (it) => {
-    if (!instance || !it)
+    if (!instance.value || !it)
         return;
-    const styles = instance.matchAll(/style|css/) || []
+    const styles = instance.value.matchAll(/style|css/)
 
     if (DevMode.value) {
         console.log(styles);
     }
     
     rawStyle.value = (await Promise.all(
-        styles.map(s => instance.getContentRaw(s.id))))
+        styles.map(s => instance.value?.getContentRaw(s.id))))
         .join("\n");
 })
 </script>

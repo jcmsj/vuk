@@ -17,14 +17,14 @@ const options = Object.freeze({
 const addObserver = new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("add")
-        instance?.next()
+        instance.value?.next()
     }
 }, options)
 
 const dropObserver = new IntersectionObserver(([entry], _) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("rem", "hasleft")
-        instance?.previous()
+        instance.value?.previous()
     }
 }, options)
 

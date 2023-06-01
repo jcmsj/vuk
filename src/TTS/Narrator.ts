@@ -46,7 +46,7 @@ export class Narrator {
     private async onExhausted() {
         if (loadMethod.value == LoadMethod.lazy) {
             try {
-                await instance?.next();
+                await instance.value?.next();
                 this.next(true)
             } catch (e) {
                 isReading.value = false;
@@ -106,7 +106,7 @@ export class Narrator {
 
     override(l: HTMLElement) {
         const n = l.firstChild;
-        if (!n || walker.currentNode?.isSameNode(n))
+        if (!n ||walker?.currentNode?.isSameNode(n))
             return false;
 
         console.log("Override: ", l);

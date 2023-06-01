@@ -10,7 +10,7 @@ export async function anchorClicked(e: MouseEvent, id?:string) {
     if (loadMethod.value == LoadMethod.all) {
       document.getElementById(id)?.scrollIntoView()
     } else {
-      instance.between({id})
+      instance.value?.between({id})
     }
   }
 }

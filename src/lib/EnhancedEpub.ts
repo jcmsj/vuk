@@ -5,6 +5,7 @@ import { BoundaryError } from "./BoundaryError";
 import { EpubArgs } from "@jcsj/epub";
 import { MemoizedEpubAndSanitized } from "@jcsj/epub"
 import { CleanEpub } from "@jcsj/epub/lib/sanitize";
+import { shallowRef } from "vue";
 export interface LoadedChapter {
     id: string,
     html: string
@@ -25,12 +26,11 @@ export interface EnhancedEpub extends CleanEpub {
     render(pos: LoadPosition): Promise<void>;
     previous(): Promise<void>;
 }
-export let instance: EnhancedEpub;
-
+export let instance = shallowRef<EnhancedEpub>();
 export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
     a.chapterTransformer = simplifyHTMLTree;
     const old = await MemoizedEpubAndSanitized(a);
-    instance = {
+    instance.value = {
         ...old,
         index: 0,
         id: "", //The currently shown flow item called from between
@@ -130,6 +130,5 @@ export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
             }
         }
     }
-
-    return instance;
+    return instance.value;
 }

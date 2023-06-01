@@ -1,34 +1,27 @@
 <template>
     <q-menu touch-position auto-close>
         <q-list>
-            <q-item v-for="item of items" clickable :key="item.label" @click="item.cb">
-                <q-item-section avatar>
-                    <q-icon :name="item.icon" />
-                </q-item-section> 
-                <q-item-section>
-                    {{ item.label }}
-                </q-item-section>             
-            </q-item>
+            <menu-item v-for="item of items" 
+            :key="item.label" 
+            :item="item"
+            @click="item.cb"
+            ></menu-item>
         </q-list>
     </q-menu>
 </template>
 <script setup lang=ts>
 import { toggle } from 'src/Bookmarks/useBook';
 import { narrator } from 'src/TTS/Narrator';
+import MenuItem from './MenuItem.vue';
+import { MenuItemProps } from './MenuItemProps';
 
-interface MenuItem {
-    label: string,
-    icon: string,
-    cb: () => void
-}
-
-const items: MenuItem[] = [
+const items: MenuItemProps[] = [
     {
         label: "Read aloud",
         icon: "campaign",
         cb() {
-            narrator.stop()
-            narrator.start()
+            narrator.stop();
+            narrator.start();
         }
     },
     {
