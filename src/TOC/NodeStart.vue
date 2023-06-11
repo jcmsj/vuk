@@ -3,7 +3,7 @@
     :active="props.active" 
     class="node"
 >
-    <div v-if="props.level > maxLevel" />
+    <div v-if="props.level > maxLevel"></div>
     <q-item
         v-else 
         v-for="[key, item] of props.items"
@@ -15,6 +15,7 @@
             v-if="item.navPoint"
             :item="item"
             :items="item.navPoint"
+            :level="props.level + 1"
         />
         <router-link
             v-else 
@@ -26,28 +27,17 @@
     </q-item>
 </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import NodeEnd from "./NodeEnd.vue";
 import {anchorClicked} from "../Library/anchorClicked"
+import { Chapter } from "@jcsj/epub/lib/traits";
 
 const maxLevel = 7;
-const props = defineProps({
-    "items": {
-        type: Map,
-        default() {
-            return new Map()
-        }
-    },
-    "active": {
-        type : Boolean,
-        default() {
-            return true;
-        }
-    },
-    "level": {
-        type: Number
-    }
-})
+const props = defineProps< {
+    readonly items: Map<string, Chapter>;
+    readonly active: boolean;
+    readonly level: number;
+}>();
 
 </script>
 <style lang='sass' scoped>
