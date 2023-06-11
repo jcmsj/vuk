@@ -1,15 +1,15 @@
 <template>
     <section>
-        <q-btn-group class="controls" v-if="reveal">
+        <q-btn-group class="controls" v-if="status == Status.ON">
             <MediaControls />
             <Settings />
         </q-btn-group>
     </section>
 </template>
 <script setup lang="ts">
-import reveal from "./reveal";
 import MediaControls from "./MediaControls.vue"
 import Settings from "./Settings.vue"
+import { status, Status } from "./voice";
 
 </script>
 <style lang="sass">

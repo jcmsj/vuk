@@ -66,11 +66,11 @@ export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
             )
                 return false;
 
-            const leftMost = index - this.range
-            const rightMost = index + this.range
-            const before: string[] = this.slice(Math.max(0, leftMost), index - 1);
+            const leftMost = Math.max(0, index - this.range)
+            const rightMost = Math.min(index + this.range, this.parts.flow.size)
+            const before: string[] = this.slice(leftMost, index - 1);
             //center == id
-            const after: string[] = this.slice(index + 1, Math.min(rightMost, this.parts.flow.size))
+            const after: string[] = this.slice(index + 1, rightMost);
 
             const toBeLoaded = await Promise.all([
                 ...before,

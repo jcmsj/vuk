@@ -1,5 +1,5 @@
 import { Platform } from 'quasar';
-import { loadBookFromFile } from './fileReader';
+import { loadBookFromFile } from '../src/Library/fileReader';
 
 /**
  * @Electron

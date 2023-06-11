@@ -4,11 +4,10 @@
     </label>
     <select
         name="voice-pack"
-        @change="voice.set($event.target!.value)"
-        :value="prefVoice"
+        v-model="prefVoice"
     >
         <option
-            v-for="({name}) in voice.voices"
+            v-for="({name}) in voices"
             :key="name"
             :value="name"
         >
@@ -17,12 +16,8 @@
     </select>
 </template>
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
-import voice, {prefVoice} from "./voice";
+import  {prefVoice, voices} from "./voice";
 
-onBeforeMount(() => {
-    voice.onMount()
-})
 </script>
 <style lang='sass' scoped>
 </style>

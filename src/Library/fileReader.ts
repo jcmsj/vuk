@@ -53,7 +53,7 @@ export async function loadBookFromFile(anEpub: File) {
     switch (loadMethod.value) {
         case LoadMethod.lazy:
             let index = 0;
-            const tail = book.bookmarks[book.bookmarks.length - 1]
+            const tail = book.bookmarks[book.bookmarks.length - 1];
             //else new book
             if (tail) {
                 const id = toManifestID(tail);
@@ -77,25 +77,4 @@ export async function loadBookFromHandle(h: FileSystemFileHandle) {
     await loadBookFromFile(
         await h.getFile()
     )
-}
-
-/**
- * @PWA
- */
-export async function loadBookFromLauncher() {
-    if (!("launchQueue" in window && "files" in LaunchParams.prototype)) {
-        console.log("File Handling API is unsupported")
-        return
-    }
-
-    // The File Handling API is supported.
-    launchQueue.setConsumer((launchParams) => {
-        // Nothing to do when the queue is empty.
-        if (!launchParams.files.length) {
-            console.log("No files to be launched!");
-            return;
-        }
-        const [handle] = launchParams.files;
-        loadBookFromHandle(handle);
-    });
 }

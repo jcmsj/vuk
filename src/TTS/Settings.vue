@@ -17,19 +17,8 @@ import SpeechRateController from "./SpeechRateController.vue"
 import VoiceSelector from "./VoiceSelector.vue"
 import { onBeforeMount, watch } from "vue";
 import { useLocalStorage } from "@vueuse/core";
-import voice, {prefVoice} from "./voice";
+import {prefVoice} from "./voice";
 
-watch(voice.voices, vs => {
-    if (vs.length) {
-        voice.value = voice.search(prefVoice.value)
-    }
-})
-
-watch(() => voice.value, v => {
-    prefVoice.value = v.name
-})
-
-onBeforeMount(voice.onMount.bind(voice))
 </script>
 <style lang="sass">
 @import "src/sass/media_queries"

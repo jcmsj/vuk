@@ -1,43 +1,35 @@
 import { useLocalStorage } from "@vueuse/core";
-import { reactive } from "vue";
+import { computed } from "vue";
 import { Platform } from "quasar";
-export const voice = reactive({
-    // Using null as SpeechSynthesisUtterance.value uses null
-    value: null as SpeechSynthesisVoice | null,
-    voices: [] as SpeechSynthesisVoice[],
-    attempts: 5,
-    set(name: string) {
-        this.value = this.find(v => v.name == name) ?? null
-    },
-    find(cb: (v: SpeechSynthesisVoice) => boolean) {
-        return this.voices.find(cb)
-    },
-    search(name: string) {
-        return this.find(v => v.name.includes(name))
-    },
-    load() {
-        if (!this.voices.length) {
-            this.voices = this.init
-        }
-    },
-    get init() {
-        return speechSynthesis.getVoices()
-    },
-    onMount() {
-        if (!window.speechSynthesis) {
-            alert("Speech Synthesis is unsupported!");
-            return;
-        }
-        this.load()
-    }
-});
+
 export const prefVoice = useLocalStorage("voice", () => {
     // The default in Google's TTS has the country included
     if (Platform.is.android) {
         return "English (United States)"
     }
+    if (Platform.is.win) {
+        return "Microsoft David - English (United States)"
+    }
 
     return "English"
 })
+export const voices = computed(() => window.speechSynthesis.getVoices());
 
-export default voice;
+export const voice = computed(() => voices.value.find(it => it.name === prefVoice.value));
+export enum Status {
+    OFF,
+    ON,
+    UNSUPPORTED
+};
+
+export const status = useLocalStorage<Status>("tts-state", () => {
+    if (window.speechSynthesis) {
+        return Status.ON
+    } else {
+        return Status.UNSUPPORTED
+    }
+});
+
+export function setPreferred(name: string) {
+    prefVoice.value = name;
+}
