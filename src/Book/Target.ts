@@ -13,14 +13,13 @@ interface Target {
     identify(e: MouseEvent): void;
     override(l: HTMLElement): boolean;
 }
-
 export const target = shallowReactive<Target>({
     element:undefined,
     identify(e:MouseEvent) {
         if (e.target instanceof HTMLElement) {
             this.override(e.target);
         } else {
-            console.log(e.AT_TARGET, " is not an element!")
+            console.log(e.target, " is not an element!")
         }
     },
     override(l: HTMLElement) {

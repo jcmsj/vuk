@@ -1,3 +1,4 @@
+import { FileSystemPermissionMode, FileSystemHandlePermissionDescriptor, FileSystemHandle } from "browser-fs-access";
 import { Dir, Handle, HandleKind, Item, Status } from ".";
 import { db } from "../db/dexie";
 import { settings_id } from "../settings/settings_id";
@@ -7,7 +8,7 @@ export async function verifyPermission(handle?: FileSystemDirectoryHandle, mode:
     if (!handle)
         return false;
 
-    const options: FileSystemPermissionDescriptor = {
+    const options: FileSystemHandlePermissionDescriptor = {
         mode,
         handle,
         name: "push"
@@ -77,7 +78,12 @@ export function asDir(dir: FileSystemDirectoryHandle): Dir {
         },
         async *entries() {
             for await (const [_, h] of dir.entries()) {
-                yield h.kind === "file" ? asItem(h) : asDir(h);
+                if (h.kind[0] === "d" /* directory */) {
+                    yield asDir(h);
+                } else if (h.name.endsWith(".epub")) {
+                    yield asItem(h);
+                }
+                // else skip
             }
         }
     }

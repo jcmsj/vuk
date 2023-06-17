@@ -5,8 +5,8 @@
             Open
         </q-btn>
         <slot></slot>
+        <input type=file hidden ref=chooser @change=selectFile :accept="INFO.MIME">
     </q-btn-group>
-    <input type=file hidden ref=chooser @change=selectFile :accept="INFO.MIME">
 </template>
 <script setup lang=ts>
 import { ref } from 'vue';

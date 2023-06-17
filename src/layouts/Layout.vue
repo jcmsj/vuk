@@ -9,7 +9,7 @@
   <main>
     <RouterView v-slot="{ Component, route }">
       <Transition name="slide">
-        <q-card v-if="route.path != '/'" class="panel" :class="onNoTouch ? 'shadow-4' : ''">
+        <q-card v-if="route.path != '/'" class="panel" :class="{'shadow-4': onNoTouch}">
           <component :is="Component" :key="route.path" />
         </q-card>
       </Transition>

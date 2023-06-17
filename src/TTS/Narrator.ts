@@ -47,43 +47,40 @@ export class Narrator {
         if (loadMethod.value == LoadMethod.lazy) {
             try {
                 await instance.value?.next();
-                this.next(true)
+                this.next()
+                this.emit(EV.exhausted)
             } catch (e) {
                 isReading.value = false;
             }
         }
     }
 
-    private next(exhausted=false) {
+    private next() {
         //IMPORTANT: The span tags made by Transformer should never be included.
         transformer.revert()
         const n = walker.nextNode();
         if (n) {
             this.beforeSpeak(n);
-        } else if (!exhausted){
-            this.emit(EV.exhausted)
         }
     }
 
     /**
      * `txt` or the node's text
      */
-    private beforeSpeak(n: Node, txt?: string) {
-        txt ??= n.textContent ?? "";
+    private beforeSpeak(n: Node) {
+        let txt = n.textContent ?? "";
 
         if (txt.length == 0) {
             this.next();
             return;
         }
         const charIndex = transformer.transform(n, transformer.elem?.index || 0);
-        if (charIndex) {
-            txt = txt.slice(charIndex);
-        }
+        txt = txt.slice(charIndex);
         readAloud(txt)
         follow()
     }
-    start(at?: string) {
-        this.beforeSpeak(walker.currentNode, at)
+    start() {
+        this.beforeSpeak(walker.currentNode)
     }
 
     stop() {

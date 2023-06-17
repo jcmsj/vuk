@@ -35,15 +35,14 @@ export function asDir(name:string):Dir {
         isRoot: false,
         kind:HandleKind.DIR,
         async getItem(name) {
-            name += name.endsWith(".epub") ? "": "/"
             return asItem(full(name));
         },
         async *entries() {
             const pair = await window.vuk.list(full(this.name));
-            for (const [_,dirent] of Object.entries(pair.dirs)) {
+            for (const dirent of Object.values(pair.dirs)) {
                 yield asDir(dirent.name);
             }
-            for (const [_,filent] of Object.entries(pair.books)) {
+            for (const filent of Object.values(pair.books)) {
                 yield asItem(filent.name)
             }
         },

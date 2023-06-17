@@ -29,7 +29,3 @@ export const status = useLocalStorage<Status>("tts-state", () => {
         return Status.UNSUPPORTED
     }
 });
-
-export function setPreferred(name: string) {
-    prefVoice.value = name;
-}

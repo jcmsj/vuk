@@ -1,18 +1,27 @@
 import { Platform } from "quasar";
+import CapacitorExplorer from "src/Library/CapacitorExplorer.vue";
+import ElectronExplorer from "src/Library/ElectronExplorer.vue";
+import Explorer from "src/Library/Explorer.vue";
+import Layout from "src/layouts/Layout.vue";
 import { RouteRecordRaw } from "vue-router";
+
+function determineExplorer() {
+  if (Platform.is.electron) {
+    return ElectronExplorer;
+  } else if (Platform.is.capacitor) {
+    return CapacitorExplorer;
+  }
+  return Explorer;
+}
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("src/layouts/Layout.vue"),
+    component: Layout,
     children: [
       {
         path: "browse",
-        component: () => {
-          if (Platform.is.electron) {
-            return import("src/Library/ElectronExplorer.vue")
-          }
-          return import("src/Library/Explorer.vue")
-        }
+        component: determineExplorer(),
       },
       {
         path: "config",
