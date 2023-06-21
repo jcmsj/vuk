@@ -1,7 +1,7 @@
-import { BrowserWindow, dialog } from "electron";
+import { BrowserWindow, MessageBoxSyncOptions, dialog } from "electron";
 
 export function prepLeave(mainWindow:BrowserWindow) {
-  const options = {
+  const options:MessageBoxSyncOptions = {
     type: 'question',
     buttons: ['Cancel', 'Leave'],
     message: 'Leave app?',

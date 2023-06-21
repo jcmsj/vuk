@@ -40,6 +40,11 @@ function createWindow() {
   prepDev(mainWindow);
   prepIPC();
   mainWindow.webContents.on('will-prevent-unload', prepLeave(mainWindow));
+  // Restore pinch zoom
+  mainWindow.webContents.setVisualZoomLevelLimits(1,3); 
+  mainWindow.webContents.on("zoom-changed", (_, direction) => {
+    mainWindow.webContents.zoomFactor += 0.2 * (direction == "in" ? 1:-1);
+  })
 }
 
 app.whenReady().then(createWindow);
