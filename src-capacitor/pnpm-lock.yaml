@@ -1,6 +1,13 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
+  '@capacitor/android':
+    specifier: ^5.0.0
+    version: 5.0.5(@capacitor/core@5.0.4)
   '@capacitor/app':
     specifier: ^5.0.2
     version: 5.0.2(@capacitor/core@5.0.4)
@@ -10,8 +17,22 @@ dependencies:
   '@capacitor/core':
     specifier: ^5.0.4
     version: 5.0.4
+  '@capacitor/filesystem':
+    specifier: ^5.0.4
+    version: 5.0.4(@capacitor/core@5.0.4)
+  '@jcesarmobile/ssl-skip':
+    specifier: ^0.2.0
+    version: 0.2.0
 
 packages:
+
+  /@capacitor/android@5.0.5(@capacitor/core@5.0.4):
+    resolution: {integrity: sha512-vH5Qoy+p2Egsu1GtPtOsihHcEI2fCGCIHwlUGPaXXGysudzpzWtJZ5JZNlycJyfRdjECrjkutgbNaHLog+YlXQ==}
+    peerDependencies:
+      '@capacitor/core': ^5.0.0
+    dependencies:
+      '@capacitor/core': 5.0.4
+    dev: false
 
   /@capacitor/app@5.0.2(@capacitor/core@5.0.4):
     resolution: {integrity: sha512-TRs5Iu94+IfUJ4iiljWC0tuVsHXBOD4asADggpUH6DnwlQo3cVuRnFK+A0jJnWW9GvlFy9uTsXxytzzXP/V0vQ==}
@@ -51,6 +72,14 @@ packages:
     resolution: {integrity: sha512-BFvziz9jM87pLHW2sXPNIzwrdmI5mAP0tBsBHgXoCO2+wVdpvIMYCpcst5BuTULaMz5JBFZZ6g6nqwgfs+SMCA==}
     dependencies:
       tslib: 2.5.2
+    dev: false
+
+  /@capacitor/filesystem@5.0.4(@capacitor/core@5.0.4):
+    resolution: {integrity: sha512-dsmy8Hz19+SMI5hwTzHto3TXT3ckbgCJ5kfI4oel73yyn3G7zjdKZuHoZRINoX1BbFNSZryzpbMQ69lSOLCpnQ==}
+    peerDependencies:
+      '@capacitor/core': ^5.0.0
+    dependencies:
+      '@capacitor/core': 5.0.4
     dev: false
 
   /@ionic/cli-framework-output@2.2.6:
@@ -151,6 +180,10 @@ packages:
       wrap-ansi: 7.0.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@jcesarmobile/ssl-skip@0.2.0:
+    resolution: {integrity: sha512-hkhOM5+qPm5xzOYcbUODzYTZKyATEM3qixzUL1gJsJckZ5wAUQxyZJFM3hcUANv8fV8cONfX7A+d/DJpzVvM+Q==}
     dev: false
 
   /@types/fs-extra@8.1.2:

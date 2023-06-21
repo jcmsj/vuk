@@ -1,6 +1,6 @@
 {
   "name": "vuk",
-  "version": "0.0.28.2",
+  "version": "0.0.28.3",
   "description": "A cross-platform epub reader",
   "productName": "Vuk",
   "author": "Jean Carlo San Juan",
@@ -16,6 +16,7 @@
     "elec-debug": "quasar build -m electron --debug"
   },
   "dependencies": {
+    "@capacitor/filesystem": "^5.0.4",
     "@jcsj/arraymap": "^0.0.4",
     "@jcsj/epub": "link:D:/code/epub",
     "@quasar/extras": "^1.16.4",
