@@ -28,13 +28,10 @@ export async function load(title: string) {
     book.title = title;
     const _book: Book | undefined = await db.books.get({ title }) || undefined;
     if (_book) {
-        //Restore
+        // Restore
         Object.assign(book, _book);
-        //book.id = _book.id;
-        //book.bookmarks = _book.bookmarks;
-        //book.auto = _book.auto   
     } else {
-        //Create new entry
+        // Create new entry
         book.bookmarks = [];
         book.id = undefined;
         book.id = await db.books.add(toRaw(book)) as number;
