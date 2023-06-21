@@ -1,0 +1,7 @@
+{
+  "appId": "org.jcsj.vuk",
+  "appName": "Vuk",
+  "bundledWebRuntime": false,
+  "npmClient": "pnpm",
+  "webDir": "www"
+}
