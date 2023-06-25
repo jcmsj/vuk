@@ -1,6 +1,6 @@
 import { Book, db } from "../db/dexie";
 import { reactive, toRaw } from "vue";
-import generateSelector from "generate-selector";
+import generateSelector from "@jcsj/generate-selector";
 import mainElem, { getReadingProgress } from "src/lib/useMainElem";
 import { Bookmark } from "./";
 

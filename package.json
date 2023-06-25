@@ -1,6 +1,6 @@
 {
   "name": "vuk",
-  "version": "0.0.28.2",
+  "version": "0.0.28.3",
   "description": "A cross-platform epub reader",
   "productName": "Vuk",
   "author": "Jean Carlo San Juan",
@@ -18,12 +18,12 @@
   "dependencies": {
     "@jcsj/arraymap": "^0.0.4",
     "@jcsj/epub": "link:D:/code/epub",
+    "@jcsj/generate-selector": "^0.0.2",
     "@quasar/extras": "^1.16.4",
     "@tauri-apps/api": "2.0.0-alpha.4",
     "@vueuse/core": "^10.1.2",
     "browser-fs-access": "^0.34.1",
     "dexie": "^3.2.4",
-    "generate-selector": "link:E:/Code/Web Dev/SMALL/generate-selector",
     "quasar": "^2.12.0",
     "v-walker": "link:D:/code/v-walker",
     "vue": "^3.3.4",
