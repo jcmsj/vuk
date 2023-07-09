@@ -2,7 +2,6 @@ import simplifyHTMLTree from "./simplifyHTMLTree";
 import { render as renderView, reassign, repaint, LoadPosition } from "../Book";
 import { range } from "./range"
 import { BoundaryError } from "./BoundaryError";
-import { EpubArgs } from "@jcsj/epub";
 import { MemoizedEpubAndSanitized } from "@jcsj/epub"
 import { CleanEpub } from "@jcsj/epub/lib/sanitize";
 import { shallowRef } from "vue";
@@ -27,9 +26,10 @@ export interface EnhancedEpub extends CleanEpub {
     previous(): Promise<void>;
 }
 export let instance = shallowRef<EnhancedEpub>();
-export async function Enhanced(a: EpubArgs): Promise<EnhancedEpub> {
+export async function Enhanced(a:  Parameters<typeof MemoizedEpubAndSanitized>["0"]): Promise<EnhancedEpub> {
     a.chapterTransformer = simplifyHTMLTree;
     const old = await MemoizedEpubAndSanitized(a);
+
     instance.value = {
         ...old,
         index: 0,

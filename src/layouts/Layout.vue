@@ -25,6 +25,7 @@ import { toggleSelect, toHome } from "./Tab"
 import { RouterView } from 'vue-router';
 import { QTabs, QRouteTab, QCard } from 'quasar';
 import { Transition } from 'vue';
+import { log } from 'src/settings/DevMode';
 /* if device has no touch screen */
 const onNoTouch = useMediaQuery("(any-pointer: fine) and (min-width: 1024px)");
 
@@ -34,9 +35,8 @@ const hotkeys = {
   t: "toc",
   c: "config",
 }
-
 useEventListener("keyup", e => {
-  console.log(e.key);
+  log(e.key)  
 
   switch (e.key) {
     case "Escape":

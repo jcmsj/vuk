@@ -1,5 +1,4 @@
 import { Platform } from "quasar";
-import CapacitorExplorer from "src/Library/CapacitorExplorer.vue";
 import ElectronExplorer from "src/Library/ElectronExplorer.vue";
 import Explorer from "src/Library/Explorer.vue";
 import Layout from "src/layouts/Layout.vue";
@@ -8,9 +7,7 @@ import { RouteRecordRaw } from "vue-router";
 function determineExplorer() {
   if (Platform.is.electron) {
     return ElectronExplorer;
-  } else if (Platform.is.capacitor) {
-    return CapacitorExplorer;
-  }
+  } 
   return Explorer;
 }
 

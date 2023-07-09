@@ -1,7 +1,7 @@
 <template>
     <q-item>
         <q-item-label header>
-            Reduce logs:
+            Show logs:
         </q-item-label>
         <q-item-section>
             <q-toggle :label="devMode" v-model="DevMode" :icon="devMode" />
