@@ -5,6 +5,6 @@ export default DevMode;
 
 export function log(...args:Parameters<typeof console.log>) {
     if (DevMode.value) {
-        console.log(args)
+        console.log(...args)
     }
 }

@@ -5,6 +5,7 @@ import { BoundaryError } from "./BoundaryError";
 import { MemoizedEpubAndSanitized } from "@jcsj/epub"
 import { CleanEpub } from "@jcsj/epub/lib/sanitize";
 import { shallowRef } from "vue";
+import { log } from "src/settings/DevMode";
 export interface LoadedChapter {
     id: string,
     html: string
@@ -26,10 +27,25 @@ export interface EnhancedEpub extends CleanEpub {
     previous(): Promise<void>;
 }
 export let instance = shallowRef<EnhancedEpub>();
-export async function Enhanced(a:  Parameters<typeof MemoizedEpubAndSanitized>["0"]): Promise<EnhancedEpub> {
+export async function Enhanced(a: Parameters<typeof MemoizedEpubAndSanitized>["0"]): Promise<EnhancedEpub> {
     a.chapterTransformer = simplifyHTMLTree;
-    const old = await MemoizedEpubAndSanitized(a);
+    a.fallbackImage = ""
+    // Try to load stuff from entries
+    a.missingMediaHandler = async(it) => {
+        const l = await old.parser.reader.read(it.src.replace("../", ""), "image/*");
+        if (l && l.data instanceof Blob) {
+            log("Found: ", it.src)
+            const d = URL.createObjectURL(l.data as Blob)
+            it.img.setAttribute(it.key, d) 
+            return d
+        }
+        log("Still missing: ", it.src);
 
+        return undefined
+    }
+    const old = await MemoizedEpubAndSanitized(a);
+    console.log(old.parser.reader.entries);
+    
     instance.value = {
         ...old,
         index: 0,
