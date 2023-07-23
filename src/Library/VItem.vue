@@ -15,11 +15,6 @@ interface ItemProps extends QItemProps {
     item_name?:string
 }
 
-const {item_name} = withDefaults(
-    defineProps<ItemProps>(), 
-    {
-        item_name: "folder"
-    }
-);
+const {item_name = "folder"} = defineProps<ItemProps>()
 
 </script>

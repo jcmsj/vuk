@@ -3,7 +3,7 @@
     :active="props.active" 
     class="node"
 >
-    <div v-if="props.level > maxLevel"></div>
+    <div v-if="props.level > maxDepth"></div>
     <q-item
         v-else 
         v-for="[key, item] of props.items"
@@ -17,22 +17,15 @@
             :items="item.navPoint"
             :level="props.level + 1"
         />
-        <router-link
-            v-else 
-            :to="'/#' + item.id"
-            @click="anchorClicked($event, item.id)"
-        >
-            {{item.title}}
-        </router-link>
+        <ItemLink :item="item"/>
     </q-item>
 </div>
 </template>
 <script setup lang="ts">
-import NodeEnd from "./NodeEnd.vue";
-import {anchorClicked} from "../Library/anchorClicked"
 import { Chapter } from "@jcsj/epub/lib/traits";
-
-const maxLevel = 7;
+import NodeEnd from "./NodeEnd.vue";
+import ItemLink from "./ItemLink.vue"
+import { maxDepth } from ".";
 const props = defineProps< {
     readonly items: Map<string, Chapter>;
     readonly active: boolean;
