@@ -20,7 +20,6 @@ export const book = reactive<Book>({
     id: -1,
     title: "Vuk",
     bookmarks: [],
-    recentId: 0,
 });
 
 export default book;
