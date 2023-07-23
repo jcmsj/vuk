@@ -35,7 +35,12 @@ const hotkeys = {
   t: "toc",
   c: "config",
 }
-useEventListener("keyup", e => {
+
+useEventListener("keyup",  e => {
+  if (e.target instanceof HTMLInputElement) {
+    return 
+  }
+
   log(e.key)  
 
   switch (e.key) {

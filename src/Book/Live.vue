@@ -13,8 +13,6 @@ import PageView from "./PageView.vue";
 import "../Bookmarks/background"; // For Side effects
 </script>
 <style lang='sass' scoped>
-@import "src/sass/media_queries"
-@import "src/sass/mixins"
     
 article
     overflow-y: auto

@@ -11,7 +11,13 @@ import {isReading, toggleReading} from ".";
 import {onKeyUp} from "@vueuse/core";
 
 const keys = ["r","F8","MediaPlayPause"];
-onKeyUp(keys, toggleReading)
+onKeyUp(keys, e => {
+    if (e.target instanceof HTMLInputElement) {
+        return
+    }
+
+    toggleReading()
+})
 
 </script>
 <style lang='sass'>
