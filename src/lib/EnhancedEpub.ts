@@ -1,11 +1,12 @@
 import simplifyHTMLTree from "./simplifyHTMLTree";
-import { render as renderView, reassign, repaint, LoadPosition } from "../Book";
+import { render as renderView, LoadPosition } from "../Book";
 import { range } from "./range"
 import { BoundaryError } from "./BoundaryError";
 import { MemoizedEpubAndSanitized } from "@jcsj/epub"
 import { CleanEpub } from "@jcsj/epub/lib/sanitize";
 import { shallowRef } from "vue";
 import { log } from "src/settings/DevMode";
+import { pages } from "src/Book/Pages";
 export interface LoadedChapter {
     id: string,
     html: string
@@ -97,19 +98,15 @@ export async function Enhanced(a: Parameters<typeof MemoizedEpubAndSanitized>["0
             //Reassign if toBeloaded resolves
             this.index = index;
             this.id = id;
-
-            repaint(toBeLoaded)
-            await reassign()
+            pages.value = toBeLoaded;
             return true;
         },
 
         async loadAll() {
-            repaint(
-                await Promise.all([...this.parts.flow.keys()]
+            pages.value = await Promise
+            .all([...this.parts.flow.keys()]
                     .map(this.retrieve, this)
-                ));
-
-            await reassign()
+                );
         },
 
         async next() {
