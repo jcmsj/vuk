@@ -6,7 +6,7 @@ import { Bookmark } from "./";
 
 export interface Latest {
     bm: Bookmark,
-    elem: Element
+    elem: HTMLElement
 }
 
 type MaybeLatest = Latest | undefined;
@@ -64,7 +64,7 @@ export function getPreview(elem: HTMLElement | HTMLImageElement, upTo: number) {
     return t.slice(0, upTo)
 }
 
-type Querier = (selector: string) => Element | null;
+type Querier = (selector: string) =>HTMLElement| null;
 export function determineLatest(querier: Querier) {
     return (items: Bookmark[]): MaybeLatest => {
         const it = items.reduce<Bookmark | null>((latest, bm) => {
@@ -77,7 +77,7 @@ export function determineLatest(querier: Querier) {
 }
 export function addClassForElement(className: string) {
     return (selector: string) => {
-        const lem = document.querySelector(selector)
+        const lem = document.querySelector<HTMLElement>(selector)
         lem?.classList.add(className)
         return lem
     }
