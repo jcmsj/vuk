@@ -31,12 +31,12 @@ export async function Enhanced(a: Parameters<typeof MemoizedEpubAndSanitized>["0
     a.chapterTransformer = simplifyHTMLTree;
     a.fallbackImage = ""
     // Try to load stuff from entries
-    a.missingMediaHandler = async(it) => {
+    a.missingMediaHandler = async (it) => {
         const l = await old.parser.reader.read(it.src.replace("../", ""), "image/*");
         if (l && l.data instanceof Blob) {
             log("Found: ", it.src)
             const d = URL.createObjectURL(l.data as Blob)
-            it.img.setAttribute(it.key, d) 
+            it.img.setAttribute(it.key, d)
             return d
         }
         log("Still missing: ", it.src);
@@ -45,7 +45,7 @@ export async function Enhanced(a: Parameters<typeof MemoizedEpubAndSanitized>["0
     }
     const old = await MemoizedEpubAndSanitized(a);
     console.log(old.parser.reader.entries);
-    
+
     instance.value = {
         ...old,
         index: 0,
@@ -98,13 +98,13 @@ export async function Enhanced(a: Parameters<typeof MemoizedEpubAndSanitized>["0
             this.index = index;
             this.id = id;
 
-            await repaint(toBeLoaded)
+            repaint(toBeLoaded)
             await reassign()
             return true;
         },
 
         async loadAll() {
-            await repaint(
+            repaint(
                 await Promise.all([...this.parts.flow.keys()]
                     .map(this.retrieve, this)
                 ));

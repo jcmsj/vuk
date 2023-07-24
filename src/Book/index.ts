@@ -67,7 +67,7 @@ export async function reassign() {
         refocus(maybeLatest.elem)
     }
 }
-export async function repaint(paintables:LoadedChapter[] = []) {
+export function repaint(paintables:LoadedChapter[] = []) {
     pages.value = paintables;
 }
 

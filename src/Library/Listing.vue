@@ -1,6 +1,6 @@
 <template>
     <q-list>
-        <q-input v-model="target" clearable></q-input>
+        <q-input v-model="target" clearable autofocus />
         <VItem v-if="!fs.inRoot" @click="fs.goto(fs.root)">
             /
         </VItem>

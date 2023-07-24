@@ -1,5 +1,5 @@
 <template>
-  <q-tabs :vertical="onNoTouch" align="left" switch-indicator shrink content-class="sidebar" on-same-tab="deselect"
+  <q-tabs :vertical="onNoTouch" align="left" switch-indicator shrink content-class="sidebar"
     active-color="primary" class="bg-secondary text-grey-9 shadow-3">
     <q-route-tab exact :to="hotkeys.f" icon="folder" title="Browse" @click="toggleSelect($event, hotkeys.f)" />
     <q-route-tab exact :to="hotkeys.t" icon="list" title="Table of contents" @click="toggleSelect($event, hotkeys.t)" />
