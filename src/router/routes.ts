@@ -1,6 +1,8 @@
 import { Platform } from "quasar";
+import CapacitorExplorer from "src/Library/CapacitorExplorer.vue";
 import ElectronExplorer from "src/Library/ElectronExplorer.vue";
 import Explorer from "src/Library/Explorer.vue";
+import Taurist from "src/Library/Taurist.vue";
 import Layout from "src/layouts/Layout.vue";
 import { RouteRecordRaw } from "vue-router";
 
@@ -8,6 +10,14 @@ function determineExplorer() {
   if (Platform.is.electron) {
     return ElectronExplorer;
   } 
+
+  if (Platform.is.capacitor) {
+    return CapacitorExplorer;
+  }
+
+  if (window.__TAURI_INVOKE__ instanceof Function)  {
+    return Taurist;
+  }
   return Explorer;
 }
 

@@ -17,9 +17,12 @@ dependencies:
   '@quasar/extras':
     specifier: ^1.16.5
     version: 1.16.5
-  '@tauri-apps/api':
-    specifier: 2.0.0-alpha.5
-    version: 2.0.0-alpha.5
+  '@tauri-apps/plugin-dialog':
+    specifier: github:tauri-apps/tauri-plugin-dialog#v2
+    version: github.com/tauri-apps/tauri-plugin-dialog/c84cc21fbcd1cd284a4832e8021e08460cd42963
+  '@tauri-apps/plugin-fs':
+    specifier: https://github.com/tauri-apps/tauri-plugin-fs#v2
+    version: github.com/tauri-apps/tauri-plugin-fs/60e8dec66d2582cc39ebdd7b7101e9c96c23e52a
   '@vueuse/core':
     specifier: ^10.3.0
     version: 10.3.0(vue@3.3.4)
@@ -6361,3 +6364,19 @@ packages:
       compress-commons: 4.1.1
       readable-stream: 3.6.2
     dev: true
+
+  github.com/tauri-apps/tauri-plugin-dialog/c84cc21fbcd1cd284a4832e8021e08460cd42963:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-dialog/tar.gz/c84cc21fbcd1cd284a4832e8021e08460cd42963}
+    name: '@tauri-apps/plugin-dialog'
+    version: 2.0.0-alpha.0
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.5
+    dev: false
+
+  github.com/tauri-apps/tauri-plugin-fs/60e8dec66d2582cc39ebdd7b7101e9c96c23e52a:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-fs/tar.gz/60e8dec66d2582cc39ebdd7b7101e9c96c23e52a}
+    name: '@tauri-apps/plugin-fs'
+    version: 2.0.0-alpha.0
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.5
+    dev: false

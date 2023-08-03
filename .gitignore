@@ -32,4 +32,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-/src-capacitor
+/an

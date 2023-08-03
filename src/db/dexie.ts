@@ -14,6 +14,7 @@ export interface Settings {
     id:number,
     lastDir?:FileSystemDirectoryHandle,
     electronDir?:string,
+    tauriDir?:string,
     speechRate:number,
     theme:string,
     speechPanel:boolean,

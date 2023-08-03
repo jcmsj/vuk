@@ -10,9 +10,14 @@
 
 const { configure } = require('quasar/wrappers');
 const open = require('open')
-module.exports = configure(function (ctx) {
+// @ts-expect-error process is a nodejs global
+const mobile = !!/android|ios/.exec(process.env.TAURI_PLATFORM);
+module.exports = configure(async function (ctx) {
+  const { internalIpV4 } = await import("internal-ip")
+  const hmrHost = await internalIpV4()
+  console.log(hmrHost);
   return {
-    
+
 
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -21,8 +26,8 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      ctx.mode.electron ? "electron":"",
-      ctx.mode.pwa ? "pwa":"",
+      ctx.mode.electron ? "electron" : "",
+      ctx.mode.pwa ? "pwa" : "",
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -47,8 +52,8 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2022', 'edge107', 'firefox106', 'chrome107', 'safari16.1' ],
-        node: 'node16'
+        browser: ['es2022', 'edge110', 'firefox110', 'chrome110', 'safari16.1'],
+        node: 'node20'
       },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
@@ -67,10 +72,13 @@ module.exports = configure(function (ctx) {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf(viteConf) {
+        // 1. prevent vite from obscuring rust errors
+        viteConf.clearScreen = false,
+        viteConf.envPrefix = ["VITE_", "TAURI_"]
+      },
       // viteVuePluginOptions: {},
 
-      
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
@@ -79,11 +87,27 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       https: true,
-      open: (ctx.mode.capacitor || ctx.mode.electron) ? false: {
-        app: {name: open.apps.edge}
-      }, // opens browser window 
-    },
+      open: false,
+      open: (ctx.mode.capacitor || ctx.mode.electron || process.env.TAURI_PLATFORM) ? false : {
+        app: { name: open.apps.edge }
+      }, // opens browser window
+      // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
+      //
 
+      // 2. tauri expects a fixed port, fail if that port is not available
+      server: {
+        host: mobile ? "0.0.0.0" : false,
+        port: 1420,
+        hmr: mobile
+          ? {
+            protocol: "ws",
+            host: hmrHost,
+            port: 1421,
+          }
+          : undefined,
+        strictPort: true,
+      },
+    },
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {
@@ -110,20 +134,20 @@ module.exports = configure(function (ctx) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#sourcefiles
     sourceFiles: {
-    //   rootComponent: 'src/App.vue',
-    //router: 'src/router/index',
-    //   store: 'src/store/index',
-    //   registerServiceWorker: 'src-pwa/register-service-worker',
-    //   serviceWorker: 'src-pwa/custom-service-worker',
-    //pwaManifestFile: 'src-pwa/manifest.json',
-    //   electronMain: 'src-electron/electron-main',
-    //   electronPreload: 'src-electron/electron-preload'
+      //   rootComponent: 'src/App.vue',
+      //router: 'src/router/index',
+      //   store: 'src/store/index',
+      //   registerServiceWorker: 'src-pwa/register-service-worker',
+      //   serviceWorker: 'src-pwa/custom-service-worker',
+      //pwaManifestFile: 'src-pwa/manifest.json',
+      //   electronMain: 'src-electron/electron-main',
+      //   electronPreload: 'src-electron/electron-preload'
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
     ssr: {
       // ssrPwaHtmlFilename: 'offline.html', // do NOT use index.html as name!
-                                          // will mess up SSR
+      // will mess up SSR
 
       // extendSSRWebserverConf (esbuildConf) {},
       // extendPackageJson (json) {},
@@ -134,7 +158,7 @@ module.exports = configure(function (ctx) {
       // manualPostHydrationTrigger: true,
 
       prodPort: 3000, // The default port that the production server should use
-                      // (gets superseded if process.env.PORT is specified at runtime)
+      // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
         'render' // keep this as last one
@@ -149,7 +173,7 @@ module.exports = configure(function (ctx) {
       manifestFilename: 'manifest.json',
       useCredentialsForManifestTag: false,
       // useFilenameHashes: true,
-      extendGenerateSWOptions (cfg) {
+      extendGenerateSWOptions(cfg) {
         cfg.skipWaiting = false
         cfg.clientsClaim = false
       }
@@ -191,9 +215,9 @@ module.exports = configure(function (ctx) {
         // https://www.electron.build/configuration/configuration
         appId: 'vuk',
         fileAssociations: {
-          ext:"epub",
-          icon:"./public/icons/favicon.ico",
-          role:"viewer",
+          ext: "epub",
+          icon: "./public/icons/favicon.ico",
+          role: "viewer",
         },
         nsis: {
           //othersettings,
