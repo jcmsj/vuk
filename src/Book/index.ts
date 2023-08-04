@@ -23,14 +23,14 @@ export async function render(p:Page ) {
     const _pages = pages.value;
     
     switch (p.pos) {
-        case -1:
+        case LoadPosition.before:
             if (_pages.length > ShiftCount.value) {
                 _pages.pop()
             }
             view.value?.firstElementChild?.scrollIntoView({ block: "nearest", behavior: "smooth" })
             _pages.unshift(p)
         break;
-        case 1:
+        case LoadPosition.after:
             if (_pages.length > ShiftCount.value) {
                 _pages.shift()
             }
