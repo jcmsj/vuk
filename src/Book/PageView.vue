@@ -1,7 +1,7 @@
 <template>
     <lazy-loader>
         <div @mouseup="target.identify" id="__live" ref="view" @click="anchorClicked">
-            <v-page v-for="page in pages" :key="page.id" :page="page" />
+            <v-page v-for="page in pages" :page="page" />
             <context-menu />
         </div>
     </lazy-loader>

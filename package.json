@@ -34,10 +34,10 @@
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.4.3",
-    "@types/node": "^20.4.5",
+    "@types/node": "^20.4.7",
     "@types/wicg-file-system-access": "^2020.9.6",
     "autoprefixer": "^10.4.14",
-    "electron": "^25.3.2",
+    "electron": "^25.4.0",
     "electron-builder": "^24.6.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-packager": "17.1.1",
