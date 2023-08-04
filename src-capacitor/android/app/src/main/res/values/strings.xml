@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Vuk</string>
-    <string name="title_activity_main">Vuk</string>
-    <string name="package_name">org.jcsj.vuk</string>
-    <string name="custom_url_scheme">org.jcsj.vuk</string>
-</resources>

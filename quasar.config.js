@@ -14,8 +14,6 @@ const open = require('open')
 const mobile = !!/android|ios/.exec(process.env.TAURI_PLATFORM);
 module.exports = configure(async function (ctx) {
   const { internalIpV4 } = await import("internal-ip")
-  const hmrHost = await internalIpV4()
-  console.log(hmrHost);
   return {
 
 
@@ -101,7 +99,7 @@ module.exports = configure(async function (ctx) {
         hmr: mobile
           ? {
             protocol: "ws",
-            host: hmrHost,
+            host: await internalIpV4(),
             port: 1421,
           }
           : undefined,

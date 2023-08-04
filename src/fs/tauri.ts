@@ -1,4 +1,4 @@
-import { readDir, readBinaryFile, FileEntry, } from "@tauri-apps/plugin-fs"
+import { readDir, readBinaryFile, FileEntry  } from "@tauri-apps/plugin-fs"
 import { Dir, Handle, HandleKind, Item } from ".";
 
 export function asItem(entry: FileEntry): Item {
@@ -7,26 +7,13 @@ export function asItem(entry: FileEntry): Item {
         kind: HandleKind.FILE,
         origin: entry,
         async get() {
-            const ns = await readBinaryFile(this.origin.path);
-            return new File([new Blob([ns])], entry.name!)
+            return  new Blob([(await readBinaryFile(this.origin.path)).buffer])
         },
-        async isSame(other: Handle<FileEntry>) {
+        async isSame(other) {
             return this.origin.path.localeCompare(other.origin.path) == 0
         },
     } as Handle<FileEntry> as Item
 }
-
-/* export function full(name:string):string {
-    if (library.value == undefined)
-        return ""
-    //root + folders + name
-    const paths = library.value.levels
-        .map(({name}) => name);
-    if (name.localeCompare(library.value.currentDir.name) != 0) {
-        paths.push(library.value.currentDir.name);
-    }
-    return [...paths, name].join("/");
-} */
 
 export function asDir(entry: FileEntry): Dir {
     return {
@@ -39,7 +26,7 @@ export function asDir(entry: FileEntry): Dir {
             return asItem(maybeChild!);
         },
         async *entries() {
-            const entries = await readDir(entry.path);
+            const entries = await readDir(entry.path, {recursive:true});
             for (const entry of entries) {
                 if (entry.children) {
                     yield asDir(entry)

@@ -43,6 +43,7 @@ const noLogs: ProgressEvents = {
     }
 }
 export async function loadBookFromFile(anEpub: File) {
+    toHome()
     const epub = await Enhanced({
         blob: anEpub,
         events: DevMode.value ? withLogs : noLogs
@@ -65,8 +66,6 @@ export async function loadBookFromFile(anEpub: File) {
         default:
             epub.loadAll()
     }
-
-    toHome()
 }
 export async function loadBook(item:Item) {
     await loadBookFromFile(

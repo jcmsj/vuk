@@ -18,11 +18,12 @@
     "elec-debug": "quasar build -m electron --debug"
   },
   "dependencies": {
-    "@capacitor/filesystem": "^5.1.1",
     "@jcsj/arraymap": "^0.0.4",
     "@jcsj/epub": "link:D:/code/epub",
     "@jcsj/generate-selector": "^0.0.2",
     "@quasar/extras": "^1.16.5",
+    "@tauri-apps/plugin-dialog": "github:tauri-apps/tauri-plugin-dialog#v2",
+    "@tauri-apps/plugin-fs": "https://github.com/tauri-apps/tauri-plugin-fs#v2",
     "@vueuse/core": "^10.3.0",
     "browser-fs-access": "^0.34.1",
     "dexie": "^3.2.4",
@@ -40,7 +41,7 @@
     "electron-builder": "^24.6.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-packager": "17.1.1",
-    "typescript": "^5.1.6",
+    "internal-ip": "^8.0.0",
     "workbox-build": "^7.0.0",
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",

@@ -5,12 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@capacitor/filesystem':
-    specifier: ^5.1.1
-    version: 5.1.1(@capacitor/core@5.2.2)
   '@jcsj/arraymap':
     specifier: ^0.0.4
     version: 0.0.4
+  '@jcsj/epub':
+    specifier: link:D:/code/epub
+    version: link:../epub
   '@jcsj/generate-selector':
     specifier: ^0.0.2
     version: 0.0.2
@@ -35,6 +35,9 @@ dependencies:
   quasar:
     specifier: ^2.12.3
     version: 2.12.3
+  v-walker:
+    specifier: link:D:/code/v-walker
+    version: link:../v-walker
   vue:
     specifier: ^3.3.4
     version: 3.3.4
@@ -70,9 +73,6 @@ devDependencies:
   internal-ip:
     specifier: ^8.0.0
     version: 8.0.0
-  typescript:
-    specifier: ^5.1.6
-    version: 5.1.6
   workbox-build:
     specifier: ^7.0.0
     version: 7.0.0
@@ -1285,20 +1285,6 @@ packages:
       '@babel/helper-string-parser': 7.22.5
       '@babel/helper-validator-identifier': 7.22.5
       to-fast-properties: 2.0.0
-
-  /@capacitor/core@5.2.2:
-    resolution: {integrity: sha512-3jKECZC5+YD2rljMZm1e/K3AYyoxUmLDZCyofTPbRYPBSI0wJh5ZCkX+XIGzNM0o/Wokl3Voa1JB8xsLC0MPxA==}
-    dependencies:
-      tslib: 2.6.1
-    dev: false
-
-  /@capacitor/filesystem@5.1.1(@capacitor/core@5.2.2):
-    resolution: {integrity: sha512-wq55joyYocsYI0f0UNoDE9TPxI0n4fx+PmejGR5JOYFzrnU8DqcSJ9EREAYAkkoOrmQHrB1vuN9F79XC0PuADw==}
-    peerDependencies:
-      '@capacitor/core': ^5.1.1
-    dependencies:
-      '@capacitor/core': 5.2.2
-    dev: false
 
   /@develar/schema-utils@2.6.5:
     resolution: {integrity: sha512-0cp4PsWQ/9avqTVMCtZ+GirikIA36ikvjtHweU4/j8yLtgObI0+JUPhYFScgwlteveGB1rt3Cm8UhN04XayDig==}
@@ -5828,6 +5814,7 @@ packages:
 
   /tslib@2.6.1:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
+    dev: true
 
   /type-fest@0.13.1:
     resolution: {integrity: sha512-34R7HTnG0XIJcBSn5XhDd7nNFPRcXYRZrBB2O2jdKqYODldSzBAqzsWoZYYvduky73toYS/ESqxPvkDf/F0XMg==}
@@ -5895,12 +5882,6 @@ packages:
   /typescript@4.9.5:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
-    hasBin: true
-    dev: true
-
-  /typescript@5.1.6:
-    resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
-    engines: {node: '>=14.17'}
     hasBin: true
     dev: true
 

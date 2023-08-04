@@ -2,88 +2,57 @@
     <BaseActions>
         <LibraryBtn @click="setLibrary" />
     </BaseActions>
-    <VListing :sorter="sorter" :library="library" @open-book="loadBook" />
+    <VListing v-if="library" :sorter="librarian" :fs="library" @open-book="loadBook" />
 </template>
 <script setup lang=ts>
 import { db } from 'src/db/dexie';
-import { readBinaryFile, readDir, FileEntry } from '@tauri-apps/api/fs';
+import { onBeforeMount, watch } from 'vue';
+import BaseActions from './BaseActions.vue';
+import { loadBook } from './fileReader';
+import { settings_id } from "src/settings/settings_id";
 import LibraryBtn from './LibraryBtn.vue';
 import VListing from './Listing.vue';
-import { open } from "@tauri-apps/api/dialog"
-import { loadBookFromFile } from './fileReader';
-import BaseActions from './BaseActions.vue';
-import { sorter, library } from "./tauri.handle"
-import { onBeforeMount, watch } from 'vue';
-import { settings_id } from "src/settings/settings_id";
+import { library } from '.';
+import { createFS } from 'src/fs/prepFS';
+import { asDir } from 'src/fs/tauri';
+import { librarian } from 'src/fs/prepLibrarian';
+import { open } from '@tauri-apps/plugin-dialog';
+import { readDir, } from "@tauri-apps/plugin-fs"
 
-async function loadBook(h: FileEntry) {
-    loadBookFromFile(
-        new Blob([await readBinaryFile(h.path)]) as File
-    );
-}
-
-async function setLibrary() {
-    let selected = await open({
-        directory: true,
-        multiple:false,
-        recursive: false,
-    });
-
-    console.log(selected);
-    //Use always the first path provided. May be adjusted to allow multiple roots in the future.
-    if (Array.isArray(selected) && selected.length) {
-        selected = selected[0]
-    } else if (selected === null) {
-        return
-    }
-
-    library.setRoot(
-        await asEntry(selected as string
-    ))
-}
-
-async function asEntry(pathname: string): Promise<FileEntry> {
-    return {
-        name: pathname,
-        children: await readDir(pathname),
-        path: pathname
-    }
-}
-watch(() => library.levels.length, async (s) => {
-    console.log(library.levels);
-    const last = library.levels[s - 1] ?? library.root;
-    //Always refresh children
-    last.children = await readDir(last.path)
-    library.value = last;
-})
-
-watch(() => library.value, async (entry) => {
-    console.log(entry);
-    if (entry === undefined)
+watch(() => library.value?.root, rootDir => {
+    if (rootDir === undefined)
         return;
-    sorter.sort(entry)
-})
-watch(() => library.root, async (rootEntry) => {
-    console.log("Root changed:", rootEntry);
-    if (rootEntry === undefined) {
-        return
-    }
 
+    console.log(rootDir);
     db.settings.put({
         id: settings_id,
-        electronDir: rootEntry.path,
-        speechRate: 0,
+        tauriDir: rootDir.name,
     })
+    librarian.sort(rootDir);
 })
+async function setLibrary() {
+    const libraryRootPath = await open({ 
+        directory: true, 
+        title: "Pick a library directory", 
+        recursive:true
+    })
+    loadRoot(libraryRootPath!)
+}
 
+async function loadRoot(path?: string|null) {
+    if (path) {
+        const children = await readDir(path, {recursive:true})
+        library.value = await createFS(asDir({
+            path,
+            name: path,
+            children,
+        }));
+    }
+}
 onBeforeMount(async () => {
-    if (!library.root) {
-        const settings = await db.settings.get(settings_id);
-        if (settings && settings.electronDir) {
-            library.setRoot(
-                await asEntry(settings.electronDir)
-            )
-        }
+    if (library.value == undefined) {
+        const s = await db.settings.get(settings_id);
+        loadRoot(s?.tauriDir)
     }
 })
 </script>
