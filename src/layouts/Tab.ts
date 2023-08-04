@@ -5,8 +5,7 @@ export function toHome(...args:any[]) {
 }
 
 export function toggleSelect(e: MouseEvent | KeyboardEvent, tabName: string) {
-    if (Router.currentRoute.value.path.includes(tabName)) {
-      e.preventDefault()
+    if (Router.currentRoute.value.name == tabName) {
       toHome()
     } else if (e instanceof KeyboardEvent) {
       Router.replace(tabName)

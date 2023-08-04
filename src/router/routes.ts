@@ -18,24 +18,29 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "browse",
+        name: "browse",
         component: determineExplorer(),
       },
       {
         path: "config",
+        name: "config",
         component: () => import("src/settings/SettingsPage.vue")
       },
       {
         path: "toc",
+        name: "toc",
         component: () => import("src/TOC/TOC.vue")
       },
       {
         path: "bookmarks",
+        name: "bookmarks",
         component: () => import("src/Bookmarks/Bookmarks.vue")
       },
       // Always leave this as last one,
       // but you can also remove it
       {
         path: ":catchAll(.*)*",
+        name:"404",
         component: () => import("src/pages/404.vue"),
       },
     ]
