@@ -23,14 +23,14 @@
     "@vueuse/core": "^10.3.0",
     "browser-fs-access": "^0.34.1",
     "dexie": "^3.2.4",
-    "quasar": "^2.12.3",
+    "quasar": "^2.12.4",
     "v-walker": "link:D:/code/v-walker",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.4.3",
-    "@types/node": "^20.4.7",
+    "@types/node": "^20.4.8",
     "@types/wicg-file-system-access": "^2020.9.6",
     "autoprefixer": "^10.4.14",
     "electron": "^25.4.0",

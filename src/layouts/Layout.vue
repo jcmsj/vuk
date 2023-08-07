@@ -29,12 +29,12 @@ import { log } from 'src/settings/DevMode';
 /* if device has no touch screen */
 const onNoTouch = useMediaQuery("(any-pointer: fine) and (min-width: 1024px)");
 
-const hotkeys = {
+const hotkeys = Object.freeze({
   f: "browse",
   b: "bookmarks",
   t: "toc",
   c: "config",
-}
+})
 
 useEventListener("keyup",  e => {
   if (e.target instanceof HTMLInputElement) {
