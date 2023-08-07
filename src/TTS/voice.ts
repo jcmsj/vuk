@@ -1,5 +1,5 @@
 import { useLocalStorage } from "@vueuse/core";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { Platform } from "quasar";
 
 export const prefVoice = useLocalStorage("voice", () => {
@@ -13,7 +13,7 @@ export const prefVoice = useLocalStorage("voice", () => {
 
     return "English"
 })
-export const voices = computed(() => window.speechSynthesis.getVoices());
+export const voices = ref<SpeechSynthesisVoice[]>([]) ;
 
 export const voice = computed(() => voices.value.find(it => it.name === prefVoice.value));
 export enum Status {

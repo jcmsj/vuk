@@ -16,8 +16,12 @@
     </select>
 </template>
 <script setup lang="ts">
+import { onMounted } from "vue";
 import  {prefVoice, voices} from "./voice";
 
+onMounted(() => {
+    voices.value = window.speechSynthesis.getVoices()
+})
 </script>
 <style lang='sass' scoped>
 </style>
