@@ -10,8 +10,6 @@ export async function verifyPermission(handle?: FileSystemDirectoryHandle, mode:
 
     const options: FileSystemHandlePermissionDescriptor = {
         mode,
-        handle,
-        name: "push"
     };
 
     // Check if permission was already granted.
