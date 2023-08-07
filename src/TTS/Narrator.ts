@@ -58,7 +58,7 @@ export class Narrator {
     private next() {
         //IMPORTANT: The span tags made by Transformer should never be included.
         transformer.revert()
-        const n = walker.nextNode();
+        const n = walker.value!.nextNode();
         if (n) {
             this.beforeSpeak(n);
         }
@@ -80,16 +80,12 @@ export class Narrator {
         follow()
     }
     start() {
-        this.beforeSpeak(walker.currentNode)
+        this.beforeSpeak(walker.value!.currentNode)
     }
 
     stop() {
-        if (!speechSynthesis.speaking) {
-            return;
-        }
-
         speechSynthesis.cancel()
-        isReading.value = speechSynthesis.speaking
+        isReading.value = false
         this.emit(EV.end)
     }
     toggle() {

@@ -2,13 +2,15 @@
 <q-btn icon="fast_rewind" />
 <q-btn 
     :icon="isReading ? 'pause':'play_arrow'" 
-    @click="toggleReading"
+    @click="narrator.toggle()"
 />
 <q-btn icon="fast_forward" />
 </template>
 <script setup lang=ts>
-import {isReading, toggleReading} from ".";
+import {isReading } from ".";
 import {onKeyUp} from "@vueuse/core";
+import { narrator } from "./Narrator";
+import { watch } from "vue";
 
 const keys = ["r","F8","MediaPlayPause"];
 onKeyUp(keys, e => {
@@ -16,8 +18,15 @@ onKeyUp(keys, e => {
         return
     }
 
-    toggleReading()
+    narrator.toggle()
 })
+
+watch(isReading, () => {
+    if (!isReading.value) {
+        narrator.stop()
+    }
+})
+
 
 </script>
 <style lang='sass'>

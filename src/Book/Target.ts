@@ -1,10 +1,9 @@
 import { createTextTreeWalker } from "src/walker";
-import { shallowReactive } from "vue";
+import { ref, shallowReactive } from "vue";
 
-export let walker:TreeWalker;
-
+export const walker = ref<TreeWalker>();
 export function setWalker(l:HTMLElement) {
-    walker = createTextTreeWalker(l);
+    walker.value = createTextTreeWalker(l);
 }
 
 interface Target {
@@ -24,12 +23,12 @@ export const target = shallowReactive<Target>({
     },
     override(l: HTMLElement) {
         const n = l.firstChild;
-        if (!n ||walker.currentNode.isSameNode(n)) {
+        if (!n || walker.value?.currentNode?.isSameNode(n)) {
             return false;
         }
     
         // TODO: Ensure target descends from walker.root
-        walker.currentNode = n;
+        walker.value!.currentNode = n;
         target.element = l;
         return true;
     }
