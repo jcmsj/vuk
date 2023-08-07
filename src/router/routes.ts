@@ -14,6 +14,7 @@ function determineExplorer() {
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
+    name:"/",
     component: Layout,
     children: [
       {

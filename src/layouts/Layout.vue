@@ -1,10 +1,10 @@
 <template>
   <q-tabs :vertical="onNoTouch" align="left" switch-indicator shrink content-class="sidebar"
     active-color="primary" class="bg-secondary text-grey-9 shadow-3">
-    <q-route-tab exact :to="hotkeys.f" icon="folder" title="Browse" @click="toggleSelect($event, hotkeys.f)" />
-    <q-route-tab exact :to="hotkeys.t" icon="list" title="Table of contents" @click="toggleSelect($event, hotkeys.t)" />
-    <q-route-tab exact :to="hotkeys.b" icon="bookmarks" title="Bookmarks" @click="toggleSelect($event, hotkeys.b)" />
-    <q-route-tab exact :to="hotkeys.c" icon="settings" title="Config" @click="toggleSelect($event, hotkeys.c)" />
+    <toggle-tab exact :inactive="hotkeys.f" if-active="/" icon="folder" title="Browse" />
+    <toggle-tab exact :inactive="hotkeys.t" if-active="/" icon="list" title="Table of contents" />
+    <toggle-tab exact :inactive="hotkeys.b" if-active="/" icon="bookmarks" title="Bookmarks" />
+    <toggle-tab exact :inactive="hotkeys.c" if-active="/" icon="settings" title="Config"  />
   </q-tabs>
   <main>
     <RouterView v-slot="{ Component, route }">
@@ -23,9 +23,10 @@ import Live from 'src/Book/Live.vue';
 import { useEventListener, useMediaQuery } from '@vueuse/core';
 import { toggleSelect, toHome } from "./Tab"
 import { RouterView } from 'vue-router';
-import { QTabs, QRouteTab, QCard } from 'quasar';
+import { QTabs, QCard } from 'quasar';
 import { Transition } from 'vue';
 import { log } from 'src/settings/DevMode';
+import ToggleTab from './ToggleTab.vue';
 /* if device has no touch screen */
 const onNoTouch = useMediaQuery("(any-pointer: fine) and (min-width: 1024px)");
 
@@ -49,7 +50,7 @@ useEventListener("keyup",  e => {
       break;
     default:
       if (hotkeys[e.key as keyof typeof hotkeys]) {
-        toggleSelect(e, hotkeys[e.key as keyof typeof hotkeys])
+        toggleSelect(hotkeys[e.key as keyof typeof hotkeys])
       }
   }
 })
