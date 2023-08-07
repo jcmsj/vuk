@@ -45,7 +45,7 @@ export async function Enhanced(a: Parameters<typeof MemoizedEpubAndSanitized>["0
         return undefined
     }
     const old = await MemoizedEpubAndSanitized(a);
-    console.log(old.parser.reader.entries);
+    log(old.parser.reader.entries);
 
     instance.value = {
         ...old,
