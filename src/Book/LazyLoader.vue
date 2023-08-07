@@ -5,9 +5,8 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { instance } from "src/lib/EnhancedEpub";
-import { loadMethod, LoadMethod } from "src/Library/Load";
 import { useIntersectionObserver } from "@vueuse/core";
+import { LoadMethod, loadMethod } from "src/Library/Load";
 
 const pageStart = ref<HTMLDivElement>()
 const pageEnd = ref<HTMLDivElement>()
@@ -15,6 +14,12 @@ const pageEnd = ref<HTMLDivElement>()
 onMounted(() => {
     observe()
 })
+
+const emit = defineEmits<{
+    next: [],
+    prev: [],
+    stop: [],
+}>()
 
 const options = Object.freeze({
     root: null,
@@ -25,38 +30,36 @@ const options = Object.freeze({
 const forwarder = useIntersectionObserver(pageEnd, ([entry]) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("add");
-        instance.value?.next();
+        emit("next")
     }
 }, options)
 
 const backtracker = useIntersectionObserver(pageStart, ([entry]) => {
     if (entry.isIntersecting) {
         entry.target.classList.remove("rem", "hasleft");
-        instance.value?.previous();
+        emit("prev")
     }
 }, options)
 
 /**
  * Disables Chapter loaders
  */
-async function unobserve() {
+function unobserve() {
     forwarder.pause()
     backtracker.pause()
 }
 
-async function observe() {
-    if (loadMethod.value == LoadMethod.lazy) {
-        forwarder.resume()
-        backtracker.resume()
-    }
+function observe() {
+    forwarder.resume()
+    backtracker.resume()
 }
 
-watch(loadMethod, async (preferred) => {
-    if (preferred == LoadMethod.all) {
-        await unobserve()
-        instance.value?.loadAll()
+watch(() => loadMethod.value == LoadMethod.lazy, (shouldObserve) => {
+    if (shouldObserve) {
+        observe()
     } else {
-        await observe()
+        unobserve()
+        emit("stop")
     }
 })
 </script>
