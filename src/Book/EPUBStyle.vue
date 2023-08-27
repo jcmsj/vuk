@@ -1,49 +1,35 @@
 <template>
-    <component is="style">
-        {{epubStyle}}
+    <component is="style" v-for="scoped of scopeds">
+        {{ scoped }}
     </component>
 </template>
 <script setup lang=ts>
-import { book } from 'src/Bookmarks/useBook';
-import { instance } from 'src/lib/EnhancedEpub';
+import { EnhancedEpub, instance } from 'src/lib/EnhancedEpub';
 import { log } from 'src/settings/DevMode';
-import { watch } from 'vue';
-import { rawStyle, epubStyle, prefix } from './styles';
+import { computedAsync } from '@vueuse/core';
+import { className } from "src/TTS/constants";
+
+const SELECTOR_PREFIX = `#__live > .${className.chapter} `;
+const scopeds = computedAsync(async () => {
+    if (instance.value) {
+        console.log("Searching for CSS");
+        return (await searchCSS(instance.value))
+            .map(addSelectorPrefix);
+    }
+    return []
+});
 
 //TODO: Delegate to worker
-watch(rawStyle, style => {
-    if (!style) {
-        epubStyle.value = "" //Reset
-        return;
-    }
+const SELECTOR_REGEX = /.+(\n|\r)*{/g
+function addSelectorPrefix(raw: string = "") {
+    return raw.replaceAll(SELECTOR_REGEX, (selector) => SELECTOR_PREFIX + selector)
+}
 
-    let selector:string = "";
-    let rules:string = "";
-    let scoped = "";
-    for (const c of style) {
-        if (rules.length || c === "{") {
-            rules += c;
-        } else {
-            selector += c;
-        }
-        if (c === "}") {
-            scoped += prefix + selector + rules;
-            rules = "";
-            selector= "";
-        }
-    }
-
-    epubStyle.value = scoped;
-})
-
-watch(() => book.title, async (it) => {
-    if (!instance.value || !it)
-        return;
-    const styles = instance.value.matchAll(/style|css/)
+async function searchCSS(epub: EnhancedEpub) {
+    const styles = epub.matchAll(/style|css/)
     log(styles)
-    
-    rawStyle.value = (await Promise.all(
-        styles.map(s => instance.value?.getContentRaw(s.id))))
-        .join("\n");
-})
+    return Promise.all(
+        styles.map(s => instance.value?.getContentRaw(s.id ?? "")));
+}
+
 </script>

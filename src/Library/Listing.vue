@@ -12,7 +12,7 @@
         >
             {{ dirname }}
         </VItem>
-        <VItem item_name="book" v-for="(item, name) of sorter.books" :key="name" @click="emit('open-book', item)"
+        <VItem item_name="book" v-for="(item, name) of sorter.books" :key="name" @click="$emit('open-book', item)"
         :class="{hidden:shouldHide(item)}"
         >
             {{ name }}
@@ -23,7 +23,7 @@
 import { FS, Item, Librarian, Handle } from 'src/fs';
 import VItem from "./VItem.vue"
 import { computed, ref } from 'vue';
-const emit = defineEmits<{
+defineEmits<{
     (event: "open-book", item: Item): void
 }>();
 const target = ref("")
