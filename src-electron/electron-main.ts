@@ -1,14 +1,14 @@
 import { app, BrowserWindow, nativeTheme } from 'electron';
 import path from 'path';
-import os from 'os';
-import { prepLeave } from './prepLeave';
+import { platform as osPlatform } from 'os';
+import { addLeave } from './prepLeave';
 import { prepIPC } from './ipc';
 import { prepDev } from './prepDev';
 import Store from 'electron-store';
 import { WebContents } from 'electron';
 
 // needed in case process is undefined under Linux
-const platform = process.platform || os.platform();
+const platform = process.platform || osPlatform();
 
 /**
  * @see https://github.com/electron/electron/issues/526#issuecomment-1375534548
@@ -64,21 +64,20 @@ function createWindow() {
   });
   rememberWindowState(mainWindow);
   mainWindow.loadURL(process.env.APP_URL);
-
   prepDev(mainWindow);
   prepIPC();
-  mainWindow.webContents.on('will-prevent-unload', prepLeave(mainWindow));
+  addLeave(mainWindow);
   addZoom(mainWindow.webContents)
-
 }
 
 app.whenReady().then(createWindow);
 
-app.on('window-all-closed', () => {
-  if (platform !== 'darwin') {
+// Dont add the listener in darwin
+if (platform !== 'darwin') {
+  app.on('window-all-closed', () => {
     app.quit();
-  }
-});
+  });
+}
 
 app.on('activate', () => {
   if (mainWindow === undefined) {
