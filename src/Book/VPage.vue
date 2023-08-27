@@ -1,5 +1,5 @@
 <template>
-<div class="chapter" v-html="page.html" :id="page.id">
+<div class="chapter" v-html="html" :id="id">
 
 </div>
 </template>
@@ -36,5 +36,5 @@ interface Page {
     id: string,
     html: string
 }
-const { page } = defineProps<{ page: Page }>();
+defineProps<Page>();
 </script>

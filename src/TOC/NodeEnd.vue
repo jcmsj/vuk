@@ -3,11 +3,11 @@
         <q-item-section avatar @click="toggleChild">
             <q-icon :name="isChildActive ? 'expand_less' : 'expand_more'" />
         </q-item-section>
-        <q-item-section :data-id="props.item.id">
+        <q-item-section :data-id="item.id">
             {{ item.title }}
         </q-item-section>
     </q-item>
-    <NodeStart :items="props.items" :active="isChildActive" :level="props.level" />
+    <NodeStart :items="item.navPoint" :active="isChildActive" :level="level" />
 </template>
 <script setup lang="ts">
 import { ref } from "vue"
@@ -16,10 +16,9 @@ import { Chapter } from "@jcsj/epub/lib/traits";
 
 const isChildActive = ref(false)
 
-const props = defineProps<{
-    readonly item: Chapter,
-    readonly items: Map<string, Chapter>
-    readonly level:number
+defineProps<{
+    readonly item: Required<Chapter>,
+    readonly level: number
 }>();
 function toggleChild() {
     isChildActive.value = !isChildActive.value

@@ -6,5 +6,5 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { Bookmark } from '.';
-const { bookmark } = defineProps<{ bookmark: Bookmark }>()
-</script> 
+defineProps<{ bookmark: Bookmark }>()
+</script>  
