@@ -68,7 +68,7 @@ type Querier = (selector: string) =>HTMLElement| null;
 export function determineLatest(querier: Querier) {
     return (items: Bookmark[]): MaybeLatest => {
         const it = items.reduce<Bookmark | null>((latest, bm) => {
-            return !latest || bm.percentage > latest.percentage ?
+            return (!latest || bm.percentage > latest.percentage) ?
                 bm : latest;
         }, null);
         const elem = it ? querier(it.selector) : null;
