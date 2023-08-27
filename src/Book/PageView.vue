@@ -40,7 +40,8 @@ watch(pages, async () => {
         log("[TTS]: no elem");
     }
 
-})
+    // https://vuejs.org/guide/essentials/watchers.html#callback-flush-timing
+}, {flush: "post"})
 
 function up() {
     while (walker.value.currentNode instanceof Text) {
