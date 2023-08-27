@@ -3,13 +3,17 @@
         <q-item-label header v-if="book.auto">
             Last Spoken:
         </q-item-label>
-        <BookmarkItem v-if="book.auto" :bookmark="book.auto" @click="focus(book.auto)" @dblclick="unmark(book.auto)" />
+        <BookmarkItem v-if="book.auto" :bookmark="book.auto" @click="focus(book.auto)" />
         <q-separator v-if="book.auto" />
         <q-item-label header>
             Bookmarks
         </q-item-label>
         <BookmarkItem v-for="bm of book?.bookmarks" :key="bm.selector" :bookmark="bm" @click="focus(bm)"
-            @dblclick="unmark(bm)" :title="bm.selector" />
+             :title="bm.selector">
+            <q-item-section avatar @click.prevent="unmark(bm)">
+                <q-icon name="delete"></q-icon>
+            </q-item-section>
+        </BookmarkItem>
     </q-list>
 </template>
 <script setup lang="ts">
