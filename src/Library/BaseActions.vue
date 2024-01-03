@@ -1,5 +1,5 @@
 <template>
-    <q-btn-group spread>
+    <q-btn-group spread style="position: sticky; top:0">
         <slot name="before"></slot>
         <q-btn color="primary" @click="chooser?.click()" title="Open an EPUB" icon-right="book">
             Open

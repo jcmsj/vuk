@@ -33,3 +33,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 /src-capacitor
+/src-tauri/gen/*

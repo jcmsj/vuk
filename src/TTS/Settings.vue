@@ -18,7 +18,7 @@ import VoiceSelector from "./VoiceSelector.vue"
 import { onBeforeMount, watch } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import {prefVoice} from "./voice";
-
+import DevMode from 'src/settings/DevMode';
 </script>
 <style lang="sass">
 @import "src/sass/media_queries"

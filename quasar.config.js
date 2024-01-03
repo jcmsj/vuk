@@ -47,8 +47,8 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2022', 'edge107', 'firefox106', 'chrome107', 'safari16.1' ],
-        node: 'node16'
+        browser: [ 'es2022', 'edge115', 'firefox115', 'chrome115', 'safari16.1' ],
+        node: 'node21'
       },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'

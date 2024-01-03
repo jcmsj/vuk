@@ -5,7 +5,7 @@ import { loadMethod, LoadMethod } from "./Load";
 import { book, load, toManifestID } from "../Bookmarks/useBook";
 import { toHome } from "../layouts/Tab";
 import { ProgressEvents } from "@jcsj/epub/lib/Parts";
-import DevMode from "../settings/DevMode";
+import DevMode, { log } from "../settings/DevMode";
 import { Item } from "../fs";
 
 const withLogs: ProgressEvents = {
@@ -42,6 +42,14 @@ const noLogs: ProgressEvents = {
         TOC.items = toc
     }
 }
+
+let lastFile: File|undefined = undefined
+export async function reload() {
+    if (lastFile) {
+        log("Reloading", lastFile.name)
+        await loadBookFromFile(lastFile)
+    }
+}
 export async function loadBookFromFile(anEpub: File) {
     const epub = await Enhanced({
         blob: anEpub,
@@ -65,7 +73,7 @@ export async function loadBookFromFile(anEpub: File) {
         default:
             epub.loadAll()
     }
-
+    lastFile = anEpub
     toHome()
 }
 export async function loadBook(item:Item) {
