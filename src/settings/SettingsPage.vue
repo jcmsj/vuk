@@ -26,7 +26,7 @@
         <DevModeSwitcher />
         <q-item>
             <!-- reload btn -->
-            <q-btn v-if="DevMode" color="primary" @click="reload" title="Reload the current book" icon-right="refresh">
+            <q-btn color="primary" @click="reload" title="Reload the current book" icon-right="refresh">
                 Reload Epub
             </q-btn>
         </q-item>
