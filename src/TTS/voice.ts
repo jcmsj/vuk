@@ -14,7 +14,9 @@ export const prefVoice = useLocalStorage("voice", () => {
     return "English"
 })
 export const voices = ref<SpeechSynthesisVoice[]>([]) ;
-
+speechSynthesis.onvoiceschanged = () => {
+    voices.value = speechSynthesis.getVoices()
+}
 export const voice = computed(() => voices.value.find(it => it.name === prefVoice.value));
 export enum Status {
     OFF,

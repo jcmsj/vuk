@@ -11,7 +11,6 @@ import { useEventBus, UseEventBusReturn } from "@vueuse/core";
 import { saveProgress } from "src/Bookmarks/useBook";
 import { walker } from "src/Book/Target";
 
-interface EventMap extends Partial<Record<EV, Function | undefined>> { };
 export function follow() {
     scrollIfUnseen(transformer.elem)
 }
@@ -21,11 +20,13 @@ export class Narrator {
     bus: UseEventBusReturn<EV, void>;
     constructor() {
         this.bus = useEventBus<EV, void>("narrator")
-        const eventMap: EventMap = {
-            [EV.exhausted]: this.onExhausted.bind(this),
-            [EV.end]: this.onEnd.bind(this),
-        };
-        this.bus.on(ev => eventMap[ev]?.())
+        this.bus.on(ev => {
+            if (ev == EV.end) {
+                this.onEnd()
+            } else if (ev == EV.exhausted) {
+                this.onExhausted()
+            }
+        })
     }
 
     emit(ev: EV) {

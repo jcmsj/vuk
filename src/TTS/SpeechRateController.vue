@@ -4,18 +4,19 @@
             Speech rate:
             {{ speech_rate }}
         </label>
-        <input type="range" name="speech-rate" list="ticks" :min="min" :max="max" step="0.25" :value="speech_rate"
-            @change="speech_rate = $event.target.value">
+        <input type="range" name="speech-rate" list="ticks" :min="min" :max="max" :step="STEP" v-model="speech_rate">
         <datalist id="ticks">
-            <option :value="min" :label="min"></option>
-            <option value="1" label="1"></option>
-            <option value="2" label="2"></option>
-            <option :value="max" :label="max"></option>
+            <!-- add a label every 0.25 -->
+            <option v-for="option in OPTIONS" :value="option" ></option>
         </datalist>
     </div>
 </template>
 <script setup>
+import { range } from "src/lib/range";
 import { speech_rate, min, max } from "./speech_rate";
+import { onKeyUp } from "@vueuse/core";
+const STEP = 0.05;
+const OPTIONS = Object.freeze(range(min, max, STEP));
 
 </script>
 <style lang='sass' scoped>

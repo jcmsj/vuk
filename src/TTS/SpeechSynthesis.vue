@@ -1,16 +1,17 @@
 <template>
     <section>
-        <q-btn-group class="controls" v-if="status == Status.ON">
+        <q-btn-group class="controls" v-if="enabled">
             <MediaControls />
             <Settings />
         </q-btn-group>
     </section>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
 import MediaControls from "./MediaControls.vue"
 import Settings from "./Settings.vue"
 import { status, Status } from "./voice";
-
+const enabled = computed(() => status.value == Status.ON)
 </script>
 <style lang="sass">
 
